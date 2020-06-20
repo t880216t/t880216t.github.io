@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="大厂刁钻面试题，学习使我快乐。（持续更新）">
+<meta name="keywords" content="python,杂项">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【测试开发】刁钻面试题真题解析">
+<meta property="og:url" content="https://t880216t.github.io/2019/04/23/ms/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="大厂刁钻面试题，学习使我快乐。（持续更新）">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn.orion-c.top/17067099-9e47ad3c730fd760.png">
+<meta property="og:image" content="http://cdn.orion-c.top/17067099-05c6fd7004e88f8f.jpg">
+<meta property="og:image" content="http://cdn.orion-c.top/17067099-3809178c8aa4b224.jpg">
+<meta property="og:image" content="http://cdn.orion-c.top/17067099-37bb72eef8ba6f41.jpg">
+<meta property="og:image" content="http://cdn.orion-c.top/17067099-0eb0133fcf2858b2.jpg">
+<meta property="og:updated_time" content="2019-08-23T06:53:19.415Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【测试开发】刁钻面试题真题解析">
+<meta name="twitter:description" content="大厂刁钻面试题，学习使我快乐。（持续更新）">
+<meta name="twitter:image" content="http://cdn.orion-c.top/17067099-9e47ad3c730fd760.png">
+
+<link rel="canonical" href="https://t880216t.github.io/2019/04/23/ms/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>【测试开发】刁钻面试题真题解析 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2019/04/23/ms/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【测试开发】刁钻面试题真题解析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-23 23:50:12" itemprop="dateCreated datePublished" datetime="2019-04-23T23:50:12+08:00">2019-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-08-23 14:53:19" itemprop="dateModified" datetime="2019-08-23T14:53:19+08:00">2019-08-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>大厂刁钻面试题，学习使我快乐。（持续更新）</p>
+<a id="more"></a>
+
+<h1 id="1-现在有两个杯子，一个能装水-6L，一个能装水-5L，不用其他杯子的情况下，怎么倒出-3L-的水？"><a href="#1-现在有两个杯子，一个能装水-6L，一个能装水-5L，不用其他杯子的情况下，怎么倒出-3L-的水？" class="headerlink" title="1.现在有两个杯子，一个能装水 6L，一个能装水 5L，不用其他杯子的情况下，怎么倒出 3L 的水？"></a>1.现在有两个杯子，一个能装水 6L，一个能装水 5L，不用其他杯子的情况下，怎么倒出 3L 的水？</h1><p><a href="https://github.com/t880216t/cupGame/" target="_blank" rel="noopener">https://github.com/t880216t/cupGame/</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0.</span> 初始状态</span><br><span class="line">A杯当前水量:<span class="number">0L</span> [      ]</span><br><span class="line">B杯当前水量:<span class="number">0L</span> [     ]</span><br><span class="line">------------------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="number">1.</span> B加满</span><br><span class="line">A杯当前水量:<span class="number">0L</span> [      ]</span><br><span class="line">B杯当前水量:<span class="number">5L</span> [<span class="comment">#####]</span></span><br><span class="line">------------------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="number">2.</span> B倒入A</span><br><span class="line">A杯当前水量:<span class="number">5L</span> [<span class="comment">##### ]</span></span><br><span class="line">B杯当前水量:<span class="number">0L</span> [     ]</span><br><span class="line">------------------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="number">3.</span> B再加满</span><br><span class="line">A杯当前水量:<span class="number">5L</span> [<span class="comment">##### ]</span></span><br><span class="line">B杯当前水量:<span class="number">5L</span> [<span class="comment">#####]</span></span><br><span class="line">------------------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="number">4.</span> B倒入A，加满A</span><br><span class="line">A杯当前水量:<span class="number">6L</span> [<span class="comment">######]</span></span><br><span class="line">B杯当前水量:<span class="number">4L</span> [<span class="comment">#### ]</span></span><br><span class="line">------------------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="number">5.</span> A清空，B倒入A</span><br><span class="line">A杯当前水量:<span class="number">4L</span> [<span class="comment">####  ]</span></span><br><span class="line">B杯当前水量:<span class="number">0L</span> [     ]</span><br><span class="line">------------------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="number">6.</span>B倒满</span><br><span class="line">A杯当前水量:<span class="number">4L</span> [<span class="comment">####  ]</span></span><br><span class="line">B杯当前水量:<span class="number">5L</span> [<span class="comment">#####]</span></span><br><span class="line">------------------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="number">7.</span>B倒入A，加满A</span><br><span class="line">A杯当前水量:<span class="number">6L</span> [<span class="comment">######]</span></span><br><span class="line">B杯当前水量:<span class="number">3L</span> [<span class="comment">###  ]</span></span><br><span class="line">------------------------------------------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-get-与-post-区别"><a href="#2-get-与-post-区别" class="headerlink" title="2.get 与 post 区别"></a>2.get 与 post 区别</h1><h2 id="从面上看"><a href="#从面上看" class="headerlink" title="从面上看:"></a>从面上看:</h2><ul>
+<li>最直接的区别，GET请求的参数是放在URL里的，POST请求参数是放在请求body里的；</li>
+<li>GET请求的URL传参有长度限制，而POST请求没有长度限制；</li>
+<li>GET请求的参数只能是ASCII码，所以中文需要URL编码，而POST请求传参没有这个限制；</li>
+</ul>
+<h2 id="本质上看："><a href="#本质上看：" class="headerlink" title="本质上看："></a>本质上看：</h2><p>两者没有任何区别。他们都是HTTP协议中的请求方法。<br>底层实现都是基于TCP/IP协议。只是让请求，更加有语义而已。<br>所以GET把参数body里，只要服务端去取，也是一样的。<br>上述的所谓区别，只是浏览器厂家根据约定，做得限制而已。</p>
+<h1 id="3-网页从输入url到完整呈现出来都经历了哪几个过程"><a href="#3-网页从输入url到完整呈现出来都经历了哪几个过程" class="headerlink" title="3.网页从输入url到完整呈现出来都经历了哪几个过程"></a>3.网页从输入url到完整呈现出来都经历了哪几个过程</h1><ul>
+<li>1：输入网址；</li>
+<li>2：发送至DNS服务器，并获取域名对应的web服务器对应的ip地址；</li>
+<li>3：与web服务器建立TCP连接；</li>
+<li>4：浏览器向web服务器发送http请求；</li>
+<li>5：web服务器响应请求，并返回指定url的数据；</li>
+<li>6：浏览器下载web服务器返回的数据及解析html源文件；</li>
+<li>7：生成DOM树，解析css和js，渲染页面，直至显示完成；</li>
+</ul>
+<h1 id="4-有一只小青蛙，想要跳到最高的台阶上看风景，由于台阶比较高，小青蛙每次只能跳一阶或两阶，如果台阶一共有N阶，请问小青蛙有多少种跳法？"><a href="#4-有一只小青蛙，想要跳到最高的台阶上看风景，由于台阶比较高，小青蛙每次只能跳一阶或两阶，如果台阶一共有N阶，请问小青蛙有多少种跳法？" class="headerlink" title="4.有一只小青蛙，想要跳到最高的台阶上看风景，由于台阶比较高，小青蛙每次只能跳一阶或两阶，如果台阶一共有N阶，请问小青蛙有多少种跳法？"></a>4.有一只小青蛙，想要跳到最高的台阶上看风景，由于台阶比较高，小青蛙每次只能跳一阶或两阶，如果台阶一共有N阶，请问小青蛙有多少种跳法？</h1><p>可以自己画张图，先试试，随着台阶数的递增，得到的结果也递增：1、2、3、5、8、13…，同样的问题，还有兔子生兔子之类的。<br>这就是<a href="https://baike.baidu.com/item/%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/99145" target="_blank" rel="noopener">斐波那契数列</a>了。<br>超过3阶的套公式吧</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f(n) = f(n<span class="number">-1</span>)+f(n<span class="number">-2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>用递归程序表达为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib_rec</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> isinstance(n,int):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">elif</span> n == <span class="number">1</span> <span class="keyword">or</span> n == <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> n</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> fib_rec(n<span class="number">-1</span>) + fib_rec(n<span class="number">-2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>但是这种递归可想而知，计算量是越来越大的。<br>可以用递推方式来解决：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib_loop</span><span class="params">(n)</span>:</span></span><br><span class="line">    a, b = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n+<span class="number">1</span>):</span><br><span class="line">        res = a + b</span><br><span class="line">        a = b</span><br><span class="line">        b = res</span><br><span class="line">    <span class="keyword">return</span> a</span><br></pre></td></tr></table></figure>
+
+<h1 id="5-appium的架构及工作原理是什么？"><a href="#5-appium的架构及工作原理是什么？" class="headerlink" title="5. appium的架构及工作原理是什么？"></a>5. appium的架构及工作原理是什么？</h1><p>appium本身是个标准的c/s架构。<br>架构图如下：<br><img src="http://cdn.orion-c.top/17067099-9e47ad3c730fd760.png" alt="appiumjiagouwps1.png"></p>
+<p>通过个简单的图来了解它的工作原理及流程：<br>一句描述为：appium client处理脚本后发送给appium server， server给设备的监听服务发送脚本里的操作，设备端调底层的自动化库执行相关的操作指令。<br><img src="http://cdn.orion-c.top/17067099-05c6fd7004e88f8f.jpg" alt="IMG_20190428_135558.jpg"></p>
+<h1 id="6-简述TCP连接流程及与UDP的区别"><a href="#6-简述TCP连接流程及与UDP的区别" class="headerlink" title="6.简述TCP连接流程及与UDP的区别"></a>6.简述TCP连接流程及与UDP的区别</h1><p>TCP是一种面向连接的、可靠的传输层通信协议。<br>保证了传输数据的完整性，适用于文件传输。如网页请求。<br>UDP是一种无连接、不可靠的通信协议。<br>可以理解为一个广播喇叭，只管自己说，不管别人听到了多少、听到没有。用于实时视频传输，直播等。</p>
+<h2 id="TCP建立连接过程"><a href="#TCP建立连接过程" class="headerlink" title="TCP建立连接过程"></a>TCP建立连接过程</h2><p><img src="http://cdn.orion-c.top/17067099-3809178c8aa4b224.jpg" alt="IMG_20190506_105144.jpg"></p>
+<h2 id="TCP数据传输过程"><a href="#TCP数据传输过程" class="headerlink" title="TCP数据传输过程"></a>TCP数据传输过程</h2><p><img src="http://cdn.orion-c.top/17067099-37bb72eef8ba6f41.jpg" alt="IMG_20190506_105219.jpg"></p>
+<h2 id="TCP断开连接过程"><a href="#TCP断开连接过程" class="headerlink" title="TCP断开连接过程"></a>TCP断开连接过程</h2><p><img src="http://cdn.orion-c.top/17067099-0eb0133fcf2858b2.jpg" alt="IMG_20190506_105245.jpg"></p>
+<h1 id="7-adb常用命令"><a href="#7-adb常用命令" class="headerlink" title="7.adb常用命令"></a>7.adb常用命令</h1><h2 id="设备数据获取类"><a href="#设备数据获取类" class="headerlink" title="设备数据获取类"></a>设备数据获取类</h2><p>adb logcat &gt; log.txt 获取设备运行日志并输出到本地文件<br>adb shell dumpsys battery<br>adb shell dumpsys meminfo -s &lt;pakagename | pid&gt;  获取指定包内存数据<br>adb shell top -n 5 | grep &lt;pakagename | pid&gt;    获取指定包CPU数据<br>adb shell dumpsys window windows | grep “mCurrentFocus”    获取当前窗口包名<br>adb shell pm list packages 获取应用中所有包名</p>
+<h2 id="工具辅助类"><a href="#工具辅助类" class="headerlink" title="工具辅助类"></a>工具辅助类</h2><p>adb shell monkey -p <pakagename>  <event-count>  对指定包执行指定次数的混乱测试</event-count></pakagename></p>
+<h3 id="无线调试手机："><a href="#无线调试手机：" class="headerlink" title="无线调试手机："></a>无线调试手机：</h3><p>将 Android 设备与要运行 adb 的电脑连接到同一个局域网，比如连到同一个 WiFi。<br>adb tcpip 5555<br>adb connect <device-ip-address>:5555</device-ip-address></p>
+<h3 id="管理包"><a href="#管理包" class="headerlink" title="管理包"></a>管理包</h3><p>adb install xxxxx.apk    安装包<br>adb uninstall <pakagename>    卸载<br>adb shell pm clear <pakagename> 清除应用缓存</pakagename></pakagename></p>
+<h3 id="截图录屏"><a href="#截图录屏" class="headerlink" title="截图录屏"></a>截图录屏</h3><p>adb shell screencap -p /sdcard/test.png        截图应用<br>adb shell screenrecord /sdcard/demo.mp4        录屏设备默认最大2分钟<br>adb pull /sdcard/test.png test.png    取手机数据<br>adb push test.png /sdcard/test.png    发送数据到手机</p>
+<h3 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h3><p>adb shell input tap x y        点击坐标<br>adb shell input swipe x1 y1 x2 y2    直线滑动<br>adb shell input keyevent  82    系统自带事件<br>adb shell input text 123456        输入文本</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/杂项/" rel="tag"># 杂项</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/04/15/powershellupdate/" rel="prev" title="Win7 Powershell 升级">
+      <i class="fa fa-chevron-left"></i> Win7 Powershell 升级
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/04/28/robotframework1/" rel="next" title="RobotFramework自动化框架（一）">
+      RobotFramework自动化框架（一） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-现在有两个杯子，一个能装水-6L，一个能装水-5L，不用其他杯子的情况下，怎么倒出-3L-的水？"><span class="nav-number">1.</span> <span class="nav-text">1.现在有两个杯子，一个能装水 6L，一个能装水 5L，不用其他杯子的情况下，怎么倒出 3L 的水？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-get-与-post-区别"><span class="nav-number">2.</span> <span class="nav-text">2.get 与 post 区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从面上看"><span class="nav-number">2.1.</span> <span class="nav-text">从面上看:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本质上看："><span class="nav-number">2.2.</span> <span class="nav-text">本质上看：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-网页从输入url到完整呈现出来都经历了哪几个过程"><span class="nav-number">3.</span> <span class="nav-text">3.网页从输入url到完整呈现出来都经历了哪几个过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-有一只小青蛙，想要跳到最高的台阶上看风景，由于台阶比较高，小青蛙每次只能跳一阶或两阶，如果台阶一共有N阶，请问小青蛙有多少种跳法？"><span class="nav-number">4.</span> <span class="nav-text">4.有一只小青蛙，想要跳到最高的台阶上看风景，由于台阶比较高，小青蛙每次只能跳一阶或两阶，如果台阶一共有N阶，请问小青蛙有多少种跳法？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-appium的架构及工作原理是什么？"><span class="nav-number">5.</span> <span class="nav-text">5. appium的架构及工作原理是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-简述TCP连接流程及与UDP的区别"><span class="nav-number">6.</span> <span class="nav-text">6.简述TCP连接流程及与UDP的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP建立连接过程"><span class="nav-number">6.1.</span> <span class="nav-text">TCP建立连接过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP数据传输过程"><span class="nav-number">6.2.</span> <span class="nav-text">TCP数据传输过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP断开连接过程"><span class="nav-number">6.3.</span> <span class="nav-text">TCP断开连接过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-adb常用命令"><span class="nav-number">7.</span> <span class="nav-text">7.adb常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#设备数据获取类"><span class="nav-number">7.1.</span> <span class="nav-text">设备数据获取类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工具辅助类"><span class="nav-number">7.2.</span> <span class="nav-text">工具辅助类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#无线调试手机："><span class="nav-number">7.2.1.</span> <span class="nav-text">无线调试手机：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管理包"><span class="nav-number">7.2.2.</span> <span class="nav-text">管理包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#截图录屏"><span class="nav-number">7.2.3.</span> <span class="nav-text">截图录屏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动化"><span class="nav-number">7.2.4.</span> <span class="nav-text">自动化</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https://github.com/t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : 'aa68912b2cbe4452aab348d38733554c',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

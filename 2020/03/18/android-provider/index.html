@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前面写了关于整个云真机平台设计的帖子云真机平台的设计与实现，实际的框架实现起来涉及知识点还是很多的。">
+<meta name="keywords" content="python,云真机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云真机平台的设计与实现--Android设备状态监听">
+<meta property="og:url" content="https://t880216t.github.io/2020/03/18/android-provider/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="前面写了关于整个云真机平台设计的帖子云真机平台的设计与实现，实际的框架实现起来涉及知识点还是很多的。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/17067099-fa32523fd1ced7e7.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/17067099-931cc4edf80bdf6b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/540">
+<meta property="og:updated_time" content="2020-06-20T16:23:16.521Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="云真机平台的设计与实现--Android设备状态监听">
+<meta name="twitter:description" content="前面写了关于整个云真机平台设计的帖子云真机平台的设计与实现，实际的框架实现起来涉及知识点还是很多的。">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/17067099-fa32523fd1ced7e7.gif?imageMogr2/auto-orient/strip">
+
+<link rel="canonical" href="https://t880216t.github.io/2020/03/18/android-provider/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>云真机平台的设计与实现--Android设备状态监听 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2020/03/18/android-provider/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          云真机平台的设计与实现--Android设备状态监听
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-18 16:27:18" itemprop="dateCreated datePublished" datetime="2020-03-18T16:27:18+08:00">2020-03-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-21 00:23:16" itemprop="dateModified" datetime="2020-06-21T00:23:16+08:00">2020-06-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前面写了关于整个云真机平台设计的帖子<a href="https://www.jianshu.com/p/2ff4c60243f5" target="_blank" rel="noopener">云真机平台的设计与实现</a>，实际的框架实现起来涉及知识点还是很多的。</p>
+<a id="more"></a>
+
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>前面写了关于整个云真机平台设计的帖子<a href="https://www.jianshu.com/p/2ff4c60243f5" target="_blank" rel="noopener">云真机平台的设计与实现</a>，实际的框架实现起来涉及知识点还是很多的。参考了atx-android-provider的代码，拆分需要的方法实现了该模块，这篇算是对python+安卓设备provider实现的基本讲解。</p>
+<h1 id="实现效果"><a href="#实现效果" class="headerlink" title="实现效果"></a>实现效果</h1><p>gif有点慢，主要展示的是设备接入后自动刷新列表，设备掉线后状态自动更新。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/17067099-fa32523fd1ced7e7.gif?imageMogr2/auto-orient/strip" alt="androidd.gif"></p>
+<h1 id="数据流程"><a href="#数据流程" class="headerlink" title="数据流程"></a>数据流程</h1><p><img src="https://upload-images.jianshu.io/upload_images/17067099-931cc4edf80bdf6b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/540" alt="ui (2).png"></p>
+<h2 id="获取依赖文件"><a href="#获取依赖文件" class="headerlink" title="获取依赖文件"></a>获取依赖文件</h2><p>安卓控制主要需要的是<a href="https://github.com/openstf/minitouch" target="_blank" rel="noopener">minitouch</a>、<a href="https://github.com/openstf/minicap" target="_blank" rel="noopener">minicap</a>、<a href="https://github.com/openatx/atx-agent" target="_blank" rel="noopener">atx-agent</a> 这三个文件，由于不同设备的cpu架构不同，我们需要根据不同的设备cpu丢进去不同的执行文件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_init_binaries</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="comment"># minitouch, minicap, minicap.so</span></span><br><span class="line">    d = self._device</span><br><span class="line">    sdk = d.getprop(<span class="string">"ro.build.version.sdk"</span>)  <span class="comment"># eg 26</span></span><br><span class="line">    abi = d.getprop(<span class="string">'ro.product.cpu.abi'</span>)  <span class="comment"># eg arm64-v8a</span></span><br><span class="line">    abis = (d.getprop(<span class="string">'ro.product.cpu.abilist'</span>).strip() <span class="keyword">or</span> abi).split(<span class="string">","</span>)</span><br><span class="line">    logger.debug(<span class="string">"%s sdk: %s, abi: %s, abis: %s"</span>, self, sdk, abi, abis)</span><br></pre></td></tr></table></figure>
+
+<p>官方npm库<a href="https://www.npmjs.com/package/minicap-prebuilt" target="_blank" rel="noopener">minicap-prebuilt</a>有编译好的文件，atx的作者已经打包放到git上了，可以直接下载<a href="https://github.com/openatx/stf-binaries" target="_blank" rel="noopener">stf-binaries</a>，通过adb push进手机。</p>
+<blockquote>
+<p>在windows上开发时，发现从zipfile中 push 类似<figure class="highlight plain"><figcaption><span>push。</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">``` python</span><br><span class="line">        stf_zippath = fetching.get_stf_binaries()</span><br><span class="line">        zip_folder, _ = os.path.splitext(os.path.basename(stf_zippath))</span><br><span class="line">        prefix = zip_folder + &quot;/node_modules/minicap-prebuilt/prebuilt/&quot;</span><br><span class="line">        self._push_stf(prefix + abi + &quot;/lib/android-&quot; + sdk + &quot;/minicap.so&quot;,</span><br><span class="line">                       &quot;/data/local/tmp/minicap.so&quot;,</span><br><span class="line">                       mode=0o644,</span><br><span class="line">                       zipfile_path=stf_zippath)</span><br><span class="line">        try:</span><br><span class="line">            self._push_stf(prefix + abi + &quot;/bin/minicap&quot;,</span><br><span class="line">                           &quot;/data/local/tmp/minicap&quot;,</span><br><span class="line">                           zipfile_path=stf_zippath)</span><br><span class="line">        except Exception as e:</span><br><span class="line">            logger.warn(&quot;Device: %s push minicap fail&quot;, self._serial)</span><br><span class="line">            realFile = &quot;vendor/&quot; + prefix + abi + &quot;/bin/minicap&quot;</span><br><span class="line">            if os.path.isfile(realFile):</span><br><span class="line">                self._device.sync.push(realFile, &quot;/data/local/tmp/minicap&quot;)</span><br><span class="line">            else:</span><br><span class="line">                with zipfile.ZipFile(stf_zippath) as zFile:</span><br><span class="line">                    zFile.extractall(path=&apos;vendor/&apos;)</span><br><span class="line">                    self._device.sync.push(realFile, &quot;/data/local/tmp/minicap&quot;)</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="设备监听服务"><a href="#设备监听服务" class="headerlink" title="设备监听服务"></a>设备监听服务</h2><p>Provider是通过adb track_devices来监听设备的状态，同时会对新接入设备进行初始化检查，在此事件中，可以用来定制设备的过滤规则。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">for</span> event <span class="keyword">in</span> adb.track_devices():</span><br><span class="line">    logger.debug(<span class="string">"%s"</span>, event)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> allow_remote:</span><br><span class="line">        <span class="keyword">if</span> re.match(<span class="string">r"(\d+)\.(\d+)\.(\d+)\.(\d+):(\d+)"</span>, event.serial):</span><br><span class="line">            logger.debug(<span class="string">"Skip remote device: %s"</span>, event)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">if</span> event.present:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            udid = serial2udid[event.serial] = event.serial</span><br><span class="line">            udid2serial[udid] = event.serial</span><br><span class="line">            device = AndroidDevice(event.serial, partial(callback, udid))</span><br><span class="line">            <span class="keyword">await</span> device.init()</span><br><span class="line">            <span class="keyword">await</span> device.open_identify()</span><br><span class="line">            udid2device[udid] = device</span><br><span class="line">            <span class="keyword">await</span> serverCon.update_device(&#123;</span><br><span class="line">                <span class="string">"udid"</span>: udid,</span><br><span class="line">                <span class="string">"platform"</span>: <span class="string">"android"</span>,</span><br><span class="line">                <span class="string">"colding"</span>: <span class="literal">False</span>,</span><br><span class="line">                <span class="string">"provider_name"</span>: provider_info()[<span class="string">'name'</span>],</span><br><span class="line">                <span class="string">"provider_ip"</span>: provider_info()[<span class="string">'ip'</span>],</span><br><span class="line">                <span class="string">"provider"</span>: device.addrs(),</span><br><span class="line">                <span class="string">"properties"</span>: <span class="keyword">await</span> device.properties(),</span><br><span class="line">            &#125;)</span><br><span class="line">            logger.info(<span class="string">"Device:%s is ready"</span>, event.serial)</span><br><span class="line">        <span class="keyword">except</span> RuntimeError:</span><br><span class="line">            logger.warning(<span class="string">"Device:%s initialize failed"</span>, event.serial)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            logger.error(<span class="string">"Unknown error: %s"</span>, e)</span><br><span class="line">            traceback.print_exc()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        udid = serial2udid[event.serial]</span><br><span class="line">        <span class="keyword">if</span> udid <span class="keyword">in</span> udid2device:</span><br><span class="line">            udid2device[udid].close()</span><br><span class="line">            udid2device.pop(udid, <span class="literal">None</span>)</span><br><span class="line">        <span class="keyword">await</span> serverCon.disconnect_device(&#123;</span><br><span class="line">            <span class="string">"udid"</span>: udid,</span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="长连接封装"><a href="#长连接封装" class="headerlink" title="长连接封装"></a>长连接封装</h2><p>因为要监听服务端一些辅助操作指令，所以采用的socket长连接，来与服务端通信。这里对服务进行了些封装方便调用扩展。</p>
+<blockquote>
+<p>我的服务端是 flask-socket.io ， 这里采用的python-socketio作为客户端。socket使用的坑很多，不细说了。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">connect</span><span class="params">(self)</span>:</span></span><br><span class="line">    cnt = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            socketIO = <span class="keyword">await</span> self._connect()</span><br><span class="line">            cnt = <span class="number">0</span></span><br><span class="line">            <span class="keyword">return</span> socketIO</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            cnt = min(<span class="number">30</span>, cnt + <span class="number">1</span>)</span><br><span class="line">            logger.warning(<span class="string">"WS connect error: %s, reconnect after %ds"</span>, e,</span><br><span class="line">                           cnt + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">_connect</span><span class="params">(self)</span>:</span></span><br><span class="line">    socketIO.connect(<span class="string">'http://localhost:5000'</span>, namespaces=[<span class="string">'/provider'</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">update_device</span><span class="params">(self,data)</span>:</span></span><br><span class="line">    data = json.dumps(data)</span><br><span class="line">    self._socketIO.emit(<span class="string">'update_device'</span>, data, <span class="string">'/provider'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">disconnect_device</span><span class="params">(self,data)</span>:</span></span><br><span class="line">    data = json.dumps(data)</span><br><span class="line">    self._socketIO.emit(<span class="string">'disconnect_device'</span>, data, <span class="string">'/provider'</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="辅助功能服务"><a href="#辅助功能服务" class="headerlink" title="辅助功能服务"></a>辅助功能服务</h2><p>因为minitouch只是提供了UI基于坐标的点击、滑动操作，而实际使用过程中，还需要一些手机的热键操作，如：电源键、home、back、menu、截图等操作。通过监听服务的广播事件，调用本地的adb去发送keyevent      code来操作指定的设备。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@socketIO.on('provider_command')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">provider_command</span><span class="params">(data)</span>:</span></span><br><span class="line">    serial = data[<span class="string">'params'</span>][<span class="string">'deviceId'</span>]</span><br><span class="line">    <span class="keyword">if</span> data[<span class="string">'command'</span>] == <span class="string">'rotate'</span>:</span><br><span class="line">        rotate(serial, data[<span class="string">'params'</span>][<span class="string">'orientation'</span>])</span><br><span class="line">    <span class="keyword">elif</span> data[<span class="string">'command'</span>] == <span class="string">'home'</span>:</span><br><span class="line">        home(serial)</span><br><span class="line">    <span class="keyword">elif</span> data[<span class="string">'command'</span>] == <span class="string">'menu'</span>:</span><br><span class="line">        menu(serial)</span><br><span class="line">    <span class="keyword">elif</span> data[<span class="string">'command'</span>] == <span class="string">'back'</span>:</span><br><span class="line">        back(serial)</span><br><span class="line">    <span class="keyword">elif</span> data[<span class="string">'command'</span>] == <span class="string">'power'</span>:</span><br><span class="line">        power(serial)</span><br><span class="line">    <span class="keyword">elif</span> data[<span class="string">'command'</span>] == <span class="string">'sendkeys'</span>:</span><br><span class="line">        sendkeys(serial, data[<span class="string">'params'</span>][<span class="string">'value'</span>])</span><br></pre></td></tr></table></figure>
+
+<p>根据adb封装的辅助指令<br>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">home</span><span class="params">(serial)</span>:</span></span><br><span class="line">    adbclient.shell(serial,<span class="string">"input keyevent HOME"</span>)</span><br><span class="line">    logger.info(<span class="string">'KEYCODE_HOME event %s to sucessful!'</span>%(serial))</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/云真机/" rel="tag"># 云真机</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/18/ldbp/" rel="prev" title="LDAP登录功能开发">
+      <i class="fa fa-chevron-left"></i> LDAP登录功能开发
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/18/proxy/" rel="next" title="请求转发的多种方式">
+      请求转发的多种方式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现效果"><span class="nav-number">2.</span> <span class="nav-text">实现效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据流程"><span class="nav-number">3.</span> <span class="nav-text">数据流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#获取依赖文件"><span class="nav-number">3.1.</span> <span class="nav-text">获取依赖文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设备监听服务"><span class="nav-number">3.2.</span> <span class="nav-text">设备监听服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#长连接封装"><span class="nav-number">3.3.</span> <span class="nav-text">长连接封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#辅助功能服务"><span class="nav-number">3.4.</span> <span class="nav-text">辅助功能服务</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https://github.com/t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : 'dba75fc6efd7b21fe9f02dd688cc73e8',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

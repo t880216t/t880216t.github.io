@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="项目需要用到富文本编辑器，了解几个后选择了react-draft-wysiwyg。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react 富文本控件使用">
+<meta property="og:url" content="https://t880216t.github.io/2018/06/20/react_rich_text/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="项目需要用到富文本编辑器，了解几个后选择了react-draft-wysiwyg。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-06-20T15:50:12.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.582Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="react">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://t880216t.github.io/2018/06/20/react_rich_text/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>react 富文本控件使用 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2018/06/20/react_rich_text/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          react 富文本控件使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-06-20 23:50:12" itemprop="dateCreated datePublished" datetime="2018-06-20T23:50:12+08:00">2018-06-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>项目需要用到富文本编辑器，了解几个后选择了<a target="_blank" rel="noopener" href="https://github.com/jpuri/react-draft-wysiwyg">react-draft-wysiwyg</a>。</p>
+<span id="more"></span>
+
+<h1 id="富文本编辑的基本使用"><a href="#富文本编辑的基本使用" class="headerlink" title="富文本编辑的基本使用"></a>富文本编辑的基本使用</h1><p>默认模式使用比较简单</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Editor</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-draft-wysiwyg&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;react-draft-wysiwyg/dist/react-draft-wysiwyg.css&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> draftToHtml <span class="keyword">from</span> <span class="string">&#x27;draftjs-to-html&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">EditorState</span>, convertToRaw, <span class="title class_">ContentState</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;draft-js&#x27;</span>;</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line"><span class="comment">//设置初始状态，这个是默认值是空的状态，因为我的需求中需要对已有的文本进行编辑，故而还是要给状态值后面好根据fetch结果改变。</span></span><br><span class="line">state=&#123;</span><br><span class="line">	<span class="attr">pointTitleEditorState</span>: <span class="title class_">EditorState</span>.<span class="title function_">createEmpty</span>(),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//状态值改变后的接收方法，设置到state变量里。</span></span><br><span class="line">onPonitTitleEditorStateChange = <span class="function"><span class="params">pointTitleEditorState</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">      pointTitleEditorState,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">Editor</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	<span class="attr">localization</span>=<span class="string">&#123;&#123;</span> <span class="attr">locale:</span> &#x27;<span class="attr">zh</span>&#x27; &#125;&#125; //中文工具栏</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	<span class="attr">editorState</span>=<span class="string">&#123;this.state.pointTitleEditorState&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	<span class="attr">editorClassName</span>=<span class="string">&#123;styles.editor_class&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	<span class="attr">placeholder</span>=<span class="string">&quot;请输入测试点标题&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	<span class="attr">onEditorStateChange</span>=<span class="string">&#123;this.onPonitTitleEditorStateChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">  /&gt;</span></span></span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br></pre></td></tr></table></figure>
+<h1 id="自定义工具栏"><a href="#自定义工具栏" class="headerlink" title="自定义工具栏"></a>自定义工具栏</h1><p>需求总是想法比较多的，以上这种基本使用基本是不可能满足需求的。我们还需自定义工具栏。<br>这里要用到<a target="_blank" rel="noopener" href="https://github.com/jpuri/react-draft-wysiwyg">react-draft-wysiwyg</a> 的toolbar自定义属性。<br>先搞个我们需要的工具栏组件，这里用到了<a target="_blank" rel="noopener" href="https://github.com/casesandberg/react-color">react-color</a>,可以搞的东西还是很多的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* eslint-disable react/sort-comp,react/require-default-props */</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">PropTypes</span> <span class="keyword">from</span> <span class="string">&#x27;prop-types&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">TwitterPicker</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-color&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> <span class="title class_">ColorPic</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="keyword">static</span> propTypes = &#123;</span><br><span class="line">    <span class="attr">onChange</span>: <span class="title class_">PropTypes</span>.<span class="property">func</span>,</span><br><span class="line">    <span class="attr">currentState</span>: <span class="title class_">PropTypes</span>.<span class="property">object</span>,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  stopPropagation = <span class="function"><span class="params">event</span> =&gt;</span> &#123;</span><br><span class="line">    event.<span class="title function_">stopPropagation</span>();</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  onChange = <span class="function"><span class="params">color</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; onChange &#125; = <span class="variable language_">this</span>.<span class="property">props</span>; <span class="comment">//调用富文本编辑器的方法</span></span><br><span class="line">    <span class="title function_">onChange</span>(<span class="string">&#x27;color&#x27;</span>, color.<span class="property">hex</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; color &#125; = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">currentState</span>;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">onClick</span>=<span class="string">&#123;this.stopPropagation&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">TwitterPicker</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">color</span>=<span class="string">&#123;color&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onChangeComplete</span>=<span class="string">&#123;this.onChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">triangle</span>=<span class="string">&quot;hide&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">colors</span>=<span class="string">&#123;[</span>&#x27;#<span class="attr">000000</span>&#x27;, &#x27;#<span class="attr">FF0000</span>&#x27;, &#x27;#<span class="attr">0000FF</span>&#x27;]&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">width</span>=<span class="string">&#123;100&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个库有个坑，它的样式没给暴露出属性自定义，翻了好久issues未果，我是自己改了它的\node_modules.2.14.1@react-color\lib\components\twitter\Twitter.js源码实现的需求。如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> styles = (<span class="number">0</span>, _reactcss2.<span class="property">default</span>)(&#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">      <span class="attr">card</span>: &#123;</span><br><span class="line">        <span class="attr">width</span>: width,</span><br><span class="line">        <span class="attr">background</span>: <span class="string">&#x27;#fff&#x27;</span>,</span><br><span class="line">        <span class="attr">border</span>: <span class="string">&#x27;0 solid rgba(0,0,0,0.25)&#x27;</span>,</span><br><span class="line">        <span class="comment">// boxShadow: &#x27;0 1px 4px rgba(0,0,0,0.25)&#x27;,//去掉外围阴影</span></span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="string">&#x27;4px&#x27;</span>,</span><br><span class="line">        <span class="attr">position</span>: <span class="string">&#x27;relative&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">body</span>: &#123;</span><br><span class="line">        <span class="comment">// padding: &#x27;15px 9px 9px 15px&#x27;,//去掉外围边距</span></span><br><span class="line">      &#125;,</span><br><span class="line">	  .</span><br><span class="line">	  .</span><br><span class="line">	  .</span><br><span class="line">      <span class="attr">hash</span>: &#123;</span><br><span class="line">        <span class="attr">background</span>: <span class="string">&#x27;#F0F0F0&#x27;</span>,</span><br><span class="line">        <span class="attr">height</span>: <span class="string">&#x27;30px&#x27;</span>,</span><br><span class="line">        <span class="attr">width</span>: <span class="string">&#x27;30px&#x27;</span>,</span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="string">&#x27;4px 0 0 4px&#x27;</span>,</span><br><span class="line">        <span class="attr">float</span>: <span class="string">&#x27;left&#x27;</span>,</span><br><span class="line">        <span class="attr">color</span>: <span class="string">&#x27;#98A1A4&#x27;</span>,</span><br><span class="line">        <span class="attr">display</span>: <span class="string">&#x27;flex&#x27;</span>,</span><br><span class="line">        <span class="attr">alignItems</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">        <span class="attr">display</span>:<span class="string">&#x27;none&#x27;</span>, <span class="comment">//干掉输入框</span></span><br><span class="line">        <span class="attr">justifyContent</span>: <span class="string">&#x27;center&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">input</span>: &#123;</span><br><span class="line">        <span class="attr">width</span>: <span class="string">&#x27;100px&#x27;</span>,</span><br><span class="line">        <span class="attr">fontSize</span>: <span class="string">&#x27;14px&#x27;</span>,</span><br><span class="line">        <span class="attr">color</span>: <span class="string">&#x27;#666&#x27;</span>,</span><br><span class="line">        <span class="attr">border</span>: <span class="string">&#x27;0px&#x27;</span>,</span><br><span class="line">        <span class="attr">display</span>:<span class="string">&#x27;none&#x27;</span>, <span class="comment">//干掉输入框</span></span><br><span class="line">        <span class="attr">outline</span>: <span class="string">&#x27;none&#x27;</span>,</span><br><span class="line">        <span class="attr">height</span>: <span class="string">&#x27;28px&#x27;</span>,</span><br><span class="line">        <span class="attr">boxShadow</span>: <span class="string">&#x27;inset 0 0 0 1px #F0F0F0&#x27;</span>,</span><br><span class="line">        <span class="attr">boxSizing</span>: <span class="string">&#x27;content-box&#x27;</span>,</span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="string">&#x27;0 4px 4px 0&#x27;</span>,</span><br><span class="line">        <span class="attr">float</span>: <span class="string">&#x27;left&#x27;</span>,</span><br><span class="line">        <span class="attr">paddingLeft</span>: <span class="string">&#x27;8px&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">swatch</span>: &#123;</span><br><span class="line">        <span class="attr">width</span>: <span class="string">&#x27;20px&#x27;</span>,<span class="comment">//设置图片大小</span></span><br><span class="line">        <span class="attr">height</span>: <span class="string">&#x27;20px&#x27;</span>,<span class="comment">//设置图片大小</span></span><br><span class="line">        <span class="attr">float</span>: <span class="string">&#x27;left&#x27;</span>,</span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="string">&#x27;4px&#x27;</span>,</span><br><span class="line">        <span class="attr">margin</span>: <span class="string">&#x27;0 6px 6px 0&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p>Ok，要的东西准备好了，接下来设置下富文本控件的toolbar属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">ColorPic</span> <span class="keyword">from</span> <span class="string">&#x27;../EditRichCustomToolbar&#x27;</span>;</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">&lt;<span class="title class_">Editor</span></span><br><span class="line">	  editorState=&#123;editorState&#125;</span><br><span class="line">	  localization=&#123;&#123; <span class="attr">locale</span>: <span class="string">&#x27;zh&#x27;</span> &#125;&#125;</span><br><span class="line">	  wrapperClassName=&#123;styles.<span class="property">wrapper_class</span>&#125;</span><br><span class="line">	  editorClassName=&#123;styles.<span class="property">editor_class</span>&#125;</span><br><span class="line">	  onEditorStateChange=&#123;<span class="variable language_">this</span>.<span class="property">onEditorStateChange</span>&#125;</span><br><span class="line">	  onBlur=&#123;<span class="variable language_">this</span>.<span class="property">check</span>&#125;</span><br><span class="line">	  toolbarClassName=<span class="string">&quot;toolbar-class&quot;</span></span><br><span class="line">	  toolbar=&#123;&#123;</span><br><span class="line">		<span class="attr">options</span>: [<span class="string">&#x27;inline&#x27;</span>, <span class="string">&#x27;colorPicker&#x27;</span>],</span><br><span class="line">		<span class="attr">inline</span>: &#123;</span><br><span class="line">		  <span class="attr">options</span>: [<span class="string">&#x27;bold&#x27;</span>],</span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="attr">colorPicker</span>: &#123; <span class="attr">component</span>: <span class="title class_">ColorPic</span> &#125;,</span><br><span class="line">	  &#125;&#125;</span><br><span class="line">	/&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="自动获取焦点"><a href="#自动获取焦点" class="headerlink" title="自动获取焦点"></a>自动获取焦点</h1><p>我们的编辑需要能够自动获取焦点，这个富文本编辑封装的东西太多，没法一个autofocus解决。需要通过ref来做，步骤如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构造</span></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">props</span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>(props);</span><br><span class="line">    <span class="comment">// 初始状态</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">      .</span><br><span class="line">	  .</span><br><span class="line">	  .</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">setDomEditorRef</span> = <span class="function"><span class="params">ref</span> =&gt;</span> (<span class="variable language_">this</span>.<span class="property">domEditor</span> = ref);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//这是我的一个触发方法，随你放哪。</span></span><br><span class="line">  edit = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">editable</span>: <span class="literal">true</span> &#125;, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">domEditor</span>.<span class="title function_">focusEditor</span>();</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">  .</span><br><span class="line">  .</span><br><span class="line">  .</span><br><span class="line">  &lt;<span class="title class_">Editor</span></span><br><span class="line">	  ref=&#123;<span class="variable language_">this</span>.<span class="property">setDomEditorRef</span>&#125;</span><br><span class="line">	  editorState=&#123;editorState&#125;</span><br><span class="line">	  localization=&#123;&#123; <span class="attr">locale</span>: <span class="string">&#x27;zh&#x27;</span> &#125;&#125;</span><br><span class="line">	  wrapperClassName=&#123;styles.<span class="property">wrapper_class</span>&#125;</span><br><span class="line">	  editorClassName=&#123;styles.<span class="property">editor_class</span>&#125;</span><br><span class="line">	  onEditorStateChange=&#123;<span class="variable language_">this</span>.<span class="property">onEditorStateChange</span>&#125;</span><br><span class="line">	  onBlur=&#123;<span class="variable language_">this</span>.<span class="property">check</span>&#125;</span><br><span class="line">	  toolbarClassName=<span class="string">&quot;toolbar-class&quot;</span></span><br><span class="line">	  toolbar=&#123;&#123;</span><br><span class="line">		<span class="attr">options</span>: [<span class="string">&#x27;inline&#x27;</span>, <span class="string">&#x27;colorPicker&#x27;</span>],</span><br><span class="line">		<span class="attr">inline</span>: &#123;</span><br><span class="line">		  <span class="attr">options</span>: [<span class="string">&#x27;bold&#x27;</span>],</span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="attr">colorPicker</span>: &#123; <span class="attr">component</span>: <span class="title class_">ColorPic</span> &#125;,</span><br><span class="line">	  &#125;&#125;</span><br><span class="line">	/&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="全局样式调整"><a href="#全局样式调整" class="headerlink" title="全局样式调整"></a>全局样式调整</h1><p>这个富文本的默认行距很大，老板不愿意，可以通过设置全局的样式来控制。<br>新建一个CSS文件</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.public-DraftStyleDefault-block</span> &gt; <span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">1px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>导入并按如下配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cssStyles <span class="keyword">from</span> <span class="string">&#x27;./index.css&#x27;</span>;</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">customBlockStyleFn = <span class="function"><span class="params">contentBlock</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> cssStyles[<span class="string">&#x27;public-DraftStyleDefault-block&#x27;</span>];</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Editor</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  <span class="attr">ref</span>=<span class="string">&#123;this.setDomEditorRef&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  <span class="attr">editorState</span>=<span class="string">&#123;editorState&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  <span class="attr">localization</span>=<span class="string">&#123;&#123;</span> <span class="attr">locale:</span> &#x27;<span class="attr">zh</span>&#x27; &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  <span class="attr">wrapperClassName</span>=<span class="string">&#123;styles.wrapper_class&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  <span class="attr">editorClassName</span>=<span class="string">&#123;styles.editor_class&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  <span class="attr">blockStyleFn</span>=<span class="string">&#123;this.customBlockStyleFn&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  <span class="attr">onEditorStateChange</span>=<span class="string">&#123;this.onEditorStateChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  <span class="attr">onBlur</span>=<span class="string">&#123;this.check&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  <span class="attr">toolbarClassName</span>=<span class="string">&quot;toolbar-class&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  <span class="attr">toolbar</span>=<span class="string">&#123;&#123;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">		<span class="attr">options:</span> [&#x27;<span class="attr">inline</span>&#x27;, &#x27;<span class="attr">colorPicker</span>&#x27;],</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">		<span class="attr">inline:</span> &#123;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">		  <span class="attr">options:</span> [&#x27;<span class="attr">bold</span>&#x27;],</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">		&#125;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">		<span class="attr">colorPicker:</span> &#123; <span class="attr">component:</span> <span class="attr">ColorPic</span> &#125;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	  &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">	/&gt;</span></span></span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+<h1 id="富文本的展示样式调整"><a href="#富文本的展示样式调整" class="headerlink" title="富文本的展示样式调整"></a>富文本的展示样式调整</h1><p>我们编辑后的富文本，最终要通过div展示出来，我用的是antd table去展示的，列表上的可以通过global样式去设置行间距，直接改lineHeight会有重叠问题：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">:global &#123;</span><br><span class="line">  <span class="selector-class">.ant-table-row</span> <span class="selector-tag">p</span> &#123;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="selector-class">.ant-table-row</span> <span class="selector-tag">p</span><span class="selector-pseudo">:last-child</span> &#123;</span><br><span class="line">    <span class="attribute">margin-bottom</span>: <span class="number">0</span>; </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="selector-class">.ant-table-thead</span> &gt; <span class="selector-tag">tr</span> &gt; <span class="selector-tag">th</span>,</span><br><span class="line">  <span class="selector-class">.ant-table-tbody</span> &gt; <span class="selector-tag">tr</span> &gt; <span class="selector-tag">td</span> &#123;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">5px</span> <span class="number">16px</span> <span class="number">5px</span> <span class="number">16px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="selector-class">.ant-table-thead</span> &gt; <span class="selector-tag">tr</span><span class="selector-pseudo">:first</span>-child &gt; <span class="selector-tag">th</span><span class="selector-pseudo">:first</span>-child &#123;</span><br><span class="line">    <span class="attribute">text-align</span>: left;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="selector-class">.ant-table</span> <span class="selector-class">.ant-table-tbody</span> &gt; <span class="selector-tag">tr</span> &gt; <span class="selector-tag">td</span> &#123;</span><br><span class="line">    <span class="attribute">text-align</span>: left;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于富文本的展示，需要用到draftToHtml库，接收的参数是个json，如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> draftToHtml <span class="keyword">from</span> <span class="string">&#x27;draftjs-to-html&#x27;</span>;</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">&lt;div dangerouslySetInnerHTML=&#123;&#123; <span class="attr">__html</span>: <span class="title function_">draftToHtml</span>(<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">editorState</span>) &#125;&#125; /&gt;</span><br></pre></td></tr></table></figure>
+<p>这里我展示时遇到个问题，有时页面刚加载，传给富文本控件的JSON是空的，导致会报错。于是在渲染时做了个catch：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">componentWillMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">        <span class="attr">editorState</span>: <span class="title class_">EditorState</span>.<span class="title function_">createWithContent</span>(</span><br><span class="line">          <span class="title class_">ContentState</span>.<span class="title function_">createFromBlockArray</span>(<span class="title function_">convertFromHTML</span>(<span class="title function_">draftToHtml</span>(<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">editorState</span>)))</span><br><span class="line">        ),</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">        <span class="attr">editorState</span>: <span class="title class_">EditorState</span>.<span class="title function_">createEmpty</span>(),</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="自定义控件封装"><a href="#自定义控件封装" class="headerlink" title="自定义控件封装"></a>自定义控件封装</h1><p>需要的是一个点击后可以进行富文本编辑的控件,<br>控件代码如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* eslint-disable no-return-assign,react/sort-comp */</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Table</span>, <span class="title class_">Input</span>, <span class="title class_">Icon</span>, <span class="title class_">Button</span>, <span class="title class_">Popconfirm</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;antd&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">&#x27;./index.less&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> cssStyles <span class="keyword">from</span> <span class="string">&#x27;./index.css&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Editor</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-draft-wysiwyg&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">EditorState</span>, convertToRaw, convertFromRaw, convertFromHTML, <span class="title class_">ContentState</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;draft-js&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> draftToHtml <span class="keyword">from</span> <span class="string">&#x27;draftjs-to-html&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;react-draft-wysiwyg/dist/react-draft-wysiwyg.css&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ColorPic</span> <span class="keyword">from</span> <span class="string">&#x27;../EditRichCustomToolbar&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> <span class="title class_">EditableRichCell</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="comment">// 构造</span></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">props</span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>(props);</span><br><span class="line">    <span class="comment">// 初始状态</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">      <span class="attr">value</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">value</span>,</span><br><span class="line">      <span class="attr">editorState</span>: <span class="title class_">EditorState</span>.<span class="title function_">createEmpty</span>(),</span><br><span class="line">      <span class="attr">editable</span>: <span class="literal">false</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">setDomEditorRef</span> = <span class="function"><span class="params">ref</span> =&gt;</span> (<span class="variable language_">this</span>.<span class="property">domEditor</span> = ref);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentWillMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">        <span class="attr">editorState</span>: <span class="title class_">EditorState</span>.<span class="title function_">createWithContent</span>(</span><br><span class="line">          <span class="title class_">ContentState</span>.<span class="title function_">createFromBlockArray</span>(<span class="title function_">convertFromHTML</span>(<span class="title function_">draftToHtml</span>(<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">editorState</span>)))</span><br><span class="line">        ),</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">        <span class="attr">editorState</span>: <span class="title class_">EditorState</span>.<span class="title function_">createEmpty</span>(),</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  customBlockStyleFn = <span class="function"><span class="params">contentBlock</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> cssStyles[<span class="string">&#x27;public-DraftStyleDefault-block&#x27;</span>];</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  onEditorStateChange = <span class="function"><span class="params">editorState</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">      editorState,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  check = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">editable</span>: <span class="literal">false</span> &#125;);</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">onChange</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">props</span>.<span class="title function_">onChange</span>(<span class="title function_">convertToRaw</span>(<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">editorState</span>.<span class="title function_">getCurrentContent</span>()));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">  edit = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">editable</span>: <span class="literal">true</span> &#125;, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">domEditor</span>.<span class="title function_">focusEditor</span>();</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; value, editable, editorState &#125; = <span class="variable language_">this</span>.<span class="property">state</span>;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.editable_cell&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;editable ? (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">div</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">style</span>=<span class="string">&#123;&#123;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">border:</span> &#x27;<span class="attr">1px</span> <span class="attr">solid</span> #<span class="attr">d9d9d9</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">borderRadius:</span> <span class="attr">5</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">marginTop:</span> <span class="attr">10</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">backgroundColor:</span> &#x27;#<span class="attr">fff</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Editor</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">ref</span>=<span class="string">&#123;this.setDomEditorRef&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">editorState</span>=<span class="string">&#123;editorState&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">localization</span>=<span class="string">&#123;&#123;</span> <span class="attr">locale:</span> &#x27;<span class="attr">zh</span>&#x27; &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">wrapperClassName</span>=<span class="string">&#123;styles.wrapper_class&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">editorClassName</span>=<span class="string">&#123;styles.editor_class&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">blockStyleFn</span>=<span class="string">&#123;this.customBlockStyleFn&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">onEditorStateChange</span>=<span class="string">&#123;this.onEditorStateChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">onBlur</span>=<span class="string">&#123;this.check&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">toolbarClassName</span>=<span class="string">&quot;toolbar-class&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">toolbar</span>=<span class="string">&#123;&#123;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">options:</span> [&#x27;<span class="attr">inline</span>&#x27;, &#x27;<span class="attr">colorPicker</span>&#x27;],</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">inline:</span> &#123;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">options:</span> [&#x27;<span class="attr">bold</span>&#x27;],</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                &#125;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">colorPicker:</span> &#123; <span class="attr">component:</span> <span class="attr">ColorPic</span> &#125;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            /&gt;</span></span></span><br><span class="line"><span class="language-xml">            &#123;/*<span class="tag">&lt;<span class="name">Icon</span> <span class="attr">type</span>=<span class="string">&quot;check&quot;</span> <span class="attr">onClick</span>=<span class="string">&#123;this.check&#125;</span> /&gt;</span>*/&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ) : (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">div</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">display:</span> &#x27;<span class="attr">flex</span>&#x27;, <span class="attr">height:</span> &#x27;<span class="attr">100</span>%&#x27;, <span class="attr">width:</span> &#x27;<span class="attr">100</span>%&#x27;, <span class="attr">minHeight:</span> <span class="attr">20</span> &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">onDoubleClick</span>=<span class="string">&#123;this.edit&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &gt;</span></span></span><br><span class="line"><span class="language-xml">            &#123;this.props.editorState.length &gt; 1 || this.props.editorState.blocks[0].text ? (</span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">div</span> <span class="attr">dangerouslySetInnerHTML</span>=<span class="string">&#123;&#123;</span> <span class="attr">__html:</span> <span class="attr">draftToHtml</span>(<span class="attr">this.props.editorState</span>) &#125;&#125; /&gt;</span></span></span><br><span class="line"><span class="language-xml">            ) : (</span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">color:</span> &#x27;#<span class="attr">cfcfcf</span>&#x27;, <span class="attr">fontSize:</span> <span class="attr">14</span>, <span class="attr">cursor:</span> &#x27;<span class="attr">pointer</span>&#x27; &#125;&#125;&gt;</span>双击此处编辑<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            )&#125;</span></span><br><span class="line"><span class="language-xml">            &#123;/*<span class="tag">&lt;<span class="name">Icon</span> <span class="attr">type</span>=<span class="string">&quot;edit&quot;</span> <span class="attr">className</span>=<span class="string">&#123;styles.editable_cell_icon&#125;</span> <span class="attr">onClick</span>=<span class="string">&#123;this.edit&#125;</span> /&gt;</span>*/&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        )&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>调用方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">onCellChange = <span class="function">(<span class="params">record, dataIndex, value</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> pointId = record.<span class="property">id</span>;</span><br><span class="line">   ... </span><br><span class="line">  &#125;;</span><br><span class="line">  .</span><br><span class="line">  .</span><br><span class="line">  .</span><br><span class="line">&lt;<span class="title class_">EditableRichCell</span></span><br><span class="line">	  editorState=&#123;record.<span class="property">pointDetail</span>&#125;</span><br><span class="line">	  onChange=&#123;<span class="function"><span class="params">value</span> =&gt;</span> <span class="variable language_">this</span>.<span class="title function_">onCellChange</span>(record, <span class="string">&#x27;xxxx&#x27;</span>, value)&#125;</span><br><span class="line">	/&gt;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/react/" rel="tag"># react</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/06/13/jmeter_http_server/" rel="prev" title="Jmeter 性能测试《一》--APP接口录制">
+      <i class="fa fa-chevron-left"></i> Jmeter 性能测试《一》--APP接口录制
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/06/21/test_text/" rel="next" title="白盒测试基本方法">
+      白盒测试基本方法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">富文本编辑的基本使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B7%A5%E5%85%B7%E6%A0%8F"><span class="nav-number">2.</span> <span class="nav-text">自定义工具栏</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E7%84%A6%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">自动获取焦点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E6%A0%B7%E5%BC%8F%E8%B0%83%E6%95%B4"><span class="nav-number">4.</span> <span class="nav-text">全局样式调整</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%8C%E6%96%87%E6%9C%AC%E7%9A%84%E5%B1%95%E7%A4%BA%E6%A0%B7%E5%BC%8F%E8%B0%83%E6%95%B4"><span class="nav-number">5.</span> <span class="nav-text">富文本的展示样式调整</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%A7%E4%BB%B6%E5%B0%81%E8%A3%85"><span class="nav-number">6.</span> <span class="nav-text">自定义控件封装</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : 'ca1af2014786dafca562a7992a9d5a69',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="测试过程中经常需要用到第三方的邮箱，而且我们的邮箱很多场景只能用一次，但第三方的邮件平台往往都是有注册量限制的。一番琢磨决定自己搭个外网邮局。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自建linux外网邮件服务器">
+<meta property="og:url" content="https://t880216t.github.io/2018/01/03/mailserver/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="测试过程中经常需要用到第三方的邮箱，而且我们的邮箱很多场景只能用一次，但第三方的邮件平台往往都是有注册量限制的。一番琢磨决定自己搭个外网邮局。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-01-03T08:17:48.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.577Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://t880216t.github.io/2018/01/03/mailserver/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>自建linux外网邮件服务器 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2018/01/03/mailserver/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自建linux外网邮件服务器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-01-03 16:17:48" itemprop="dateCreated datePublished" datetime="2018-01-03T16:17:48+08:00">2018-01-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>测试过程中经常需要用到第三方的邮箱，而且我们的邮箱很多场景只能用一次，但第三方的邮件平台往往都是有注册量限制的。一番琢磨决定自己搭个外网邮局。</p>
+<span id="more"></span>
+
+<p>首先吐槽下这个学习过程的曲折，基本的心理过程是：不以为然》一脸懵比》绝望》心如止水。</p>
+<h2 id="不以为然"><a href="#不以为然" class="headerlink" title="不以为然"></a>不以为然</h2><p>之前在windows server上搭过内网foxmail server，但限定的用户数。于是决定在ubuntu上搞个开源无上限的。</p>
+<h2 id="一脸懵比"><a href="#一脸懵比" class="headerlink" title="一脸懵比"></a>一脸懵比</h2><p>一番搜索后，发现各种mail server都是基于postfix等等其它开源工具整合的。本着不折腾的原则尝试docker iredmail server、extmail、iredmail各种整合版本的mail server。</p>
+<h2 id="绝望"><a href="#绝望" class="headerlink" title="绝望"></a>绝望</h2><p>搭好了，但收发不到邮件收发不到邮件收发不到邮件收发不到邮件收发不到邮件收发不到邮件收发不到邮件收发不到邮件</p>
+<h2 id="心如止水"><a href="#心如止水" class="headerlink" title="心如止水"></a>心如止水</h2><p>最终搞定了MX记录，hostname，也明白了，VPS禁用了22端口。但回头看看，只有‘然并卵’一种感觉。</p>
+<h1 id="记录下这个爬坑过程吧"><a href="#记录下这个爬坑过程吧" class="headerlink" title="记录下这个爬坑过程吧"></a>记录下这个爬坑过程吧</h1><p>域名解析配置，我是主机屋的域名，MX记录要等好久的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">解析类型			子域名			指向			TTL		优先级</span><br><span class="line">a			mail			207.246.127.72		120		- -	</span><br><span class="line">mx						mail.orion-c.win	120		10	</span><br><span class="line">a			www			207.246.127.72		120		- -	</span><br><span class="line">a						207.246.127.72		120		- -</span><br></pre></td></tr></table></figure>
+
+<h3 id="extmail"><a href="#extmail" class="headerlink" title="extmail"></a>extmail</h3><p>资源：<br><a target="_blank" rel="noopener" href="http://mirror.extmail.org/iso/emos/EMOS_1.6_x86_64.iso">extmail镜像</a></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/luojianbinfen/article/details/48376063">extmail架设参考</a></p>
+<p>例如我的域名是：orion-c.win<br>那么设置时：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">domain: orion-c.win</span><br><span class="line">hostname: mail.orion-c.win</span><br></pre></td></tr></table></figure>
+<p>如果extmail邮件被APF server或slockd 的RBL拦截</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#vi  /usr/local/slockd/config/plugin.cf</span></span><br><span class="line"></span><br><span class="line">dnsbl_plugin = <span class="built_in">yes</span> 改为 dnsbl_plugin = no</span><br><span class="line"></span><br><span class="line">greylist_plugin = <span class="built_in">yes</span> 改为 greylist_plugin = no</span><br><span class="line"></span><br><span class="line"><span class="comment">#/usr/local/slockd/slockd-init stop</span></span><br><span class="line"><span class="comment">#/usr/local/slockd/slockd-init start</span></span><br><span class="line"><span class="comment">#service postfix restart</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="iredmail"><a href="#iredmail" class="headerlink" title="iredmail"></a>iredmail</h3><p>这是docker lejmr&#x2F;iredmail的架设方式，架设成功，不过我没收到邮件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker run --privileged -p 80:80 -p 443:443 -p 9022:22 --hostname=mail.orion-c.win \</span><br><span class="line">           -e <span class="string">&quot;DOMAIN=orion-c.win&quot;</span> -e <span class="string">&quot;HOSTNAME=mail&quot;</span> \</span><br><span class="line">           -e <span class="string">&quot;MYSQL_ROOT_PASSWORD=xxxxxx&quot;</span> \</span><br><span class="line">           -e <span class="string">&quot;SOGO_WORKERS1&quot;</span> \</span><br><span class="line">           -e <span class="string">&quot;TIMEZONE=Asia/Shanghai&quot;</span> \</span><br><span class="line">           -e <span class="string">&quot;POSTMASTER_PASSWORD=xxxxxx&quot;</span> \</span><br><span class="line">           -e <span class="string">&quot;IREDAPD_PLUGINS=[&#x27;reject_null_sender&#x27;, &#x27;reject_sender_login_mismatch&#x27;, &#x27;greylisting&#x27;, &#x27;throttle&#x27;, &#x27;amavisd_wblist&#x27;, &#x27;sql_alias_access_policy&#x27;]&quot;</span> \</span><br><span class="line">           -v /root/mail/mysql:/var/lib/mysql \</span><br><span class="line">           -v /root/mail/vmail:/var/vmail \</span><br><span class="line">           -v /root/mail/clamav:/var/lib/clamav \</span><br><span class="line">           --name=iredmail lejmr/iredmail:mysql-latest</span><br><span class="line">		   </span><br></pre></td></tr></table></figure>
+
+<p>iredmail 官方版本架设</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wget https://bitbucket.org/zhb/iredmail/downloads/iRedMail-0.9.7.tar.bz2</span></span><br><span class="line"><span class="comment"># sudo apt-get install bzip2</span></span><br><span class="line"><span class="comment"># tar xjf iRedMail-0.9.7.tar.bz2</span></span><br><span class="line"><span class="comment"># cd iRedMail-0.9.7</span></span><br><span class="line"><span class="comment"># bash iRedMail.sh</span></span><br></pre></td></tr></table></figure>
+
+<p>最后友情提醒：<br>1.extmail的镜像虽然可以一条龙跑完，但其是centos 2.6内核自定义的EMOS，顾无法扩展docker等应用，内核升级无果。<br>2.iredmail最低要2G的内存，虽然我是1G也能装上，但那种便秘的感觉，相信你是不会想体会的。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/linux/" rel="tag"># linux</a>
+              <a href="/tags/docker/" rel="tag"># docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/01/01/mysql/" rel="prev" title="Mysql常见问题">
+      <i class="fa fa-chevron-left"></i> Mysql常见问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/01/16/jmeter/" rel="next" title="jmeter录制脚本，传递cookie，循环执行接口">
+      jmeter录制脚本，传递cookie，循环执行接口 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E4%BB%A5%E4%B8%BA%E7%84%B6"><span class="nav-number">1.</span> <span class="nav-text">不以为然</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E8%84%B8%E6%87%B5%E6%AF%94"><span class="nav-number">2.</span> <span class="nav-text">一脸懵比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%9D%E6%9C%9B"><span class="nav-number">3.</span> <span class="nav-text">绝望</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%83%E5%A6%82%E6%AD%A2%E6%B0%B4"><span class="nav-number">4.</span> <span class="nav-text">心如止水</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95%E4%B8%8B%E8%BF%99%E4%B8%AA%E7%88%AC%E5%9D%91%E8%BF%87%E7%A8%8B%E5%90%A7"><span class="nav-number"></span> <span class="nav-text">记录下这个爬坑过程吧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#extmail"><span class="nav-number">0.1.</span> <span class="nav-text">extmail</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iredmail"><span class="nav-number">0.2.</span> <span class="nav-text">iredmail</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : 'aa7b635da8c0d21d4c7347728042f788',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

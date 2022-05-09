@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="用国外的源码编译了魔兽世界的服务器，其中的数据库信息都是英文的，虽然有些老的内容国内已经有成熟的汉化，但用的很多大量的新内容没有人汉化过，手动去翻译真的会疯掉，作为一向喜欢用技术手段‘偷懒’的我必须做点什么。。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对数据库批量翻译">
+<meta property="og:url" content="https://t880216t.github.io/2017/05/16/mysql-tra/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="用国外的源码编译了魔兽世界的服务器，其中的数据库信息都是英文的，虽然有些老的内容国内已经有成熟的汉化，但用的很多大量的新内容没有人汉化过，手动去翻译真的会疯掉，作为一向喜欢用技术手段‘偷懒’的我必须做点什么。。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-16T05:26:15.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.578Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://t880216t.github.io/2017/05/16/mysql-tra/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>对数据库批量翻译 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2017/05/16/mysql-tra/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          对数据库批量翻译
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-16 13:26:15" itemprop="dateCreated datePublished" datetime="2017-05-16T13:26:15+08:00">2017-05-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>用国外的源码编译了魔兽世界的服务器，其中的数据库信息都是英文的，虽然有些老的内容国内已经有成熟的汉化，但用的很多大量的新内容没有人汉化过，手动去翻译真的会疯掉，作为一向喜欢用技术手段‘偷懒’的我必须做点什么。。</p>
+<span id="more"></span>
+
+<p>脚本其实很简单，但用到的知识点较多，主要是python的mysqlDB、urllib、xlwt这几个模块。<br>先说下我的环境：<br>1.python 2.7<br>2.mysql 5.5.6</p>
+<p>下面是主要几个模块的解释，完整代码最后。</p>
+<h3 id="连接数据库获取要翻译的字段"><a href="#连接数据库获取要翻译的字段" class="headerlink" title="连接数据库获取要翻译的字段"></a>连接数据库获取要翻译的字段</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">connectMysql</span>():</span><br><span class="line">    db = MySQLdb.connect(<span class="string">&quot;127.0.0.1&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;database&quot;</span> )</span><br><span class="line">    cursor = db.cursor()</span><br><span class="line">    <span class="keyword">return</span> cursor,db</span><br><span class="line"></span><br><span class="line">cursor,db = connectMysql()</span><br><span class="line">sql = <span class="string">&#x27;select entry,NAME from item_template WHERE entry &gt; 65000 and entry &lt; 70000&#x27;</span></span><br><span class="line">state = cursor.execute(sql)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="借力百度翻译"><a href="#借力百度翻译" class="headerlink" title="借力百度翻译"></a>借力百度翻译</h3><p>我是抓包捞了百度的翻译接口，其实市面还有很多其它第三方翻译，看过有道、Google翻译等，都可以提供有偿的api接口，但花钱玩不是我的作风。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">test_go</span>(<span class="params">entry,name</span>):</span><br><span class="line">    url = <span class="string">&quot;http://fanyi.baidu.com/v2transapi&quot;</span></span><br><span class="line">    values = &#123;</span><br><span class="line">        <span class="string">&quot;from&quot;</span>: <span class="string">&quot;en&quot;</span>,</span><br><span class="line">        <span class="string">&quot;to&quot;</span>: <span class="string">&quot;zh&quot;</span>,</span><br><span class="line">        <span class="string">&quot;query&quot;</span>: <span class="string">&quot;%s&quot;</span>%name,</span><br><span class="line">        <span class="string">&quot;transtype&quot;</span>: <span class="string">&quot;realtime&quot;</span>,</span><br><span class="line">        <span class="string">&quot;simple_means_flag&quot;</span>: <span class="string">&quot;3&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    headers = &#123;<span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 6.1; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0&#x27;</span>,</span><br><span class="line">                <span class="string">&quot;Accept&quot;</span>: <span class="string">&quot;*/*&quot;</span>,</span><br><span class="line">                <span class="string">&quot;Accept-Language&quot;</span>: <span class="string">&quot;zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3&quot;</span>,</span><br><span class="line">                <span class="string">&quot;Referer&quot;</span>: <span class="string">&quot;http://fanyi.baidu.com/?aldtype=16047&quot;</span>,</span><br><span class="line">                <span class="string">&quot;Connection&quot;</span>: <span class="string">&quot;keep-alive&quot;</span>,</span><br><span class="line">                <span class="string">&quot;X-Requested-With&quot;</span>: <span class="string">&quot;XMLHttpRequest&quot;</span>,</span><br><span class="line">                <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/x-www-form-urlencoded; charset=UTF-8&quot;</span>,</span><br><span class="line">                <span class="string">&quot;Cookie&quot;</span>:<span class="string">&quot;BIDUPSID=124ADB9BC1148083F3FD928F0AB6E0D9; PSTM=1463040002; __cfduid=d3ce7d30fd22790d102423710107feb9c1464238819; BDUSS=mlKUU8tRTFOeWhnNXVmVDFmS01JZklWUnUwN09vUk9ObUhzRkxkTjVMYjJxdVZZSVFBQUFBJCQAAAAAAAAAAAEAAACj9i0bdDg4MDIxNnQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPYdvlj2Hb5Yf; BAIDUCUID=++; BAIDUID=0DBED8BF3B45F6955CA3FFDA47BDEF62:FG=1; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; H_PS_PSSID=1462_13551_21125_22746_17001_22917; PSINO=3; locale=zh; Hm_lvt_64ecd82404c51e03dc91cb9e8c025574=1494913008; Hm_lpvt_64ecd82404c51e03dc91cb9e8c025574=1494913008; from_lang_often=%5B%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%2C%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%5D; to_lang_often=%5B%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%2C%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%5D; REALTIME_TRANS_SWITCH=1; FANYI_WORD_SWITCH=1; HISTORY_SWITCH=1; SOUND_SPD_SWITCH=1; SOUND_PREFER_SWITCH=1&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    zhcnData = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    data = urllib.urlencode(values)</span><br><span class="line">    req = urllib2.Request(url, data, headers)</span><br><span class="line">    <span class="comment"># 因为有时会有些莫名其妙的网络错误，加了判断</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        response = urllib2.urlopen(req)</span><br><span class="line">        responsedata = response.read()</span><br><span class="line">        hjosn = json.loads(responsedata)</span><br><span class="line">        dst = hjosn[<span class="string">&#x27;trans_result&#x27;</span>][<span class="string">&#x27;data&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;dst&#x27;</span>]</span><br><span class="line">        zhcnData = dst.encode(<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="built_in">print</span> (<span class="string">&quot;this is error with entry ：%s&quot;</span>%entry)</span><br><span class="line">    <span class="keyword">return</span> zhcnData</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="来个更吊的，直接捞178魔兽数据的资料"><a href="#来个更吊的，直接捞178魔兽数据的资料" class="headerlink" title="来个更吊的，直接捞178魔兽数据的资料"></a>来个更吊的，直接捞178魔兽数据的资料</h3><p>178还没有添加军团物品的数据，但前面的几个版本的汉化还是很到位的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_178</span>(<span class="params">entry</span>):</span><br><span class="line">    url = <span class="string">&quot;http://db.178.com/wow/cn/item/%s.html&quot;</span>%entry</span><br><span class="line">    req = urllib2.Request(url)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        response = urllib2.urlopen(req)</span><br><span class="line">        responsedata = response.read()</span><br><span class="line">        compile_rule = u<span class="string">r&#x27;&lt;title&gt;.*&lt;/title&gt;&#x27;</span></span><br><span class="line">        title_list = re.findall(compile_rule, responsedata)</span><br><span class="line">        <span class="keyword">if</span> title_list == []:</span><br><span class="line">            title = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            title = title_list[<span class="number">0</span>][<span class="number">7</span>:-<span class="number">8</span>]</span><br><span class="line">            title = title.replace(<span class="string">&#x27; - 物品 - NGA178魔兽世界数据库- 德拉诺之王数据库- 简体 6.2&#x27;</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> title</span><br><span class="line"></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="built_in">print</span> (<span class="string">&quot;this is error with entry ：%s&quot;</span>%entry)</span><br></pre></td></tr></table></figure>
+
+<h3 id="把翻译结果写入EXCEL"><a href="#把翻译结果写入EXCEL" class="headerlink" title="把翻译结果写入EXCEL"></a>把翻译结果写入EXCEL</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#新建excel表空间</span></span><br><span class="line">xls = xlwt.Workbook()</span><br><span class="line">sheet = xls.add_sheet(<span class="string">&quot;Sheet1&quot;</span>)</span><br><span class="line">row = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span> cursor.fetchall():</span><br><span class="line">    entry = data[<span class="number">0</span>]</span><br><span class="line">    enNanme =  data[<span class="number">1</span>]</span><br><span class="line">    cnName = test_go(entry,enNanme)</span><br><span class="line">	<span class="comment">#cnName = get_178(entry)</span></span><br><span class="line">    <span class="keyword">if</span> cnName != <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">        sheet.write(row, <span class="number">0</span>, entry)</span><br><span class="line">        sheet.write(row, <span class="number">1</span>, enNanme)</span><br><span class="line">        sheet.write(row, <span class="number">2</span>, cnName.decode(<span class="string">&#x27;utf8&#x27;</span>))</span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span> row,entry,enNanme,cnName</span><br><span class="line"></span><br><span class="line">xls.save(<span class="string">&#x27;translate.xls&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>至此，我们在脚本的同级目录下，得到了一个翻译后的excel，3列数据，entry、enname、cnname，接下来就是用Navicate导入数据中一个新表，然后就是用update的方式去更新我们的外语老表了，</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> a , b <span class="keyword">set</span> a.name<span class="operator">=</span> b.name <span class="keyword">where</span> a.entry <span class="operator">=</span> b.entry;</span><br></pre></td></tr></table></figure>
+
+<p>完整代码如下：translate.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*-coding:utf-8-*-</span></span><br><span class="line">__author__ = <span class="string">&quot;orion-c&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> MySQLdb</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">connectMysql</span>():</span><br><span class="line">    db = MySQLdb.connect(<span class="string">&quot;127&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;database&quot;</span> )</span><br><span class="line">    cursor = db.cursor()</span><br><span class="line">    <span class="keyword">return</span> cursor,db</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_go</span>(<span class="params">entry,name</span>):</span><br><span class="line">    url = <span class="string">&quot;http://fanyi.baidu.com/v2transapi&quot;</span></span><br><span class="line">    values = &#123;</span><br><span class="line">        <span class="string">&quot;from&quot;</span>: <span class="string">&quot;en&quot;</span>,</span><br><span class="line">        <span class="string">&quot;to&quot;</span>: <span class="string">&quot;zh&quot;</span>,</span><br><span class="line">        <span class="string">&quot;query&quot;</span>: <span class="string">&quot;%s&quot;</span>%name,</span><br><span class="line">        <span class="string">&quot;transtype&quot;</span>: <span class="string">&quot;realtime&quot;</span>,</span><br><span class="line">        <span class="string">&quot;simple_means_flag&quot;</span>: <span class="string">&quot;3&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    headers = &#123;<span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 6.1; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0&#x27;</span>,</span><br><span class="line">                <span class="string">&quot;Accept&quot;</span>: <span class="string">&quot;*/*&quot;</span>,</span><br><span class="line">                <span class="string">&quot;Accept-Language&quot;</span>: <span class="string">&quot;zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3&quot;</span>,</span><br><span class="line">                <span class="string">&quot;Referer&quot;</span>: <span class="string">&quot;http://fanyi.baidu.com/?aldtype=16047&quot;</span>,</span><br><span class="line">                <span class="string">&quot;Connection&quot;</span>: <span class="string">&quot;keep-alive&quot;</span>,</span><br><span class="line">                <span class="string">&quot;X-Requested-With&quot;</span>: <span class="string">&quot;XMLHttpRequest&quot;</span>,</span><br><span class="line">                <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/x-www-form-urlencoded; charset=UTF-8&quot;</span>,</span><br><span class="line">                <span class="string">&quot;Cookie&quot;</span>:<span class="string">&quot;BIDUPSID=124ADB9BC1148083F3FD928F0AB6E0D9; PSTM=1463040002; __cfduid=d3ce7d30fd22790d102423710107feb9c1464238819; BDUSS=mlKUU8tRTFOeWhnNXVmVDFmS01JZklWUnUwN09vUk9ObUhzRkxkTjVMYjJxdVZZSVFBQUFBJCQAAAAAAAAAAAEAAACj9i0bdDg4MDIxNnQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPYdvlj2Hb5Yf; BAIDUCUID=++; BAIDUID=0DBED8BF3B45F6955CA3FFDA47BDEF62:FG=1; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; H_PS_PSSID=1462_13551_21125_22746_17001_22917; PSINO=3; locale=zh; Hm_lvt_64ecd82404c51e03dc91cb9e8c025574=1494913008; Hm_lpvt_64ecd82404c51e03dc91cb9e8c025574=1494913008; from_lang_often=%5B%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%2C%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%5D; to_lang_often=%5B%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%2C%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%5D; REALTIME_TRANS_SWITCH=1; FANYI_WORD_SWITCH=1; HISTORY_SWITCH=1; SOUND_SPD_SWITCH=1; SOUND_PREFER_SWITCH=1&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    zhcnData = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    data = urllib.urlencode(values)</span><br><span class="line">    req = urllib2.Request(url, data, headers)</span><br><span class="line">    <span class="comment"># req = urllib2.Request(url)</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        response = urllib2.urlopen(req)</span><br><span class="line">        responsedata = response.read()</span><br><span class="line">        hjosn = json.loads(responsedata)</span><br><span class="line">        dst = hjosn[<span class="string">&#x27;trans_result&#x27;</span>][<span class="string">&#x27;data&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;dst&#x27;</span>]</span><br><span class="line">        zhcnData = dst.encode(<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="built_in">print</span> (<span class="string">&quot;this is error with entry ：%s&quot;</span>%entry)</span><br><span class="line">    <span class="keyword">return</span> zhcnData</span><br><span class="line"></span><br><span class="line">cursor,db = connectMysql()</span><br><span class="line"><span class="comment">#后面的条件自己定义哦</span></span><br><span class="line">sql = <span class="string">&#x27;select entry,NAME from item_template WHERE entry &gt; 70000 and entry &lt; 80000&#x27;</span></span><br><span class="line">state = cursor.execute(sql)</span><br><span class="line"></span><br><span class="line"><span class="comment">#新建excel表空间</span></span><br><span class="line">xls = xlwt.Workbook()</span><br><span class="line">sheet = xls.add_sheet(<span class="string">&quot;Sheet1&quot;</span>)</span><br><span class="line">row = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span> cursor.fetchall():</span><br><span class="line">    entry = data[<span class="number">0</span>]</span><br><span class="line">    enNanme =  data[<span class="number">1</span>]</span><br><span class="line">    cnName = test_go(entry,enNanme)</span><br><span class="line">    <span class="keyword">if</span> cnName != <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">        sheet.write(row, <span class="number">0</span>, entry)</span><br><span class="line">        sheet.write(row, <span class="number">1</span>, enNanme)</span><br><span class="line">        sheet.write(row, <span class="number">2</span>, cnName.decode(<span class="string">&#x27;utf8&#x27;</span>))</span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span> row,entry,enNanme,cnName</span><br><span class="line"></span><br><span class="line">xls.save(<span class="string">&#x27;translate.xls&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/mysql/" rel="tag"># mysql</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/05/03/stu-way/" rel="prev" title="学习方向的确立与前行">
+      <i class="fa fa-chevron-left"></i> 学习方向的确立与前行
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/09/05/jiekoutonji/" rel="next" title="接口访问频率数据统计">
+      接口访问频率数据统计 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93%E8%8E%B7%E5%8F%96%E8%A6%81%E7%BF%BB%E8%AF%91%E7%9A%84%E5%AD%97%E6%AE%B5"><span class="nav-number">1.</span> <span class="nav-text">连接数据库获取要翻译的字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%9F%E5%8A%9B%E7%99%BE%E5%BA%A6%E7%BF%BB%E8%AF%91"><span class="nav-number">2.</span> <span class="nav-text">借力百度翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A5%E4%B8%AA%E6%9B%B4%E5%90%8A%E7%9A%84%EF%BC%8C%E7%9B%B4%E6%8E%A5%E6%8D%9E178%E9%AD%94%E5%85%BD%E6%95%B0%E6%8D%AE%E7%9A%84%E8%B5%84%E6%96%99"><span class="nav-number">3.</span> <span class="nav-text">来个更吊的，直接捞178魔兽数据的资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%8A%E7%BF%BB%E8%AF%91%E7%BB%93%E6%9E%9C%E5%86%99%E5%85%A5EXCEL"><span class="nav-number">4.</span> <span class="nav-text">把翻译结果写入EXCEL</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '6b27b10a0ee078177d8db59eb25548c6',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

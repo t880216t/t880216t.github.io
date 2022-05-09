@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Ant Design Pro 是蚂蚁金服团队在 Ant Design 的设计规范与组件库基础上推出的一套 React 实现的企业级中后台前端&#x2F;设计解决方案">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ant Design Pro 使用">
+<meta property="og:url" content="https://t880216t.github.io/2018/04/17/ant_design_pro/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="Ant Design Pro 是蚂蚁金服团队在 Ant Design 的设计规范与组件库基础上推出的一套 React 实现的企业级中后台前端&#x2F;设计解决方案">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gw.alipayobjects.com/zos/rmsportal/DaIsSQRbNkwOXbMDhqEx.png">
+<meta property="og:image" content="https://gw.alipayobjects.com/zos/rmsportal/psqyFTiRoXQeaNZdjppA.png">
+<meta property="article:published_time" content="2018-04-17T15:50:12.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.572Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="react">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gw.alipayobjects.com/zos/rmsportal/DaIsSQRbNkwOXbMDhqEx.png">
+
+<link rel="canonical" href="https://t880216t.github.io/2018/04/17/ant_design_pro/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Ant Design Pro 使用 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2018/04/17/ant_design_pro/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ant Design Pro 使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-04-17 23:50:12" itemprop="dateCreated datePublished" datetime="2018-04-17T23:50:12+08:00">2018-04-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Ant Design Pro 是蚂蚁金服团队在 Ant Design 的设计规范与组件库基础上推出的一套 React 实现的企业级中后台前端&#x2F;设计解决方案</p>
+<span id="more"></span>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="方式一：直接-clone-git-仓库"><a href="#方式一：直接-clone-git-仓库" class="headerlink" title="方式一：直接 clone git 仓库"></a>方式一：直接 clone git 仓库</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git clone --depth=<span class="number">1</span> <span class="attr">https</span>:<span class="comment">//github.com/ant-design/ant-design-pro.git my-project</span></span><br><span class="line">$ cd my-project</span><br></pre></td></tr></table></figure>
+
+<h2 id="方式二：使用npm命令行工具"><a href="#方式二：使用npm命令行工具" class="headerlink" title="方式二：使用npm命令行工具"></a>方式二：使用npm命令行工具</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ npm install ant-design-pro-cli -g</span><br><span class="line">$ mkdir my-project &amp;&amp; cd my-project</span><br><span class="line">$ pro <span class="keyword">new</span>  # 安装脚手架</span><br></pre></td></tr></table></figure>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>我们已经为你生成了一个完整的开发框架，提供了涵盖中后台开发的各类功能和坑位，下面是整个项目的目录结构。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">├── mock                     <span class="comment"># 本地模拟数据</span></span><br><span class="line">├── public</span><br><span class="line">│   └── favicon.ico          <span class="comment"># Favicon</span></span><br><span class="line">├── src</span><br><span class="line">│   ├── assets               <span class="comment"># 本地静态资源</span></span><br><span class="line">│   ├── common               <span class="comment"># 应用公用配置，如导航信息</span></span><br><span class="line">│   ├── components           <span class="comment"># 业务通用组件</span></span><br><span class="line">│   ├── e2e                  <span class="comment"># 集成测试用例</span></span><br><span class="line">│   ├── layouts              <span class="comment"># 通用布局</span></span><br><span class="line">│   ├── models               <span class="comment"># dva model</span></span><br><span class="line">│   ├── routes               <span class="comment"># 业务页面入口和常用模板</span></span><br><span class="line">│   ├── services             <span class="comment"># 后台接口服务</span></span><br><span class="line">│   ├── utils                <span class="comment"># 工具库</span></span><br><span class="line">│   ├── g2.js                <span class="comment"># 可视化图形配置</span></span><br><span class="line">│   ├── theme.js             <span class="comment"># 主题配置</span></span><br><span class="line">│   ├── index.ejs            <span class="comment"># HTML 入口模板</span></span><br><span class="line">│   ├── index.js             <span class="comment"># 应用入口</span></span><br><span class="line">│   ├── index.less           <span class="comment"># 全局样式</span></span><br><span class="line">│   └── router.js            <span class="comment"># 路由入口</span></span><br><span class="line">├── tests                    <span class="comment"># 测试工具</span></span><br><span class="line">├── README.md</span><br><span class="line">└── package.json</span><br></pre></td></tr></table></figure>
+
+<h2 id="本地开发"><a href="#本地开发" class="headerlink" title="本地开发"></a>本地开发</h2><p>安装依赖。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<p>如果网络状况不佳，可以使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cnpm install</span><br></pre></td></tr></table></figure>
+<img src="https://gw.alipayobjects.com/zos/rmsportal/DaIsSQRbNkwOXbMDhqEx.png" width="700" />
+
+<p>启动完成后会自动打开浏览器访问 <a target="_blank" rel="noopener" href="http://localhost:8000/">http://localhost:8000</a>，你看到下面的页面就代表成功了。</p>
+<img src="https://gw.alipayobjects.com/zos/rmsportal/psqyFTiRoXQeaNZdjppA.png" width="700" alt="首页截图" />
+
+<h1 id="加页面"><a href="#加页面" class="headerlink" title="加页面"></a>加页面</h1><h2 id="新建菜单栏标签"><a href="#新建菜单栏标签" class="headerlink" title="新建菜单栏标签"></a>新建菜单栏标签</h2><p>在\src\common\menu.js中加入我们的新标签。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;dashboard&#x27;</span>,</span><br><span class="line">    <span class="attr">icon</span>: <span class="string">&#x27;dashboard&#x27;</span>,</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;dashboard&#x27;</span>,</span><br><span class="line">    <span class="attr">children</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;分析页&#x27;</span>,</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&#x27;analysis&#x27;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;监控页&#x27;</span>,</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&#x27;monitor&#x27;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;工作台&#x27;</span>,</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&#x27;workplace&#x27;</span>,</span><br><span class="line">        <span class="comment">// hideInBreadcrumb: true,</span></span><br><span class="line">        <span class="comment">// hideInMenu: true,</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;测试页&#x27;</span>,</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&#x27;test&#x27;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<h2 id="新建页面"><a href="#新建页面" class="headerlink" title="新建页面"></a>新建页面</h2><p>在src&#x2F;routes 下新建 pages文件夹，里面再新建页面。newPage.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>,&#123;<span class="title class_">PureComponent</span>&#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> <span class="title class_">Workplace</span> <span class="keyword">extends</span> <span class="title class_ inherited__">PureComponent</span>&#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">view</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="新建该页面的路由"><a href="#新建该页面的路由" class="headerlink" title="新建该页面的路由"></a>新建该页面的路由</h2><p>在\src\common\router.js的getRouterData中加入我们的页面。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;/&#x27;</span>: &#123;</span><br><span class="line">  <span class="attr">component</span>: <span class="title function_">dynamicWrapper</span>(app, [<span class="string">&#x27;user&#x27;</span>, <span class="string">&#x27;login&#x27;</span>], <span class="function">() =&gt;</span> <span class="title function_">import</span>(<span class="string">&#x27;../layouts/BasicLayout&#x27;</span>)),</span><br><span class="line">&#125;,</span><br><span class="line"><span class="string">&#x27;/dashboard/analysis&#x27;</span>: &#123;</span><br><span class="line">  <span class="attr">component</span>: <span class="title function_">dynamicWrapper</span>(app, [<span class="string">&#x27;chart&#x27;</span>], <span class="function">() =&gt;</span> <span class="title function_">import</span>(<span class="string">&#x27;../routes/Dashboard/Analysis&#x27;</span>)),</span><br><span class="line">&#125;,</span><br><span class="line"><span class="string">&#x27;/dashboard/monitor&#x27;</span>: &#123;</span><br><span class="line">  <span class="attr">component</span>: <span class="title function_">dynamicWrapper</span>(app, [<span class="string">&#x27;monitor&#x27;</span>], <span class="function">() =&gt;</span> <span class="title function_">import</span>(<span class="string">&#x27;../routes/Dashboard/Monitor&#x27;</span>)),</span><br><span class="line">&#125;,</span><br><span class="line"><span class="string">&#x27;/dashboard/test&#x27;</span>: &#123;</span><br><span class="line">  <span class="attr">component</span>: <span class="title function_">dynamicWrapper</span>(app, [], <span class="function">() =&gt;</span> <span class="title function_">import</span>(<span class="string">&#x27;../routes/pages/newPage&#x27;</span>)),</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>至此，我们的页面已经可以展示了。</p>
+<h1 id="组件化模块"><a href="#组件化模块" class="headerlink" title="组件化模块"></a>组件化模块</h1><p>实际使用时如果控件重复我们可以写到组件里调用</p>
+<h2 id="新建组件"><a href="#新建组件" class="headerlink" title="新建组件"></a>新建组件</h2><p>如下：<br>在src&#x2F;components下新建一个 大写的文件夹名ImageWrapper，里面新建文件index.js  index.less<br>index.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">&#x27;./index.less&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (&#123;src,desc,style&#125;)=&gt;(</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">styles</span>=<span class="string">&#123;style&#125;</span> <span class="attr">className</span>=<span class="string">&#123;styles.imageWrapper&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;src&#125;</span> <span class="attr">alt</span>=<span class="string">&quot;desc&quot;</span> <span class="attr">className</span>=<span class="string">&#123;styles.img&#125;/</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &#123;desc &amp;&amp; <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.desc&#125;</span>&gt;</span>&#123;desc&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>index.less</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.imageWrapper</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">20px</span> <span class="number">8px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#f2f4f5</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">400px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> auto;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.img</span> &#123;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">  <span class="attribute">max-width</span>: <span class="built_in">calc</span>(<span class="number">100%</span> - <span class="number">32px</span>);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">2.4em</span> <span class="number">1em</span>;</span><br><span class="line">  <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">8px</span> <span class="number">20px</span> <span class="built_in">rgba</span>(<span class="number">143</span>, <span class="number">168</span>, <span class="number">191</span>, <span class="number">0.35</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="调用组件"><a href="#调用组件" class="headerlink" title="调用组件"></a>调用组件</h2><p>在我之前新建的newPage.js中调用我们的组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>,&#123;<span class="title class_">PureComponent</span>&#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ImageWrapper</span> <span class="keyword">from</span> <span class="string">&#x27;../../components/ImageWrapper&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> <span class="title class_">Workplace</span> <span class="keyword">extends</span> <span class="title class_ inherited__">PureComponent</span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">ImageWrapper</span> <span class="attr">src</span>=<span class="string">&quot;https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1523969861626&amp;di=514baab40d332e00c2eee8a5717a652a&amp;imgtype=0&amp;src=http%3A%2F%2Ftv06.tgbusdata.cn%2Fv2%2Fthumb%2Fjpg%2FMDA5QSw1ODAsMTAwLDQsMywxLC0xLDAscms1MA%3D%3D%2Fu%2Fwow.tgbus.com%2FUploadFiles_2396%2F201206%2F2012060410191894.jpg&quot;</span> <span class="attr">desc</span>=<span class="string">&quot;测试数据&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ImageWrapper</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">view</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>好了，调用正常吧。</p>
+<h1 id="数据交互"><a href="#数据交互" class="headerlink" title="数据交互"></a>数据交互</h1><p>Ant Design Pro 是一套基于 React 技术栈的单页面应用，提供的是前端代码和本地模拟数据的开发模式，<br>通过 Restful API 的形式和任何技术栈的服务端应用一起工作。</p>
+<h2 id="前端请求流程"><a href="#前端请求流程" class="headerlink" title="前端请求流程"></a>前端请求流程</h2><p>在 Ant Design Pro 中，一个完整的前端 UI 交互到服务端处理流程是这样的：</p>
+<ol>
+<li>UI 组件交互操作；</li>
+<li>调用 model 的 effect；</li>
+<li>调用统一管理的 service 请求函数；</li>
+<li>使用封装的 request.js 发送请求；</li>
+<li>获取服务端返回；</li>
+<li>然后调用 reducer 改变 state；</li>
+<li>更新 model。</li>
+</ol>
+<p>从上面的流程可以看出，为了方便管理维护，统一的请求处理都放在 <code>services</code> 文件夹中，并且一般按照 model 维度进行拆分文件，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">services/</span><br><span class="line">  user.js</span><br><span class="line">  api.js</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>utils/request.js</code> 是基于 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/es/docs/Web/API/Fetch_API/Using_Fetch">fetch</a> 的封装，便于统一处理 POST，GET 等请求参数，请求头，以及错误提示信息等。具体可以参看 <a target="_blank" rel="noopener" href="https://github.com/ant-design/ant-design-pro/blob/master/src/utils/request.js">request.js</a>。</p>
+<p>Ant Design Pro 直接沿用了 roadhog 中自带的 mock 功能，方便本地快速开发调试。<br>还是以之前的测试页面为例，我们为它新建一个测试请求：</p>
+<h2 id="新建一个dva-model"><a href="#新建一个dva-model" class="headerlink" title="新建一个dva model"></a>新建一个dva model</h2><p>在src&#x2F;models 新建文件testdata.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; queryProjectList&#125; <span class="keyword">from</span> <span class="string">&#x27;../services/api&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">namespace</span>: <span class="string">&#x27;testdata&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  <span class="attr">state</span>: &#123;</span><br><span class="line">    <span class="attr">testdata</span>:&#123;&#125;,</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="attr">effects</span>: &#123;</span><br><span class="line">    *<span class="title function_">fetchProject</span>(<span class="params">_, &#123; call, put &#125;</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> response = <span class="keyword">yield</span> <span class="title function_">call</span>(queryProjectList);</span><br><span class="line">      <span class="keyword">yield</span> <span class="title function_">put</span>(&#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&#x27;saveProject&#x27;</span>,</span><br><span class="line">        <span class="attr">payload</span>: response,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="attr">reducers</span>: &#123;</span><br><span class="line">    <span class="title function_">saveProject</span>(<span class="params">state, action</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        ...state,</span><br><span class="line">        <span class="attr">testdata</span>: action.<span class="property">payload</span>,</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中queryProjectList是我们真正要发的请求方法</p>
+<h2 id="新建请求方法"><a href="#新建请求方法" class="headerlink" title="新建请求方法"></a>新建请求方法</h2><p>在src&#x2F;services&#x2F;api.js中新建方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">queryProjectList</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">request</span>(<span class="string">&#x27;/api/project&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>request(‘&#x2F;api&#x2F;project’);就是实际的请求路径，是在本地调试代理下，所以请求最终会被mock到.roadhogrc.mock.js</p>
+<h2 id="新建测试请求数据"><a href="#新建测试请求数据" class="headerlink" title="新建测试请求数据"></a>新建测试请求数据</h2><p>在.roadhogrc.mock.js中新建</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;GET /api/project&#x27;</span> : &#123;</span><br><span class="line">        <span class="attr">code</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="attr">content</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="string">&quot;create_time&quot;</span>: <span class="string">&quot;Tue, 12 Dec 2017 11:27:40 GMT&quot;</span>,</span><br><span class="line">            <span class="string">&quot;create_user&quot;</span>: <span class="string">&quot;test1&quot;</span>,</span><br><span class="line">            <span class="string">&quot;entry&quot;</span>: <span class="number">6</span>,</span><br><span class="line">            <span class="string">&quot;project_key&quot;</span>: <span class="string">&quot;test1_app&quot;</span></span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="string">&quot;create_time&quot;</span>: <span class="string">&quot;Tue, 12 Dec 2017 11:28:00 GMT&quot;</span>,</span><br><span class="line">            <span class="string">&quot;create_user&quot;</span>: <span class="string">&quot;test2&quot;</span>,</span><br><span class="line">            <span class="string">&quot;entry&quot;</span>: <span class="number">7</span>,</span><br><span class="line">            <span class="string">&quot;project_key&quot;</span>: <span class="string">&quot;test2_app&quot;</span></span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="页面发请求"><a href="#页面发请求" class="headerlink" title="页面发请求"></a>页面发请求</h2><p>回到 之前新建的newPage.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>,&#123;<span class="title class_">PureComponent</span>&#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ImageWrapper</span> <span class="keyword">from</span> <span class="string">&#x27;../../components/ImageWrapper&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">&#x27;dva&#x27;</span>;</span><br><span class="line"></span><br><span class="line">@<span class="title function_">connect</span>(<span class="function">(<span class="params">&#123; testdata,loading &#125;</span>) =&gt;</span> (&#123;</span><br><span class="line">  testdata,</span><br><span class="line">  <span class="attr">loading</span>: loading.<span class="property">effects</span>[<span class="string">&#x27;project/fetchProject&#x27;</span>],</span><br><span class="line">&#125;))</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> <span class="title class_">Workplace</span> <span class="keyword">extends</span> <span class="title class_ inherited__">PureComponent</span>&#123;</span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; dispatch &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line">    <span class="title function_">dispatch</span>(&#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="string">&#x27;testdata/fetchProject&#x27;</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; testdata,loading &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">view</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">ImageWrapper</span> <span class="attr">src</span>=<span class="string">&quot;https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1523969861626&amp;di=514baab40d332e00c2eee8a5717a652a&amp;imgtype=0&amp;src=http%3A%2F%2Ftv06.tgbusdata.cn%2Fv2%2Fthumb%2Fjpg%2FMDA5QSw1ODAsMTAwLDQsMywxLC0xLDAscms1MA%3D%3D%2Fu%2Fwow.tgbus.com%2FUploadFiles_2396%2F201206%2F2012060410191894.jpg&quot;</span> <span class="attr">desc</span>=<span class="string">&quot;测试数据&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ImageWrapper</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;testdata.testdata.content[0].create_user&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">view</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>@connect 装饰器<br>首先的组件写法中调用了 dva 所封装的 react-redux 的 @connect 装饰器，用来接收绑定的 list 这个 model 对应的 redux store。注意到这里的装饰器实际除了 app.state.testdata以外还实际接收 app.state.loading 作为参数，这个 loading 的来源是 src&#x2F;index.js 中调用的 dva-loading 2 这个插件。它返回的信息包含了 global、model 和 effect 的异步加载完成情况。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/react/" rel="tag"># react</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/04/08/react_flask_cors/" rel="prev" title="fetch + flask跨域请求带cookie">
+      <i class="fa fa-chevron-left"></i> fetch + flask跨域请求带cookie
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/04/28/nginx_ssl/" rel="next" title="Nginx 配置 ssl 证书，并设置http强跳https">
+      Nginx 配置 ssl 证书，并设置http强跳https <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E7%9B%B4%E6%8E%A5-clone-git-%E4%BB%93%E5%BA%93"><span class="nav-number">1.1.</span> <span class="nav-text">方式一：直接 clone git 仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E4%BD%BF%E7%94%A8npm%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7"><span class="nav-number">1.2.</span> <span class="nav-text">方式二：使用npm命令行工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91"><span class="nav-number">1.4.</span> <span class="nav-text">本地开发</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A0%E9%A1%B5%E9%9D%A2"><span class="nav-number">2.</span> <span class="nav-text">加页面</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E8%8F%9C%E5%8D%95%E6%A0%8F%E6%A0%87%E7%AD%BE"><span class="nav-number">2.1.</span> <span class="nav-text">新建菜单栏标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E9%A1%B5%E9%9D%A2"><span class="nav-number">2.2.</span> <span class="nav-text">新建页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E8%AF%A5%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%B7%AF%E7%94%B1"><span class="nav-number">2.3.</span> <span class="nav-text">新建该页面的路由</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E6%A8%A1%E5%9D%97"><span class="nav-number">3.</span> <span class="nav-text">组件化模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E7%BB%84%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">新建组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">调用组件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92"><span class="nav-number">4.</span> <span class="nav-text">数据交互</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E8%AF%B7%E6%B1%82%E6%B5%81%E7%A8%8B"><span class="nav-number">4.1.</span> <span class="nav-text">前端请求流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AAdva-model"><span class="nav-number">4.2.</span> <span class="nav-text">新建一个dva model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95"><span class="nav-number">4.3.</span> <span class="nav-text">新建请求方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E6%B5%8B%E8%AF%95%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE"><span class="nav-number">4.4.</span> <span class="nav-text">新建测试请求数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E5%8F%91%E8%AF%B7%E6%B1%82"><span class="nav-number">4.5.</span> <span class="nav-text">页面发请求</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : 'af3f3158119d984c92235589adde41f4',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

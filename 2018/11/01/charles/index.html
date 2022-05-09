@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Charles是一款http代理工具，同类的软件有wireshark,fiddler,burp suite。各有侧重点不同，但核心的代理功能设置基本类似。该软件是用Java写的，能够在Windows，Mac，Linux上使用。因其界面简洁、功能齐全在作者一直习惯用这款工具，下面就使用的各方面做个简单的介绍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="360度玩转charles">
+<meta property="og:url" content="https://t880216t.github.io/2018/11/01/charles/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="Charles是一款http代理工具，同类的软件有wireshark,fiddler,burp suite。各有侧重点不同，但核心的代理功能设置基本类似。该软件是用Java写的，能够在Windows，Mac，Linux上使用。因其界面简洁、功能齐全在作者一直习惯用这款工具，下面就使用的各方面做个简单的介绍。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/2ecce10a-a15f-464c-9dca-4d7a602b1d61.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/0d845863-0cf7-4336-ba5b-7be264dc0b94.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/0da0f1aa-aacc-41c3-aee3-d58b74e51099.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/b91daf35-30ee-4e4a-80ad-b01235337c13.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/c50fc820-53a8-4399-ad22-900426cb3427.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/88fa4455-d51f-49a2-a392-c13cb591513a.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/87c3c163-7fbe-4748-a6b6-12c5eb32483f.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/c99986bb-008c-4020-900b-dd7fb0ec5989.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/c8426a44-5681-4601-9e42-ef98f9e4b35c.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/43721203-fd4f-4e68-b677-329869725aab.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/393b92e9-6af7-4c26-8900-5539c3b4ada6.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/f5c53533-c05f-4e8b-b9a9-957d77eff706.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/ceb50481-c80e-4723-9c78-583a8a60b699.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/b35fa854-867e-4a68-a2ae-25660272f0bd.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/6de18117-51db-471e-9b5c-6a204bf3926f.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/cd7a03e8-a4b4-498f-a1b6-88d13c9049b5.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/6f938352-b85b-408c-829a-44f142cb1c5d.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/2099ef9d-523f-4595-b0ca-fe8693d60115.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/cbcbb0b8-26a2-45cf-9b69-355421c93c7d.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/5f63e9f0-4bed-4c30-80f6-68ed96091e1d.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/cf8c59dc-2f83-4d88-8657-fdce13e66912.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/eb6e5a78-c09f-4bb3-af5d-13359c4dc554.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/5081479d-a3bd-4801-b7c1-3e96f0c028cc.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/ce1f8483-c549-4f18-b3c3-a4c247dad338.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/b55ad345-ae11-424f-926c-8880b13c1d8f.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/61c435fd-be36-4dcb-8488-f47294af96bf.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/5e399517-29bb-4794-ae2a-be3fba416572.png!large">
+<meta property="article:published_time" content="2018-11-01T15:50:12.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.573Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="charles">
+<meta property="article:tag" content="安全测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://testerhome.com/uploads/photo/2018/2ecce10a-a15f-464c-9dca-4d7a602b1d61.png!large">
+
+<link rel="canonical" href="https://t880216t.github.io/2018/11/01/charles/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>360度玩转charles | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2018/11/01/charles/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          360度玩转charles
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-11-01 23:50:12" itemprop="dateCreated datePublished" datetime="2018-11-01T23:50:12+08:00">2018-11-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a target="_blank" rel="noopener" href="https://www.charlesproxy.com/">Charles</a>是一款http代理工具，同类的软件有wireshark,fiddler,burp suite。各有侧重点不同，但核心的代理功能设置基本类似。该软件是用Java写的，能够在Windows，Mac，Linux上使用。因其界面简洁、功能齐全在作者一直习惯用这款工具，下面就使用的各方面做个简单的介绍。</p>
+<span id="more"></span>
+
+<h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h2><p>下载官方的安装包<a target="_blank" rel="noopener" href="https://www.charlesproxy.com/download/">Charles download</a>，这个是官方最新收费版本，不花钱也能用只是有部分限制。<br>安装后我们需要对PC做个简单的配置<br><img src="https://testerhome.com/uploads/photo/2018/2ecce10a-a15f-464c-9dca-4d7a602b1d61.png!large"></p>
+<p>如下：</p>
+<p>1.代理端口设置：（这个是可以根据需要设置默认8888）<br><img src="https://testerhome.com/uploads/photo/2018/0d845863-0cf7-4336-ba5b-7be264dc0b94.png!large"></p>
+<p>2.允许抓包的ssl域名设置：（下图是全匹配配置，看需要可以改成指定）<br><img src="https://testerhome.com/uploads/photo/2018/0da0f1aa-aacc-41c3-aee3-d58b74e51099.png!large"></p>
+<p>3.允许代理的设备ip设置：（这里默认是空的，当有远端设备代理接入时会弹窗是否允许，如图设置会允许所有设备不用再手动允许）<br><img src="https://testerhome.com/uploads/photo/2018/b91daf35-30ee-4e4a-80ad-b01235337c13.png!large"></p>
+<p>4.charles本身设置完了，我们还需要确认防火墙是否允许该端口的出入数据，这里可以配置指定端口的出入站规则，也可以指定软件的出入站，如下图：<br><img src="https://testerhome.com/uploads/photo/2018/c50fc820-53a8-4399-ad22-900426cb3427.png!large"></p>
+<h2 id="2-抓包PC"><a href="#2-抓包PC" class="headerlink" title="2.抓包PC"></a>2.抓包PC</h2><p>对于PC端的抓包charles默认会抓的IE的数据，可以把Proxy &gt; Windows Proxy 的勾去掉。<br>这里推荐使用<a target="_blank" rel="noopener" href="http://www.firefox.com.cn/">firefox</a>浏览器来抓包，因为它自带的证书管理，可以免去很烦人的证书信任。<br>但这里还是要做个简单的证书配置：</p>
+<blockquote>
+<h4 id="1-导出证书"><a href="#1-导出证书" class="headerlink" title="1.导出证书"></a>1.导出证书</h4><p><img src="https://testerhome.com/uploads/photo/2018/88fa4455-d51f-49a2-a392-c13cb591513a.png!large"><br><img src="https://testerhome.com/uploads/photo/2018/87c3c163-7fbe-4748-a6b6-12c5eb32483f.png!large"></p>
+</blockquote>
+<blockquote>
+<h4 id="2-导入火狐证书管理器"><a href="#2-导入火狐证书管理器" class="headerlink" title="2.导入火狐证书管理器"></a>2.导入火狐证书管理器</h4><p><img src="https://testerhome.com/uploads/photo/2018/c99986bb-008c-4020-900b-dd7fb0ec5989.png!large"></p>
+</blockquote>
+<blockquote>
+<h4 id="3-设置浏览器代理为"><a href="#3-设置浏览器代理为" class="headerlink" title="3.设置浏览器代理为"></a>3.设置浏览器代理为</h4><p>我这里使用的火狐的插件FoxyProxy Basic ，如果没有设置IE的代理为127.0.0.1:8888也可以，这样是设置后浏览器的数据就是走的charles代理，如果本地没有指定host配置，这时的所请求到的版本和PC网络一致。关于要对应特定代理验收的版本，请看后面的介绍。<br><img src="https://testerhome.com/uploads/photo/2018/c8426a44-5681-4601-9e42-ef98f9e4b35c.png!large"></p>
+</blockquote>
+<h2 id="3-抓包APP"><a href="#3-抓包APP" class="headerlink" title="3.抓包APP"></a>3.抓包APP</h2><p>对于APP的抓包，IOS和Android的配置略有不同：<br>通用的要求是：<font color=#DC143C >PC和移动设备必须要能够ping通</font></p>
+<blockquote>
+<h3 id="IOS"><a href="#IOS" class="headerlink" title="IOS"></a>IOS</h3><p>1.设置代理到起了Charles的主机。（点击wifi名后面的 ！进入设置页面如下）<br><img src="https://testerhome.com/uploads/photo/2018/43721203-fd4f-4e68-b677-329869725aab.png!large"></p>
+</blockquote>
+<p>2.Safari访问：<a target="_blank" rel="noopener" href="http://chls.pro/ssl">http://chls.pro/ssl</a> 允许并安装证书<br><img src="https://testerhome.com/uploads/photo/2018/393b92e9-6af7-4c26-8900-5539c3b4ada6.png!large"></p>
+<p>3.进入设置 &gt; 通用 &gt; 关于本机 &gt; 证书信任设置（拉到最底下）<br><img src="https://testerhome.com/uploads/photo/2018/f5c53533-c05f-4e8b-b9a9-957d77eff706.png!large"></p>
+<p>此时设备的请求应该都已到charles中可以看到了。</p>
+<blockquote>
+<h3 id="Android"><a href="#Android" class="headerlink" title="Android"></a>Android</h3><p>这里要注意下，安卓6.0-7.0的版本及部分8.0版本的手机，https的证书信任需修改APP源码，这里不做介绍。</p>
+</blockquote>
+<p>1.设置代理到起了Charles的主机。（以三星为例：长按wifi名，进入高级设置，代理模式改为手动）<br><img src="https://testerhome.com/uploads/photo/2018/ceb50481-c80e-4723-9c78-583a8a60b699.png!large"></p>
+<p>2.自带浏览器访问：<a target="_blank" rel="noopener" href="http://chls.pro/ssl">http://chls.pro/ssl</a> 设置任意名称，（这里会要求设置解锁密码）<br><img src="https://testerhome.com/uploads/photo/2018/b35fa854-867e-4a68-a2ae-25660272f0bd.png!large"></p>
+<p>3.如果部分手机，无法通过上面的访问自动安装证书。可以通过设置里“从设备安装证书”，具体位置视厂商不同，一般在安全隐私相关设置中。<br><img src="https://testerhome.com/uploads/photo/2018/6de18117-51db-471e-9b5c-6a204bf3926f.png!large"></p>
+<p>下面介绍的是一些开发测试过程中常用的招式</p>
+<h2 id="4-请求跳转"><a href="#4-请求跳转" class="headerlink" title="4.请求跳转"></a>4.请求跳转</h2><p>应用场景：1.开发联调 2.内网测试</p>
+<p> 如APP打包的是请求到192.168.3.4:80，但我需要请求到指定19.168.66.66:6005的机器上。</p>
+<p>在Tools &gt; Map Remote Settings 中 Add一个跳转并勾选启用，就可以了。（这里也可以直接右键已经发出的请求，点击Map Remote…设置）<br><img src="https://testerhome.com/uploads/photo/2018/cd7a03e8-a4b4-498f-a1b6-88d13c9049b5.png!large"></p>
+<p> 这里有个小技巧，就是<font color=#0000FF>我们在测试部分内网环境的触屏页面时，即使装了https证书，还是无法获取正常的数据。</font>这是由于内网环境https证书配置异常导致的，我们可以把这个https的请求转成http。<font color=#0000FF>如果该域名设置了强制使用https可以看到我们的请求会无限重定向，此时关闭https转http的设置就可以正常请求到数据了</font></p>
+<h2 id="5-断点调试"><a href="#5-断点调试" class="headerlink" title="5.断点调试"></a>5.断点调试</h2><p>应用场景：1.异常数据调试 2.安全测试 3.请求头修改模拟IP</p>
+<p>我们在接口调试时，有些数据无法通过前端流程去生成，此时可以通过断点调试的方式强行加戏。如ID为3456的公司不再搜索列表，我们可以修改请求返回的数据给它加进去。</p>
+<p>第一次我们需要正常请求一次，右键该请求添加断点，再次请求时会弹出框，2次分别为request和response，按需求修改即可。（部分客户端会有请求超时限制，手速跟不上可以把需要的返回值在文本编辑器中编辑好，复制进来即可）<br><img src="https://testerhome.com/uploads/photo/2018/6f938352-b85b-408c-829a-44f142cb1c5d.png!large"><br><img src="https://testerhome.com/uploads/photo/2018/2099ef9d-523f-4595-b0ca-fe8693d60115.png!large"><br><img src="https://testerhome.com/uploads/photo/2018/cbcbb0b8-26a2-45cf-9b69-355421c93c7d.png!large"><br><img src="https://testerhome.com/uploads/photo/2018/5f63e9f0-4bed-4c30-80f6-68ed96091e1d.png!large"></p>
+<h2 id="6-代理配置"><a href="#6-代理配置" class="headerlink" title="6.代理配置"></a>6.代理配置</h2><p>应用场景：1.灰度验收 2.组合抓包</p>
+<p>我们可以指定charles需要走的网络请求代理，通常在指定运营商灰度，或者内容上线版本模拟环境时可以这么去做。同时该功能可以使我们，将代理服务器代理到其它代理，达到一个请求多个代理查看的目的。</p>
+<p>可以分别设置http\https\socket，和浏览器的代理设置一样，我们也可以设置通配符，把不需要走代理的域名排除出去。（这个在测试内网支付时通常都需要特殊配置下。）<br><img src="https://testerhome.com/uploads/photo/2018/cf8c59dc-2f83-4d88-8657-fdce13e66912.png!large"><br><img src="https://testerhome.com/uploads/photo/2018/eb6e5a78-c09f-4bb3-af5d-13359c4dc554.png!large"></p>
+<h2 id="7-网速模拟"><a href="#7-网速模拟" class="headerlink" title="7.网速模拟"></a>7.网速模拟</h2><p>应用场景： 1. 弱网测试覆盖 </p>
+<p>弱网设置里，我们可以设置指定的域名被限速，也可以全局限速。<br><img src="https://testerhome.com/uploads/photo/2018/5081479d-a3bd-4801-b7c1-3e96f0c028cc.png!large"><br><img src="https://testerhome.com/uploads/photo/2018/ce1f8483-c549-4f18-b3c3-a4c247dad338.png!large"></p>
+<h2 id="8-扒数据"><a href="#8-扒数据" class="headerlink" title="8.扒数据"></a>8.扒数据</h2><p>应用场景：1.扒数据</p>
+<p>这个属于花式玩法，我们知道大部份的视频或音频网站都有防盗防下载的防范。如果需要，我们还是可以通过挂charles代理的方式，保存下我们需要的媒体数据。<br><img src="https://testerhome.com/uploads/photo/2018/b55ad345-ae11-424f-926c-8880b13c1d8f.png!large"><br><img src="https://testerhome.com/uploads/photo/2018/61c435fd-be36-4dcb-8488-f47294af96bf.png!large"><br><img src="https://testerhome.com/uploads/photo/2018/5e399517-29bb-4794-ae2a-be3fba416572.png!large"></p>
+<p>对于移动设备scoket请求的抓包，charles也可以结合wireshark来实现。关于这款代理工具的更多用法大家还可以根据业务需要去扩展。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/charles/" rel="tag"># charles</a>
+              <a href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag"># 安全测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/08/29/buger3/" rel="prev" title="Jira Bug管理APP v3.0.0">
+      <i class="fa fa-chevron-left"></i> Jira Bug管理APP v3.0.0
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/11/02/postman/" rel="next" title="postman接口测试记录">
+      postman接口测试记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">1.安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%8A%93%E5%8C%85PC"><span class="nav-number">2.</span> <span class="nav-text">2.抓包PC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AF%BC%E5%87%BA%E8%AF%81%E4%B9%A6"><span class="nav-number">2.0.1.</span> <span class="nav-text">1.导出证书</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%AF%BC%E5%85%A5%E7%81%AB%E7%8B%90%E8%AF%81%E4%B9%A6%E7%AE%A1%E7%90%86%E5%99%A8"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.导入火狐证书管理器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%AE%BE%E7%BD%AE%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BB%A3%E7%90%86%E4%B8%BA"><span class="nav-number">2.0.3.</span> <span class="nav-text">3.设置浏览器代理为</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%8A%93%E5%8C%85APP"><span class="nav-number">3.</span> <span class="nav-text">3.抓包APP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IOS"><span class="nav-number">3.1.</span> <span class="nav-text">IOS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android"><span class="nav-number">3.2.</span> <span class="nav-text">Android</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%AF%B7%E6%B1%82%E8%B7%B3%E8%BD%AC"><span class="nav-number">4.</span> <span class="nav-text">4.请求跳转</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text">5.断点调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text">6.代理配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E7%BD%91%E9%80%9F%E6%A8%A1%E6%8B%9F"><span class="nav-number">7.</span> <span class="nav-text">7.网速模拟</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%89%92%E6%95%B0%E6%8D%AE"><span class="nav-number">8.</span> <span class="nav-text">8.扒数据</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '22986a5e55295e1fc59d908c56deefba',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

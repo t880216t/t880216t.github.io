@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="补作业">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何设计一款安全高可用的登录模块">
+<meta property="og:url" content="https://t880216t.github.io/2020/06/19/sc/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="补作业">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-06-19T06:18:42.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.583Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="安全测试">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://t880216t.github.io/2020/06/19/sc/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>如何设计一款安全高可用的登录模块 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2020/06/19/sc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何设计一款安全高可用的登录模块
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-19 14:18:42" itemprop="dateCreated datePublished" datetime="2020-06-19T14:18:42+08:00">2020-06-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>补作业</p>
+<span id="more"></span>
+
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>   登录模块，是网站用户使用的第一个入口，也是最基本的功能，关系到用户数据和应用系统数据的安全。登录入口也是通向服务器的一个关键地方，如果登录入口设计的不够安全，那么整个系统将面临着致命安全隐患。这里我主要介绍下在前后端分离架构下，网页应用的登录模块的安全设计与具体的方案实现介绍。</p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>   本文介绍的是前后端分离架构的系统，所以安全角度分为客户端（前端）和服务端。<br>   客户端的安全，主要是用户密码本身的安全性（密码长度和复杂性等）以及用户电脑的安全性，包括用户电脑没有安装黑客木马软件，登录程序没有被第三方程序加载调试，用户录入框组织键盘Hook程序等等，通过一些代码即可解决。</p>
+<p>   服务器端的安全，包括服务器自身的安全（系统漏洞等等）以及程序设计上的安全，这里主要讲一下程序设计上的安全。最基本的问题是，用户的密码不应该直接保存在服务器的数据库上，也不应该将密码用单钥算法加密后保存。目前大多数网站都使用MD5函数进行登录认证，不过我推荐使用安全性更高的SHA1散列函数来进行登录认证。</p>
+<h2 id="安全防护方案"><a href="#安全防护方案" class="headerlink" title="安全防护方案"></a>安全防护方案</h2><h3 id="启用https"><a href="#启用https" class="headerlink" title="启用https"></a>启用https</h3><p>   HTTP请求都是明文传输的，所谓的明文指的是没有经过加密的信息，如果HTTP请求被黑客拦截或嗅探到，并且里面含有银行卡密码等敏感数据的话，会非常危险。HTTPS为了兼顾安全与效率，同时使用了对称加密和非对称加密。数据是被对称加密传输的，对称加密过程需要客户端的一个密钥，为了确保能把该密钥安全传输到服务器端，采用非对称加密对该密钥进行加密传输，总的来说，对数据进行对称加密，对称加密所要使用的密钥通过非对称加密传输。</p>
+<h3 id="登录高频限制"><a href="#登录高频限制" class="headerlink" title="登录高频限制"></a>登录高频限制</h3><p>   防止登录数据被通过接口进行高频的暴力猜解，或者防止某些IP恶意高频访问服务器,对服务器资源进行占用攻击，可以对这些IP进行限制,进行拦截。常用方式在应用服务器中进行标记记录，并结合实际的使用场景进行业务层的逻辑限制，或者直接通过Nginx本身的ip访问频率设置进行限制。</p>
+<h3 id="密码二次加密"><a href="#密码二次加密" class="headerlink" title="密码二次加密"></a>密码二次加密</h3><p>   很多人对于用户的原始密码安全，还停留在不被非法第三方获取的层面上，但实际上，原始 密码的最大威胁，往往来自于系统的开发人员和服务器的管理人员。这些人可能是有意收集，也可能是无意泄露，往往是用户原始密码的泄露的罪魁祸首。在构建登 录系统的时候，应该从根本上避免，做到只有用户自己和键盘记录器才知道原始密码。<br>   因此我们分为两个部分去做：</p>
+<ul>
+<li>传输的密码加密处理</li>
+<li>入库的密码加密存储<h4 id="传输的密码加密处理"><a href="#传输的密码加密处理" class="headerlink" title="传输的密码加密处理"></a>传输的密码加密处理</h4>   前面我们开启了https后，所有的传输数据会做加密处理，但对于比较重要的数据，我们应该采取二次加密的方式加以保护。加密算法可以选择des、sha256、sha512、md5等结合约定的密钥来加密传输和解密。</li>
+</ul>
+<p>   下面是以python + des为例的加密、解密函数：<br>   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyDes <span class="keyword">import</span> des, CBC, PAD_PKCS5</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">des_encrypt</span>(<span class="params">s</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    DES 加密</span></span><br><span class="line"><span class="string">    :param s: 原始字符串</span></span><br><span class="line"><span class="string">    :return: 加密后字符串，16进制</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    secret_key = app.config[<span class="string">&#x27;KEY&#x27;</span>]</span><br><span class="line">    iv = secret_key</span><br><span class="line">    k = des(secret_key, CBC, iv, pad=<span class="literal">None</span>, padmode=PAD_PKCS5)</span><br><span class="line">    en = k.encrypt(s, padmode=PAD_PKCS5)</span><br><span class="line">    <span class="keyword">return</span> binascii.b2a_hex(en)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">des_descrypt</span>(<span class="params">s</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    DES 解密</span></span><br><span class="line"><span class="string">    :param s: 加密后的字符串，16进制</span></span><br><span class="line"><span class="string">    :return:  解密后的字符串</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    secret_key = app.config[<span class="string">&#x27;KEY&#x27;</span>]</span><br><span class="line">    iv = secret_key</span><br><span class="line">    k = des(secret_key, CBC, iv, pad=<span class="literal">None</span>, padmode=PAD_PKCS5)</span><br><span class="line">    de = k.decrypt(binascii.a2b_hex(s), padmode=PAD_PKCS5)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        deStr = <span class="built_in">str</span>(de,encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        deStr = de.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> deStr</span><br></pre></td></tr></table></figure></p>
+<h4 id="入库的密码加密存储"><a href="#入库的密码加密存储" class="headerlink" title="入库的密码加密存储"></a>入库的密码加密存储</h4><p>   入库的密码不能直接以明文形式存储，以防拖库后用户信息的被盗用（很多人习惯多个网站一个密码）。<br>   这里我们可以通过hash算法，结合随机生成的salt给密码加密，每次调用密码校验是，在用用户输入的密码结合入库时的salt再次进行hash，来对比加密结果，以校验密码的正确性。<br>   以python为例,获取加密密码和salt方法如下：<br>   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os,hashlib,re</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">encrypt_password</span>(<span class="params">password, salt=<span class="literal">None</span>, encryptlop=<span class="number">30</span></span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> salt:</span><br><span class="line">        salt = os.urandom(<span class="number">16</span>).encode(<span class="string">&#x27;hex&#x27;</span>)  <span class="comment"># length 32</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(encryptlop):</span><br><span class="line">        password = hashlib.sha256(password + salt).hexdigest()  <span class="comment"># length 64</span></span><br><span class="line">    <span class="keyword">return</span> password, salt</span><br></pre></td></tr></table></figure></p>
+<h3 id="验证码校验"><a href="#验证码校验" class="headerlink" title="验证码校验"></a>验证码校验</h3><p>   为防止机器人登录或其它非正常手段，我们需要给登录功能加上验证码校验，验证码类型也有很多，交互方式和安全级别各有不同。验证码是后台随机产生的一个短暂的验证码，这个验证码一般是一个计算机很难识别的图片。这样就可以防止以程序的方式来尝试用户的口令。事实证明，这是最简单也最有效的方式。当然，总是让用户输入那些肉眼都看不清的验证码的用户体验不好，所以，可以折中一下。比如Google，当他发现一个IP地址发出大量的搜索后，其会要求你输入验证码。当他发现同一个IP注册了3个以上的gmail邮箱后，他需要给你发短信方式或是电话方式的验证码。</p>
+<ul>
+<li>数字图形验证码：数字加上干扰线，防止计算机能够轻易识别，这样也可以防止黑客以程序的方式来尝试登录。</li>
+<li>第三方动态图形识别：需要用户去识别并拖动校验，同类的还有图像内容识别点击，这种一般是用第三方集成好的sdk。</li>
+<li>手机短信验证码：依赖完善的用户信息，将登录行为与用户强关联，同时需注意保护用户的手机号隐私与防止短信滥用。</li>
+<li>邮件验证码：低成本的关联校验，依赖完善的用户信息，但操作链过于冗长。</li>
+</ul>
+<blockquote>
+<p>无论何种形式的验证码，都要关注到验证码自身的安全问题（不可猜解、时效性、与帐号的关联性等）</p>
+</blockquote>
+<p>   下面以python为例生成图形验证码：<br>   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image, ImageFont, ImageDraw</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CaptchaTool</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    生成图片验证码</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, width=<span class="number">50</span>, height=<span class="number">12</span></span>):</span><br><span class="line"></span><br><span class="line">        self.width = width</span><br><span class="line">        self.height = height</span><br><span class="line">        <span class="comment"># 新图片对象</span></span><br><span class="line">        self.im = Image.new(<span class="string">&#x27;RGB&#x27;</span>, (width, height), <span class="string">&#x27;white&#x27;</span>)</span><br><span class="line">        <span class="comment"># 字体</span></span><br><span class="line">        self.font = ImageFont.load_default()</span><br><span class="line">        <span class="comment"># draw对象</span></span><br><span class="line">        self.draw = ImageDraw.Draw(self.im)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">draw_lines</span>(<span class="params">self, num=<span class="number">3</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        划线</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> <span class="built_in">range</span>(num):</span><br><span class="line">            x1 = random.randint(<span class="number">0</span>, self.width / <span class="number">2</span>)</span><br><span class="line">            y1 = random.randint(<span class="number">0</span>, self.height / <span class="number">2</span>)</span><br><span class="line">            x2 = random.randint(<span class="number">0</span>, self.width)</span><br><span class="line">            y2 = random.randint(self.height / <span class="number">2</span>, self.height)</span><br><span class="line">            self.draw.line(((x1, y1), (x2, y2)), fill=<span class="string">&#x27;black&#x27;</span>, width=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_verify_code</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        生成验证码图形</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 设置随机4位数字验证码</span></span><br><span class="line">        code = <span class="string">&#x27;&#x27;</span>.join(random.sample(string.digits, <span class="number">4</span>))</span><br><span class="line">        <span class="comment"># 绘制字符串</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">            self.draw.text((<span class="number">6</span> + random.randint(-<span class="number">3</span>, <span class="number">3</span>) + <span class="number">10</span> * item, <span class="number">2</span> + random.randint(-<span class="number">2</span>, <span class="number">2</span>)),</span><br><span class="line">                        text=code[item],</span><br><span class="line">                        fill=(random.randint(<span class="number">32</span>, <span class="number">127</span>),</span><br><span class="line">                                random.randint(<span class="number">32</span>, <span class="number">127</span>),</span><br><span class="line">                                random.randint(<span class="number">32</span>, <span class="number">127</span>))</span><br><span class="line">                        , font=self.font)</span><br><span class="line">        <span class="comment"># 划线</span></span><br><span class="line">        self.draw_lines()</span><br><span class="line">        <span class="comment"># 重新设置图片大小</span></span><br><span class="line">        self.im = self.im.resize((<span class="number">100</span>, <span class="number">24</span>))</span><br><span class="line">        <span class="comment"># 图片转为base64字符串</span></span><br><span class="line">        buffered = io.BytesIO()</span><br><span class="line">        self.im.save(buffered, <span class="built_in">format</span>=<span class="string">&quot;JPEG&quot;</span>)</span><br><span class="line">        img_str = <span class="string">b&quot;data:image/png;base64,&quot;</span> + base64.b64encode(buffered.getvalue())</span><br><span class="line">        <span class="keyword">return</span> img_str, code</span><br></pre></td></tr></table></figure></p>
+<h3 id="cookie过期时间设置"><a href="#cookie过期时间设置" class="headerlink" title="cookie过期时间设置"></a>cookie过期时间设置</h3><p>   由于http协议是无状态的，传统服务器只能被动响应请求，当服务器获取到请求，并为了能够区分每一个客户端，需要客户端发送请求时发送一个标识符(cookie)，也因此为了提供这个标识符，产生了cookie技术，我们在请求头(Request Headers)中添加了标识符(cookie). cookie就是浏览器储存在用户电脑上的一小段文本文件，是纯文本格式，每次发送请求,都会把这个cookie随同其它报文一起发送给服务器。Web 页面或服务器告知浏览器按照一定规范来储存这些信息，并在随后的请求中将这些信息发送至服务器，Web 服务器就可以使用这些信息来识别不同的用户。大多数需要登录的网站在用户验证成功之后都会设置一个 cookie，只要这个 cookie 存在并可以，用户就可以自由浏览这个网站的任意页面。cookie 只包含数据，就其本身而言并不有害。</p>
+<p>   综上可知，cookie可以方便我们登录后登录身份的，但设想下如果我们长时间的离开操作位置，别人看到你的页面，如果当前有重要的操作可以点击触发，此时你还是登录状态，这样的话，你的数据就会被非法操作了。而此时由于cookie过期，需要用户重新登录才能继续之前的操作的话，一定程度上就保护了用户的重要数据。</p>
+<p>   实际应用过程中，我们还需要结合CSRF、SSRF等跨站攻击手段来合理的设置我们的cookie，以提高用户权限的安全性。</p>
+<h3 id="弱口令检测"><a href="#弱口令检测" class="headerlink" title="弱口令检测"></a>弱口令检测</h3><p>   弱口令漏洞指系统口令的长度太短或者复杂度不够，如仅包含数字或字母等。在安全方面弱口令问题算是技术含量最低的安全隐患了。但往往技术含量越低，被利用频率也越高，而且造成的影响还不见得小。弱口令容易被破解，一旦被攻击者获取，可用来直接登录系统，读取甚至修改网站代码。所以治理弱口令将成为安全体系建设中性价比最高的一个环节。但是就是这样一个性价比高的环节想完全杜绝却不是那么容易，未来的系统可以通过注册申请环节强制设置强密码，但是针对过去的老旧系统弱口令问题就令人头疼了。<br>   因此在用户账号创建之初，就应当从前端以及后端加强对弱设置的检测。<br>   下面以javascript中结合正则校验弱口令为例：<br>   <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//强弱密码校验,密码至少包含大写字母，小写字母，数字，且不少于8位</span></span><br><span class="line"><span class="keyword">var</span> tx = <span class="regexp">/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]&#123;8,16&#125;$/</span>;</span><br><span class="line"><span class="keyword">var</span> pass = <span class="string">&#x27;aaaa12345&#x27;</span></span><br><span class="line"><span class="keyword">if</span>(!tx.<span class="title function_">test</span>(pass))&#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;弱密码&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&quot;强密码&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="sql预编译"><a href="#sql预编译" class="headerlink" title="sql预编译"></a>sql预编译</h3><p>   执行登录校验，我们免不了，对于用户传输来的账号密码进行sql组装，进行正确性查询。但这个过程如果直接拼接sql参数很有可能就会出现’sql注入’等严重的安全问题。这种方式能防范SQL注入的原理是在SQL参数未注入之前，提前对SQL语句进行预编译，而其后注入的参数将不会再进行SQL编译。也就是说其后注入进来的参数系统将不会认为它会是一条SQL语句，而默认其是一条一个参数。<br>   下面以PHP中MySQL的预编译为例：<br>   <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*1.假定已经完成数据库初始化操作，数据库对象名：$pdo*/</span></span><br><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;insert into team values (null, :test_name)&quot;</span>;</span><br><span class="line"><span class="variable">$PDOStatement</span> = <span class="variable">$pdo</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="variable">$sql</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*2.绑定数据到中间编译结果*/</span> </span><br><span class="line"><span class="variable">$PDOStatement</span>-&gt;<span class="title function_ invoke__">bindValue</span>(<span class="string">&#x27;:test_name&#x27;</span>,<span class="string">&#x27;测试&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*3.执行*/</span> </span><br><span class="line"><span class="variable">$result</span> = <span class="variable">$PDOStatement</span>-&gt;<span class="title function_ invoke__">execute</span>();</span><br></pre></td></tr></table></figure></p>
+<h3 id="第三方登录"><a href="#第三方登录" class="headerlink" title="第三方登录"></a>第三方登录</h3><p>   第三方登陆又叫统一认证，英文缩写叫SSO，早期是用在操作系统上的，比如LDAP等。统一认证的优势就是我只需要一个账号密码就可以维护大量不同的系统，甚至不同厂商开发的系统。如果没有这个，大概率也是所有的系统同一个人会使用同样的账号和密码，为了登陆方便，大概率会使用弱密码。而统一认证以后，用户只需要维护一个账号即可，这样用户大概率会设定一个稍微复杂一些的强密码。那么账号的安全性就得到了保障，所以统一认证是未来的一种趋势。</p>
+<p>   国内大型的互联网平台都有提供登录授权服务，但其会对接入的网站做层层限制，能到的用户信息，和用户登录时需要提供的信息都很少，把接口的安全问题抛给三方统一处理，这不仅仅是提高了登录的安全性，在一定程度上也提高登录模块的操作易用性。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>   在Internet的飞速发展的今天，人们的工作和日常生活已离不开internet，比如网上购物，网上支付等。正所谓道高一尺魔高一丈，与之一同发展起来的web安全性问题，每天都在发生的黑客入侵及篡改网页，帐号窃取等问题越来越引起了人们的关注，因为随着Web内容的增加、应用程序功能的丰富和用户的普及，安全问题已经不容忽视。看似非常简单的登录模块，其实里面也存在着非常多的安全隐患。这些也是把好一个系统安全性的第一关，以上就是本人在应对项目安全的检查中所提出的解决方案。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag"># 安全测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/18/proxy/" rel="prev" title="请求转发的多种方式">
+      <i class="fa fa-chevron-left"></i> 请求转发的多种方式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/03/saveimg/" rel="next" title="Javascript保存网页元素为图片并下载到本地">
+      Javascript保存网页元素为图片并下载到本地 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%96%B9%E6%A1%88"><span class="nav-number">3.</span> <span class="nav-text">安全防护方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E7%94%A8https"><span class="nav-number">3.1.</span> <span class="nav-text">启用https</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E9%AB%98%E9%A2%91%E9%99%90%E5%88%B6"><span class="nav-number">3.2.</span> <span class="nav-text">登录高频限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E4%BA%8C%E6%AC%A1%E5%8A%A0%E5%AF%86"><span class="nav-number">3.3.</span> <span class="nav-text">密码二次加密</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E7%9A%84%E5%AF%86%E7%A0%81%E5%8A%A0%E5%AF%86%E5%A4%84%E7%90%86"><span class="nav-number">3.3.1.</span> <span class="nav-text">传输的密码加密处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%A5%E5%BA%93%E7%9A%84%E5%AF%86%E7%A0%81%E5%8A%A0%E5%AF%86%E5%AD%98%E5%82%A8"><span class="nav-number">3.3.2.</span> <span class="nav-text">入库的密码加密存储</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%A0%81%E6%A0%A1%E9%AA%8C"><span class="nav-number">3.4.</span> <span class="nav-text">验证码校验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cookie%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.5.</span> <span class="nav-text">cookie过期时间设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%A3%80%E6%B5%8B"><span class="nav-number">3.6.</span> <span class="nav-text">弱口令检测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sql%E9%A2%84%E7%BC%96%E8%AF%91"><span class="nav-number">3.7.</span> <span class="nav-text">sql预编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95"><span class="nav-number">3.8.</span> <span class="nav-text">第三方登录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '7f20ec78081f440327b79f24c4e018b3',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

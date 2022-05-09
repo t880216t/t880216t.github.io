@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="结合自己的项目对白盒测试方法学习写个小结，理论部分转自CSDN https:&#x2F;&#x2F;blog.csdn.net&#x2F;zxxssdsd&#x2F;article&#x2F;details&#x2F;49314203。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="白盒测试基本方法">
+<meta property="og:url" content="https://t880216t.github.io/2018/06/21/test_text/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="结合自己的项目对白盒测试方法学习写个小结，理论部分转自CSDN https:&#x2F;&#x2F;blog.csdn.net&#x2F;zxxssdsd&#x2F;article&#x2F;details&#x2F;49314203。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/ba5acac0-c135-4439-9450-f5f22f6f40e7.png!large">
+<meta property="article:published_time" content="2018-06-21T02:50:12.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.585Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="白盒测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://testerhome.com/uploads/photo/2018/ba5acac0-c135-4439-9450-f5f22f6f40e7.png!large">
+
+<link rel="canonical" href="https://t880216t.github.io/2018/06/21/test_text/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>白盒测试基本方法 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2018/06/21/test_text/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          白盒测试基本方法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-06-21 10:50:12" itemprop="dateCreated datePublished" datetime="2018-06-21T10:50:12+08:00">2018-06-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>结合自己的项目对白盒测试方法学习写个小结，理论部分转自CSDN <a target="_blank" rel="noopener" href="https://blog.csdn.net/zxxssdsd/article/details/49314203%E3%80%82">https://blog.csdn.net/zxxssdsd/article/details/49314203。</a></p>
+<span id="more"></span>
+
+<h2 id="白盒测试的概述"><a href="#白盒测试的概述" class="headerlink" title="白盒测试的概述"></a>白盒测试的概述</h2><p>由于逻辑错误和不正确假设与一条程序路径被运行的可能性成反比。由于我们经常相信某逻辑路径不可能被执行, 而事实上,它可能在正常的情况下被执行。由于代码中的笔误是随机且无法杜绝的，因此我们要进行白盒测试。<br>白盒测试又称结构测试,透明盒测试、逻辑驱动测试或基于代码的测试。白盒测试是一种测试用例设计方法，盒子指的是被测试的软件，白盒指的是盒子是可视的,你清楚盒子内部的东西以及里面是如何运作的。</p>
+<h2 id="白盒测试的特点"><a href="#白盒测试的特点" class="headerlink" title="白盒测试的特点"></a>白盒测试的特点</h2><p>依据软件设计说明书进行测试、对程序内部细节的严密检验、针对特定条件设计测试用例、对软件的逻辑路径进行覆盖测试。</p>
+<h2 id="白盒测试用例的设计目标"><a href="#白盒测试用例的设计目标" class="headerlink" title="白盒测试用例的设计目标"></a>白盒测试用例的设计目标</h2><p>保证一个模块中的所有独立路径至少被使用一次<br>对所有逻辑值均需测试 true 和 false<br>在上下边界及可操作范围内运行所有循环<br>检查内部数据结构以确保其有效性</p>
+<h2 id="白盒测试的实施步骤"><a href="#白盒测试的实施步骤" class="headerlink" title="白盒测试的实施步骤"></a>白盒测试的实施步骤</h2><p>测试计划阶段：根据需求说明书，制定测试进度。<br>测试设计阶段：依据程序设计说明书，按照一定规范化的方法进行软件结构划分和设计测试用例。<br>测试执行阶段：输入测试用例，得到测试结果。<br>测试总结阶段：对比测试的结果和代码的预期结果，分析错误原因，找到并解决错误。</p>
+<h2 id="白盒测试的方法"><a href="#白盒测试的方法" class="headerlink" title="白盒测试的方法"></a>白盒测试的方法</h2><p>其中语句覆盖是一种最弱的覆盖，判定覆盖和条件覆盖比语句覆盖强，满足判定&#x2F;条件覆盖标准的测试用例一定也满足判定覆盖、条件覆盖和语句覆盖，条件组合覆盖是除路径覆盖外最强的，路径覆盖也是一种比较强的覆盖，但未必考虑判定条件结果的组合，并不能代替条件覆盖和条件组合覆盖。</p>
+<h3 id="语句覆盖"><a href="#语句覆盖" class="headerlink" title="语句覆盖"></a>语句覆盖</h3><p>设计的用例需要保证每一个可执行语句至少执行一次。<br>覆盖率公式为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">覆盖率 = 被测到的语句数据 / 可执行语句数 * <span class="number">100</span>%</span><br></pre></td></tr></table></figure>
+
+<h3 id="判定覆盖"><a href="#判定覆盖" class="headerlink" title="判定覆盖"></a>判定覆盖</h3><p>设计的测试用例，需要保证每个判断的每个取值分支都至少经历一次。<br>优点：较语句覆盖可以有更强的覆盖，简单易理解，只需要关注单个判定，无需细分即可得到测试用例。<br>缺点：大部分的判定条件都是多个组合起来的（or&#x2F;and&#x2F;case），若仅判断整个条件的结果，会遗漏部分数据类型测试路径。<br>如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (list.<span class="property">length</span>===<span class="number">0</span> || proxy.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> result1;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> result2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序要设计判定覆盖2条用例就够了，我们的测试用例可以是：<br>1.都为真</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> list = []</span><br><span class="line"><span class="keyword">const</span> proxy = []</span><br></pre></td></tr></table></figure>
+<p>2.都为假</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> list = [<span class="string">&#x27;1&#x27;</span>]</span><br><span class="line"><span class="keyword">const</span> proxy = [<span class="string">&#x27;2&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="路径覆盖"><a href="#路径覆盖" class="headerlink" title="路径覆盖"></a>路径覆盖</h3><p>设计的测试用例，需要保证每条可能执行到的路径至少执行一次。</p>
+<h3 id="条件覆盖"><a href="#条件覆盖" class="headerlink" title="条件覆盖"></a>条件覆盖</h3><p>条件覆盖是指选择足够的测试用例，使得运行这些测试用例时，判定中每个条件的所有可能结果至少出现一次，但未必能覆盖全部分支<br>条件覆盖要检查每个符合谓词的子表达式值为真和假两种情况，要独立衡量每个子表达式的结果，以确保每个子表达式的值为真和假两种情况都被测试到。</p>
+<h3 id="判定条件覆盖"><a href="#判定条件覆盖" class="headerlink" title="判定条件覆盖"></a>判定条件覆盖</h3><p>判定-条件覆盖就是设计足够的测试用例，使得判断中每个条件的所有可能取值至少执行一次，同时每个判断的所有可能判断结果至少执行，即要求各个判断的所有可能的条件取值组合至少执行一次。</p>
+<h3 id="条件组合覆盖"><a href="#条件组合覆盖" class="headerlink" title="条件组合覆盖"></a>条件组合覆盖</h3><p>使所有判定中各条件判断结果的所有组合至少出现一次，满足这种覆盖标准成为条件组合覆盖。这是算是覆盖最全的了，但成本也很</p>
+<h1 id="实例："><a href="#实例：" class="headerlink" title="实例："></a>实例：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(repassword !== password) &#123;</span><br><span class="line">	<span class="variable language_">this</span>.<span class="property">form</span>.<span class="property">current</span>.<span class="title function_">showError</span>(<span class="string">&#x27;repassword&#x27;</span>, <span class="string">&#x27;repassword not equal password&#x27;</span>)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(!!result) &#123;</span><br><span class="line">	<span class="title class_">RegisterDao</span>.<span class="title function_">registerDone</span>(result)</span><br><span class="line">	.<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">		<span class="keyword">if</span>(response.<span class="property">registerStatus</span> === <span class="string">&#x27;0&#x27;</span>) &#123;</span><br><span class="line">			<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">navigation</span>.<span class="title function_">navigate</span>(<span class="string">&#x27;Home&#x27;</span>)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="语句覆盖："><a href="#语句覆盖：" class="headerlink" title="语句覆盖："></a>语句覆盖：</h4><p>只需要让程序中的语句都执行一遍即可</p>
+<p>1. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repassword = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> result = <span class="string">&#x27;test&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="判定覆盖："><a href="#判定覆盖：" class="headerlink" title="判定覆盖："></a>判定覆盖：</h4><p>使得程序中每个判断的取真分支和取假分支至少经历一次</p>
+<p>1. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repassword = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> result = <span class="string">&#x27;test&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>2. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repassword = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">&#x27;222&#x27;</span></span><br><span class="line"><span class="keyword">const</span> result = <span class="literal">null</span></span><br></pre></td></tr></table></figure>
+<h4 id="条件覆盖："><a href="#条件覆盖：" class="headerlink" title="条件覆盖："></a>条件覆盖：</h4><p>使得每个判断中的每个条件的可能取值至少满足一次。</p>
+<p>1. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repassword = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> result = <span class="string">&#x27;test&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>2. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repassword = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">&#x27;222&#x27;</span></span><br><span class="line"><span class="keyword">const</span> result = <span class="literal">null</span></span><br></pre></td></tr></table></figure>
+<p>3. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repassword = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">&#x27;222&#x27;</span></span><br><span class="line"><span class="keyword">const</span> result = undefind</span><br></pre></td></tr></table></figure>
+
+<h4 id="路径覆盖："><a href="#路径覆盖：" class="headerlink" title="路径覆盖："></a>路径覆盖：</h4><p>要求覆盖程序中所有可能的路径，这里如下图有四条路径。<br><img src="https://testerhome.com/uploads/photo/2018/ba5acac0-c135-4439-9450-f5f22f6f40e7.png!large"></p>
+<p>1. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repassword = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> result = <span class="string">&#x27;test&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>2. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repassword = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">&#x27;222&#x27;</span></span><br><span class="line"><span class="keyword">const</span> result = <span class="literal">null</span></span><br></pre></td></tr></table></figure>
+<p>3. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repassword = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> result = <span class="literal">null</span></span><br></pre></td></tr></table></figure>
+<p>4. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> repassword = <span class="string">&#x27;1111&#x27;</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">&#x27;222&#x27;</span></span><br><span class="line"><span class="keyword">const</span> result = <span class="string">&#x27;test&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>理解上面的条件组合判断也会得到类似用例，不过他是针对一个判断内的条件进行组合，示例程序中没有组合条件，实际使用还需按实际情况灵活选择合适的方法。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95/" rel="tag"># 白盒测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/06/20/react_rich_text/" rel="prev" title="react 富文本控件使用">
+      <i class="fa fa-chevron-left"></i> react 富文本控件使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/07/15/reactjs2/" rel="next" title="react监听点击事件，判断点击元素">
+      react监听点击事件，判断点击元素 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95%E7%9A%84%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">白盒测试的概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">白盒测试的特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="nav-number">3.</span> <span class="nav-text">白盒测试用例的设计目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95%E7%9A%84%E5%AE%9E%E6%96%BD%E6%AD%A5%E9%AA%A4"><span class="nav-number">4.</span> <span class="nav-text">白盒测试的实施步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">白盒测试的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E5%8F%A5%E8%A6%86%E7%9B%96"><span class="nav-number">5.1.</span> <span class="nav-text">语句覆盖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E5%AE%9A%E8%A6%86%E7%9B%96"><span class="nav-number">5.2.</span> <span class="nav-text">判定覆盖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E8%A6%86%E7%9B%96"><span class="nav-number">5.3.</span> <span class="nav-text">路径覆盖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E8%A6%86%E7%9B%96"><span class="nav-number">5.4.</span> <span class="nav-text">条件覆盖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E5%AE%9A%E6%9D%A1%E4%BB%B6%E8%A6%86%E7%9B%96"><span class="nav-number">5.5.</span> <span class="nav-text">判定条件覆盖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E7%BB%84%E5%90%88%E8%A6%86%E7%9B%96"><span class="nav-number">5.6.</span> <span class="nav-text">条件组合覆盖</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%EF%BC%9A"><span class="nav-number"></span> <span class="nav-text">实例：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%AD%E5%8F%A5%E8%A6%86%E7%9B%96%EF%BC%9A"><span class="nav-number">0.0.1.</span> <span class="nav-text">语句覆盖：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A4%E5%AE%9A%E8%A6%86%E7%9B%96%EF%BC%9A"><span class="nav-number">0.0.2.</span> <span class="nav-text">判定覆盖：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E8%A6%86%E7%9B%96%EF%BC%9A"><span class="nav-number">0.0.3.</span> <span class="nav-text">条件覆盖：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E8%A6%86%E7%9B%96%EF%BC%9A"><span class="nav-number">0.0.4.</span> <span class="nav-text">路径覆盖：</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '7d572311e2f9f2ff9a751bb4beaecada',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

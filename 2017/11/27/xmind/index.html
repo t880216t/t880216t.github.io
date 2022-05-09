@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一直以来都喜欢用思维导图的方式去写用例，或者记录一些要做的任务。逻辑清晰，分工明确，提高我们的工作效率。但如果任务细化到一定程度，思维导图的展示会难看，放大了看不清逻辑关系，缩小了又看不清具体描述。自己python脚本，及reactjs前端技术，写了这个转换方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用python将思维导图转换成树形列表">
+<meta property="og:url" content="https://t880216t.github.io/2017/11/27/xmind/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="一直以来都喜欢用思维导图的方式去写用例，或者记录一些要做的任务。逻辑清晰，分工明确，提高我们的工作效率。但如果任务细化到一定程度，思维导图的展示会难看，放大了看不清逻辑关系，缩小了又看不清具体描述。自己python脚本，及reactjs前端技术，写了这个转换方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-11-27T15:50:12.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.586Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://t880216t.github.io/2017/11/27/xmind/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>用python将思维导图转换成树形列表 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2017/11/27/xmind/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用python将思维导图转换成树形列表
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-27 23:50:12" itemprop="dateCreated datePublished" datetime="2017-11-27T23:50:12+08:00">2017-11-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一直以来都喜欢用思维导图的方式去写用例，或者记录一些要做的任务。逻辑清晰，分工明确，提高我们的工作效率。但如果任务细化到一定程度，思维导图的展示会难看，放大了看不清逻辑关系，缩小了又看不清具体描述。自己python脚本，及reactjs前端技术，写了这个转换方法。</p>
+<span id="more"></span>
+<p>先简单说下我的工作步骤：<br>1.<a target="_blank" rel="noopener" href="http://www.xmindchina.net/">Xmind</a>,编写用例，导出为html文件。<br>2.上传到后台服务端放导指定位置。<br>3.前台发起请求后台处理上传的文件并格式化返回，前台展示数据。</p>
+<p>我一般都是写的逻辑向右的导图，首先我们把xmind的用例导出为html，导出页面上不要勾选任何选项。例如我的导出文件为test.html。<br>虽然导出的已经html了，但毫无格式可言，看起来是很吃力的。</p>
+<p>通过脚本提取其中有用数据，并给它们每条一个id编号。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">file = <span class="built_in">open</span>(<span class="string">&#x27;app/static/uploads/test1.html&#x27;</span>).read()</span><br><span class="line">soup = BeautifulSoup(file)</span><br><span class="line">allData = []</span><br><span class="line">count = <span class="number">1</span></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> soup.find_all(<span class="string">&#x27;a&#x27;</span>):</span><br><span class="line">	value = k.text.replace(<span class="string">u&#x27;\xa0&#x27;</span>, <span class="string">u&#x27;$&#x27;</span>)</span><br><span class="line">	allData.append([count, value])</span><br><span class="line">	count += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>这里看到‘replace(u’\xa0’, u’$’)’需要说明下，导出的数据他们的父子关系主要是靠空格来区分，这里\xa0就是空格，方便后面数据转换，我把它们替换成了’$’，所以可以说，我们的导图文本里不能写这个关键字，不然会有错误。</p>
+<p>下面就是给它们理清楚出父子关系了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">sz = []</span><br><span class="line">allData[<span class="number">0</span>].append(<span class="number">0</span>)</span><br><span class="line">allData[<span class="number">1</span>].append(<span class="number">0</span>)</span><br><span class="line">sz.append(allData[<span class="number">0</span>])</span><br><span class="line">sz.append(allData[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(allData)):</span><br><span class="line">	<span class="keyword">if</span> i &gt; <span class="number">1</span>:</span><br><span class="line">		prew_index = <span class="built_in">len</span>(allData[i - <span class="number">1</span>][<span class="number">1</span>]) - <span class="built_in">len</span>(allData[i - <span class="number">1</span>][<span class="number">1</span>].replace(<span class="string">&#x27;$&#x27;</span>, <span class="string">&#x27;&#x27;</span>))</span><br><span class="line">		now_index = <span class="built_in">len</span>(allData[i][<span class="number">1</span>]) - <span class="built_in">len</span>(allData[i][<span class="number">1</span>].replace(<span class="string">&#x27;$&#x27;</span>, <span class="string">&#x27;&#x27;</span>))</span><br><span class="line">		<span class="keyword">if</span> now_index - prew_index == <span class="number">1</span>:</span><br><span class="line">			allData[i].append(allData[i - <span class="number">1</span>][<span class="number">0</span>])</span><br><span class="line">		<span class="keyword">elif</span> now_index - prew_index == <span class="number">0</span>:</span><br><span class="line">			<span class="keyword">try</span>:</span><br><span class="line">				allData[i].append(allData[i - <span class="number">1</span>][<span class="number">2</span>])</span><br><span class="line">			<span class="keyword">except</span>:</span><br><span class="line">				<span class="built_in">print</span> allData[i - <span class="number">1</span>]</span><br><span class="line">		<span class="keyword">elif</span> now_index - prew_index &lt; <span class="number">0</span>:</span><br><span class="line">			<span class="keyword">for</span> l <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(sz)):</span><br><span class="line">				<span class="comment"># 找新数组</span></span><br><span class="line">				_prew_index = <span class="built_in">len</span>(sz[(<span class="built_in">len</span>(sz) - <span class="number">1</span>) - l][<span class="number">1</span>]) - <span class="built_in">len</span>(sz[(<span class="built_in">len</span>(sz) - <span class="number">1</span>) - l][<span class="number">1</span>].replace(<span class="string">&#x27;$&#x27;</span>, <span class="string">&#x27;&#x27;</span>))</span><br><span class="line">				<span class="keyword">if</span> now_index - _prew_index == <span class="number">0</span>:</span><br><span class="line">					allData[i].append(sz[(<span class="built_in">len</span>(sz) - <span class="number">1</span>) - l][<span class="number">2</span>])</span><br><span class="line">					<span class="keyword">break</span></span><br><span class="line">		sz.append(allData[i])</span><br></pre></td></tr></table></figure>
+<p>获取到的sz数组，就是当前导出的数据格式化数据了，每条数据都有个自己的id，名字，父id。但我的reactjs前端页面需要的是，有子集的树形结构数据。</p>
+<p>通过下面的遍历方法把数据再次格式化处理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">getchild</span>(<span class="params">pid</span>):</span><br><span class="line">	result = []</span><br><span class="line">	<span class="keyword">for</span> obj <span class="keyword">in</span> sz:</span><br><span class="line">		<span class="keyword">if</span> obj[<span class="number">2</span>] == pid:</span><br><span class="line">			result.append(&#123;</span><br><span class="line">				<span class="string">&quot;id&quot;</span>: obj[<span class="number">0</span>],</span><br><span class="line">				<span class="string">&quot;title&quot;</span>: obj[<span class="number">1</span>].replace(<span class="string">&#x27;$&#x27;</span>,<span class="string">&#x27;&#x27;</span>),</span><br><span class="line">				<span class="string">&quot;pid&quot;</span>: obj[<span class="number">2</span>],</span><br><span class="line">				<span class="string">&quot;children&quot;</span>: getchild(obj[<span class="number">0</span>]),</span><br><span class="line">			&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">newResult = getchild(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(newResult)):</span><br><span class="line">	newResult[<span class="number">0</span>][<span class="string">&quot;children&quot;</span>].append(newResult[item])</span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="built_in">len</span>(newResult)):</span><br><span class="line">	newResult.pop()</span><br></pre></td></tr></table></figure>
+<p>到这里，数据处理的核心部分已经完成了。但要给前端页面展示，我还要把脚本封装到服务端，并通过接口传给前端页面。<br>我用的flask，提供restful接口。<br>前端部分用的是react框架，主要是用antd的ui库：<br>核心部分如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CaseList</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span>&#123;</span><br><span class="line">    state = &#123;</span><br><span class="line">        <span class="attr">fetch_data</span>:[],</span><br><span class="line">		...</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    fetchList=<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> par = <span class="string">&quot;entry=0&quot;</span></span><br><span class="line">        <span class="title function_">fetch</span>(<span class="string">&#x27;http://192.168.1.101:5000/gettasklist&#x27;</span>,&#123;</span><br><span class="line">            <span class="attr">method</span>: <span class="string">&quot;POST&quot;</span>,</span><br><span class="line">            <span class="attr">mode</span>: <span class="string">&quot;cors&quot;</span>,</span><br><span class="line">            <span class="attr">headers</span>: &#123;</span><br><span class="line">                <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/x-www-form-urlencoded&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">body</span>: par</span><br><span class="line">        &#125;)...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; fetch_data&#125; = <span class="variable language_">this</span>.<span class="property">state</span>;</span><br><span class="line">        <span class="keyword">const</span> columns = [ &#123;</span><br><span class="line">            <span class="attr">title</span>: <span class="string">&#x27;title&#x27;</span>,</span><br><span class="line">            <span class="attr">dataIndex</span>: <span class="string">&#x27;title&#x27;</span>,</span><br><span class="line">            <span class="attr">key</span>: <span class="string">&#x27;title&#x27;</span>,</span><br><span class="line">            <span class="attr">render</span>: <span class="function"><span class="params">text</span> =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">a</span> <span class="attr">style</span>=<span class="string">&#123;&#123;marginLeft:30,fontSize:16&#125;&#125;</span>&gt;</span>&#123;text&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span>,</span><br><span class="line">        &#125;];</span><br><span class="line">        <span class="keyword">return</span>(</span><br><span class="line">            <span class="language-xml"><span class="tag">&lt;<span class="name">Page</span> <span class="attr">title</span>=<span class="string">&quot;case列表&quot;</span> <span class="attr">loading</span>=<span class="string">&#123;this.state.isLoading&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">Table</span> <span class="attr">rowKey</span>=<span class="string">&quot;id&quot;</span> <span class="attr">columns</span>=<span class="string">&#123;columns&#125;</span> <span class="attr">dataSource</span>=<span class="string">&#123;fetch_data&#125;</span> <span class="attr">indentSize</span>=<span class="string">&#123;50&#125;/</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Page</span>&gt;</span></span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际使用时，我是通过一个上传页面直接上传导出文件到服务器的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Page</span> title=<span class="string">&quot;上传导出文件&quot;</span> loading=&#123;<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">isLoading</span>&#125;&gt;</span><br><span class="line">	<span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&#123;&#123;alignItems:</span>&#x27;<span class="attr">center</span>&#x27;, <span class="attr">justifyContent:</span>&quot;<span class="attr">center</span>&quot;,<span class="attr">display:</span>&#x27;<span class="attr">flex</span>&#x27;,<span class="attr">flex:1</span>, <span class="attr">flexDirection:</span>&#x27;<span class="attr">column</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">		<span class="attr">marginTop:</span>&quot;<span class="attr">20</span>%&quot;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;<span class="name">Upload</span> &#123;<span class="attr">...props</span>&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">				<span class="tag">&lt;<span class="name">Icon</span> <span class="attr">type</span>=<span class="string">&quot;upload&quot;</span> /&gt;</span> Select File</span></span><br><span class="line"><span class="language-xml">			<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;/<span class="name">Upload</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;<span class="name">Button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">			<span class="attr">className</span>=<span class="string">&quot;upload-demo-start&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">			<span class="attr">type</span>=<span class="string">&quot;primary&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">			<span class="attr">onClick</span>=<span class="string">&#123;this.handleUpload&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">			<span class="attr">disabled</span>=<span class="string">&#123;this.state.fileList.length</span> === <span class="string">0&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">			<span class="attr">loading</span>=<span class="string">&#123;uploading&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">			<span class="attr">style</span>=<span class="string">&#123;&#123;marginTop:20&#125;&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">		&gt;</span></span></span><br><span class="line"><span class="language-xml">			&#123;uploading ? &#x27;Uploading&#x27; : &#x27;Start Upload&#x27; &#125;</span></span><br><span class="line"><span class="language-xml">		<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Page</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>后续还将优化前端和脚本生成的数据，通过写入数据库，前端可以执行测试通过、已完成等，以记录我们的测试点的执行状态。前端部分感兴趣的可以看下我的源码：<a target="_blank" rel="noopener" href="https://github.com/t880216t/manager-web">https://github.com/t880216t/manager-web</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/javascript/" rel="tag"># javascript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/11/20/react_navigation/" rel="prev" title="react navigation的使用技巧">
+      <i class="fa fa-chevron-left"></i> react navigation的使用技巧
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/12/01/buger/" rel="next" title="移动端 JIRA 快速提 bug APP">
+      移动端 JIRA 快速提 bug APP <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '47b608376c8d08560510393ea57e7bc4',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

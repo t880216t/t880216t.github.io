@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="继之前的安全测试学习，对于现有的项目做了部分角度的安全测试。做个记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安卓安全测试----《四》sqlmap接口注入检查">
+<meta property="og:url" content="https://t880216t.github.io/2017/11/06/safe_android3/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="继之前的安全测试学习，对于现有的项目做了部分角度的安全测试。做个记录。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-11-06T15:50:12.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.583Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="android">
+<meta property="article:tag" content="安全测试">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://t880216t.github.io/2017/11/06/safe_android3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>安卓安全测试----《四》sqlmap接口注入检查 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2017/11/06/safe_android3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          安卓安全测试----《四》sqlmap接口注入检查
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-06 23:50:12" itemprop="dateCreated datePublished" datetime="2017-11-06T23:50:12+08:00">2017-11-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>继之前的安全测试学习，对于现有的项目做了部分角度的安全测试。做个记录。</p>
+<span id="more"></span>
+<h1 id="《四》sqlmap接口注入检查"><a href="#《四》sqlmap接口注入检查" class="headerlink" title="《四》sqlmap接口注入检查"></a>《四》sqlmap接口注入检查</h1><p>脚本更新：<br>——20171128新增了对GET请求的支持</p>
+<p>工具：sqlmap<br>介绍：sqlmap很强大，但实际人为去操作的话，会比较耗时间，结合抓包工具的接口数据保存。因为APP主要都是post请求，所以自己写了个自动遍历post接口数据文件的脚本。<br>相关的参数命令可以自行百度，或者查看github：<a target="_blank" rel="noopener" href="https://github.com/sqlmapproject/sqlmap/wiki/Usage">https://github.com/sqlmapproject/sqlmap/wiki/Usage</a></p>
+<p>步骤：<br>1.使用charles抓包所有需要检查sql注入的接口，基本就是把APP里的常用功能都点一遍。<br>（1）使用charles的过滤器只留下被测试应用的接口。<br>（2）全选被测接口，右键‘Export…’ -》 保存为 ‘data.har’文件<br>（3）运行makefile.py 脚本，生成测试接口数据文件<br>（4）运行run_sqlmap.py 脚本执行接口的sql注入检查</p>
+<p>我下面的脚本是直接在dos里把运行信息打印出来的，也可用注释掉那部分可以把运行log输出到文件分析。<br>但最终如果存在漏洞，sqlmap会自己记录到：用户&#x2F;.sqlmap&#x2F;output&#x2F;ip&#x2F;log 文件中的。</p>
+<p>2.脚本介绍<br>先简单说下我的目录结构:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--|sqlmap</span><br><span class="line">----|interface_trace</span><br><span class="line">--------|interface_post_file</span><br><span class="line">--------|data.har</span><br><span class="line">--------|makefile.py</span><br><span class="line">--------|run_sqlmap.py</span><br><span class="line">----|sqlmap.py</span><br></pre></td></tr></table></figure>
+
+<p>makefile.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*-coding:utf-8-*-</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">__author__=<span class="string">&quot;orion-c&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> json,os</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">loadFileData</span>(<span class="params">fileName</span>):</span><br><span class="line">    data = <span class="built_in">open</span>(fileName).read()</span><br><span class="line">    data = json.loads(data)</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line">fileName = <span class="string">&#x27;data.har&#x27;</span></span><br><span class="line">all_data = loadFileData(fileName)</span><br><span class="line">request_data = all_data[<span class="string">&#x27;log&#x27;</span>][<span class="string">&#x27;entries&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> request_index <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(request_data)):</span><br><span class="line">    method = request_data[request_index][<span class="string">&#x27;request&#x27;</span>][<span class="string">&#x27;method&#x27;</span>]</span><br><span class="line">    <span class="keyword">if</span> method == <span class="string">&quot;POST&quot;</span>:</span><br><span class="line">        url = request_data[request_index][<span class="string">&#x27;request&#x27;</span>][<span class="string">&#x27;url&#x27;</span>]</span><br><span class="line">        httpVersion = request_data[request_index][<span class="string">&#x27;request&#x27;</span>][<span class="string">&#x27;httpVersion&#x27;</span>]</span><br><span class="line">        path = url.replace(<span class="string">&#x27;http://192.168.43.131:82/&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        <span class="comment">#path = url[25:url.rfind(&#x27;?&#x27;, 1)]  #这里注意我的访问域名是xxxx:82,是25个字符，如果端口是8081等需改为27，如果是域名，改为23，下同</span></span><br><span class="line">        title_line = method + <span class="string">&#x27; /&#x27;</span> + path + <span class="string">&#x27; &#x27;</span> + httpVersion</span><br><span class="line">        headers = request_data[request_index][<span class="string">&#x27;request&#x27;</span>][<span class="string">&#x27;headers&#x27;</span>]</span><br><span class="line">        new_headers = []</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> headers:</span><br><span class="line">            new_headers.append(item[<span class="string">&#x27;name&#x27;</span>] + <span class="string">&#x27;: &#x27;</span>+item[<span class="string">&#x27;value&#x27;</span>])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            str_new_postData = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            postData = request_data[request_index][<span class="string">&#x27;request&#x27;</span>][<span class="string">&#x27;postData&#x27;</span>][<span class="string">&#x27;params&#x27;</span>]</span><br><span class="line">            new_postData = []</span><br><span class="line">            <span class="keyword">for</span> params_item_index <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(postData)):</span><br><span class="line">                <span class="keyword">if</span> params_item_index &lt; <span class="built_in">len</span>(postData) -<span class="number">1</span> :</span><br><span class="line">                    new_postData.append(postData[params_item_index][<span class="string">&#x27;name&#x27;</span>]+<span class="string">&#x27;=&#x27;</span>+postData[params_item_index][<span class="string">&#x27;value&#x27;</span>]+<span class="string">&#x27;&amp;&#x27;</span>)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    new_postData.append(postData[params_item_index][<span class="string">&#x27;name&#x27;</span>] + <span class="string">&#x27;=&#x27;</span> + postData[params_item_index][<span class="string">&#x27;value&#x27;</span>])</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> new_postData:</span><br><span class="line">                str_new_postData = str_new_postData + i</span><br><span class="line"></span><br><span class="line">            title = path.replace(<span class="string">&#x27;/&#x27;</span>, <span class="string">&#x27;_&#x27;</span>)</span><br><span class="line">            filePath = <span class="string">&quot;interface_post_file\\%s.txt&quot;</span> % title</span><br><span class="line">            int_tm = <span class="built_in">int</span>(<span class="built_in">round</span>(time.time() * <span class="number">1000</span>))</span><br><span class="line">            tm = <span class="built_in">str</span>(int_tm)</span><br><span class="line">            <span class="keyword">if</span> os.path.exists(filePath):</span><br><span class="line">                new_file = title + tm</span><br><span class="line">                filePath = <span class="string">&quot;interface_post_file\\%s.txt&quot;</span> % new_file</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(filePath, <span class="string">&quot;a&quot;</span>) <span class="keyword">as</span> f:  <span class="comment"># 格式化字符串还能这么用！</span></span><br><span class="line">                f.writelines(title_line + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> new_headers:</span><br><span class="line">                    f.writelines(i + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">                f.writelines(<span class="string">&#x27; &#x27;</span> + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">                f.writelines(str_new_postData)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            title = path.replace(<span class="string">&#x27;/&#x27;</span>, <span class="string">&#x27;_&#x27;</span>)</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;interface_post_file\\%s.txt&quot;</span> % title, <span class="string">&quot;a&quot;</span>) <span class="keyword">as</span> f:  <span class="comment"># 格式化字符串还能这么用！</span></span><br><span class="line">                f.writelines(title_line + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> new_headers:</span><br><span class="line">                    f.writelines(i + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> method == <span class="string">&quot;GET&quot;</span>:</span><br><span class="line"></span><br><span class="line">        url = request_data[request_index][<span class="string">&#x27;request&#x27;</span>][<span class="string">&#x27;url&#x27;</span>]</span><br><span class="line">        path = url[<span class="number">25</span>:url.rfind(<span class="string">&#x27;?&#x27;</span>, <span class="number">1</span>)]</span><br><span class="line">        path_and_parms = url[<span class="number">25</span>:<span class="built_in">len</span>(url)]</span><br><span class="line">        httpVersion = request_data[request_index][<span class="string">&#x27;request&#x27;</span>][<span class="string">&#x27;httpVersion&#x27;</span>]</span><br><span class="line">        title_line = method + <span class="string">&#x27; /&#x27;</span> + path_and_parms + <span class="string">&#x27; &#x27;</span> + httpVersion</span><br><span class="line">        headers = request_data[request_index][<span class="string">&#x27;request&#x27;</span>][<span class="string">&#x27;headers&#x27;</span>]</span><br><span class="line">        new_headers = []</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> headers:</span><br><span class="line">            new_headers.append(item[<span class="string">&#x27;name&#x27;</span>] + <span class="string">&#x27;: &#x27;</span> + item[<span class="string">&#x27;value&#x27;</span>])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            title = path.replace(<span class="string">&#x27;/&#x27;</span>, <span class="string">&#x27;_&#x27;</span>)</span><br><span class="line">            filePath = <span class="string">&quot;interface_post_file\\%s.txt&quot;</span> % title</span><br><span class="line">            int_tm = <span class="built_in">int</span>(<span class="built_in">round</span>(time.time() * <span class="number">1000</span>))</span><br><span class="line">            tm = <span class="built_in">str</span>(int_tm)</span><br><span class="line">            <span class="keyword">if</span> os.path.exists(filePath):</span><br><span class="line">                new_file = title + tm</span><br><span class="line">                filePath = <span class="string">&quot;interface_post_file\\%s.txt&quot;</span> % new_file</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(filePath, <span class="string">&quot;a&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                f.writelines(title_line + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> new_headers:</span><br><span class="line">                    f.writelines(i + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            title = path.replace(<span class="string">&#x27;/&#x27;</span>, <span class="string">&#x27;_&#x27;</span>)</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;interface_post_file\\%s.txt&quot;</span> % title, <span class="string">&quot;a&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                f.writelines(title_line + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> new_headers:</span><br><span class="line">                    f.writelines(i + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>run_sqlmap.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*-coding:utf-8-*-</span></span><br><span class="line">__author__=<span class="string">&quot;orion-c&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># 遍历指定目录，显示目录下的所有文件名</span></span><br><span class="line">here = os.getcwd()</span><br><span class="line">interface_post_file = here+<span class="string">&#x27;\interface_post_file&#x27;</span></span><br><span class="line">pathDir = os.listdir(interface_post_file)</span><br><span class="line">file_paths = []</span><br><span class="line"><span class="keyword">for</span> allDir <span class="keyword">in</span> pathDir:</span><br><span class="line">	child = os.path.join(<span class="string">&#x27;%s\%s&#x27;</span> % (interface_post_file, allDir))</span><br><span class="line">	file_paths.append(child.decode(<span class="string">&#x27;gbk&#x27;</span>)) <span class="comment"># .decode(&#x27;gbk&#x27;)是解决中文显示乱码问题</span></span><br><span class="line">os.chdir(<span class="string">&#x27;..&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> file_path_index <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(file_paths)):</span><br><span class="line">	<span class="comment">#os.system(&#x27;python sqlmap.py -r %s --batch &gt;&gt; result.txt&#x27;%file_paths[file_path_index])</span></span><br><span class="line">	os.system(<span class="string">&#x27;python sqlmap.py -r %s --batch&#x27;</span>%file_paths[file_path_index])</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/android/" rel="tag"># android</a>
+              <a href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag"># 安全测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/11/06/safe_android/" rel="prev" title="安卓安全测试----《一》应用反编译">
+      <i class="fa fa-chevron-left"></i> 安卓安全测试----《一》应用反编译
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/11/06/safe_android2/" rel="next" title="安卓安全测试----《三》数据备份检查">
+      安卓安全测试----《三》数据备份检查 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%8A%E5%9B%9B%E3%80%8Bsqlmap%E6%8E%A5%E5%8F%A3%E6%B3%A8%E5%85%A5%E6%A3%80%E6%9F%A5"><span class="nav-number">1.</span> <span class="nav-text">《四》sqlmap接口注入检查</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '7e0188ca392bd40734a33854d025ea29',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="最近开发了一个应用包管理平台，主要提供给内部人员使用，可以扫码下载App安装包，因为还要平台外的分发，所以需要提供个二维码保存的功能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript保存网页元素为图片并下载到本地">
+<meta property="og:url" content="https://t880216t.github.io/2020/07/03/saveimg/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="最近开发了一个应用包管理平台，主要提供给内部人员使用，可以扫码下载App安装包，因为还要平台外的分发，所以需要提供个二维码保存的功能。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-03T07:41:00.000Z">
+<meta property="article:modified_time" content="2022-05-09T06:26:04.369Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://t880216t.github.io/2020/07/03/saveimg/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Javascript保存网页元素为图片并下载到本地 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2020/07/03/saveimg/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Javascript保存网页元素为图片并下载到本地
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-03 15:41:00" itemprop="dateCreated datePublished" datetime="2020-07-03T15:41:00+08:00">2020-07-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 14:26:04" itemprop="dateModified" datetime="2022-05-09T14:26:04+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近开发了一个应用包管理平台，主要提供给内部人员使用，可以扫码下载App安装包，因为还要平台外的分发，所以需要提供个二维码保存的功能。</p>
+<span id="more"></span>
+
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>针对网页元素保存为图片，我可以用的是<a target="_blank" rel="noopener" href="https://github.com/niklasvh/html2canvas">html2canvas</a>，二维码生成我原来用的qrcode-react 库，但是发现这个图无法绘制到Canvas中，且这个库没有提供生成图片的回调，因此要实现我的功能只能二次开发下这个库了。</p>
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><h3 id="生成二维码并回传图片信息"><a href="#生成二维码并回传图片信息" class="headerlink" title="生成二维码并回传图片信息"></a>生成二维码并回传图片信息</h3><p>建一个二维码处理组件，可以看到依赖qr.js:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install qr.js</span><br></pre></td></tr></table></figure>
+<p>安装好后，创建文件 <code>qrcode-reactjs.js</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">React</span> = <span class="built_in">require</span>(<span class="string">&#x27;react&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> <span class="title class_">PropTypes</span> = <span class="built_in">require</span>(<span class="string">&#x27;prop-types&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> <span class="title class_">ReactDOM</span> = <span class="built_in">require</span>(<span class="string">&#x27;react-dom&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> qr = <span class="built_in">require</span>(<span class="string">&#x27;qr.js&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getBackingStorePixelRatio</span>(<span class="params">ctx</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    ctx.<span class="property">webkitBackingStorePixelRatio</span> ||</span><br><span class="line">    ctx.<span class="property">mozBackingStorePixelRatio</span> ||</span><br><span class="line">    ctx.<span class="property">msBackingStorePixelRatio</span> ||</span><br><span class="line">    ctx.<span class="property">oBackingStorePixelRatio</span> ||</span><br><span class="line">    ctx.<span class="property">backingStorePixelRatio</span> ||</span><br><span class="line">    <span class="number">1</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> getDOMNode;</span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/^0\.14/</span>.<span class="title function_">test</span>(<span class="title class_">React</span>.<span class="property">version</span>)) &#123;</span><br><span class="line">  getDOMNode = <span class="keyword">function</span>(<span class="params">ref</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> ref;</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  getDOMNode = <span class="keyword">function</span>(<span class="params">ref</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">ReactDOM</span>.<span class="title function_">findDOMNode</span>(ref);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">QRCode</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="title function_">shouldComponentUpdate</span>(<span class="params">nextProps</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> that = <span class="variable language_">this</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Object</span>.<span class="title function_">keys</span>(<span class="title class_">QRCode</span>.<span class="property">propTypes</span>).<span class="title function_">some</span>(<span class="keyword">function</span>(<span class="params">k</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> that.<span class="property">props</span>[k] !== nextProps[k];</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">update</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentDidUpdate</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">update</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">utf16to8</span>(<span class="params">str</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> out, i, len, c;</span><br><span class="line">    out = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    len = str.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">      c = str.<span class="title function_">charCodeAt</span>(i);</span><br><span class="line">      <span class="keyword">if</span> ((c &gt;= <span class="number">0x0001</span>) &amp;&amp; (c &lt;= <span class="number">0x007F</span>)) &#123;</span><br><span class="line">        out += str.<span class="title function_">charAt</span>(i);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c &gt; <span class="number">0x07FF</span>) &#123;</span><br><span class="line">        out += <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="number">0xE0</span> | ((c &gt;&gt; <span class="number">12</span>) &amp; <span class="number">0x0F</span>));</span><br><span class="line">        out += <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="number">0x80</span> | ((c &gt;&gt; <span class="number">6</span>) &amp; <span class="number">0x3F</span>));</span><br><span class="line">        out += <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="number">0x80</span> | ((c &gt;&gt; <span class="number">0</span>) &amp; <span class="number">0x3F</span>));</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        out += <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="number">0xC0</span> | ((c &gt;&gt; <span class="number">6</span>) &amp; <span class="number">0x1F</span>));</span><br><span class="line">        out += <span class="title class_">String</span>.<span class="title function_">fromCharCode</span>(<span class="number">0x80</span> | ((c &gt;&gt; <span class="number">0</span>) &amp; <span class="number">0x3F</span>));</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> out;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">update</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> value = <span class="variable language_">this</span>.<span class="title function_">utf16to8</span>(<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">value</span>);</span><br><span class="line">    <span class="keyword">var</span> qrcode = <span class="title function_">qr</span>(value);</span><br><span class="line">    <span class="keyword">var</span> canvas = <span class="title function_">getDOMNode</span>(<span class="variable language_">this</span>.<span class="property">refs</span>.<span class="property">canvas</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> ctx = canvas.<span class="title function_">getContext</span>(<span class="string">&#x27;2d&#x27;</span>);</span><br><span class="line">    <span class="keyword">var</span> cells = qrcode.<span class="property">modules</span>;</span><br><span class="line">    <span class="keyword">var</span> tileW = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">size</span> / cells.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">var</span> tileH = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">size</span> / cells.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">var</span> scale = (<span class="variable language_">window</span>.<span class="property">devicePixelRatio</span> || <span class="number">1</span>) / <span class="title function_">getBackingStorePixelRatio</span>(ctx);</span><br><span class="line">    canvas.<span class="property">height</span> = canvas.<span class="property">width</span> = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">size</span> * scale;</span><br><span class="line">    ctx.<span class="title function_">scale</span>(scale, scale);</span><br><span class="line"></span><br><span class="line">    cells.<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">row, rdx</span>) &#123;</span><br><span class="line">      row.<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">cell, cdx</span>) &#123;</span><br><span class="line">        ctx.<span class="property">fillStyle</span> = cell ? <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">fgColor</span> : <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">bgColor</span>;</span><br><span class="line">        <span class="keyword">var</span> w = (<span class="title class_">Math</span>.<span class="title function_">ceil</span>((cdx + <span class="number">1</span>) * tileW) - <span class="title class_">Math</span>.<span class="title function_">floor</span>(cdx * tileW));</span><br><span class="line">        <span class="keyword">var</span> h = (<span class="title class_">Math</span>.<span class="title function_">ceil</span>((rdx + <span class="number">1</span>) * tileH) - <span class="title class_">Math</span>.<span class="title function_">floor</span>(rdx * tileH));</span><br><span class="line">        ctx.<span class="title function_">fillRect</span>(<span class="title class_">Math</span>.<span class="title function_">round</span>(cdx * tileW), <span class="title class_">Math</span>.<span class="title function_">round</span>(rdx * tileH), w, h);</span><br><span class="line">      &#125;, <span class="variable language_">this</span>);</span><br><span class="line">    &#125;, <span class="variable language_">this</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">logo</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> self = <span class="variable language_">this</span></span><br><span class="line">      <span class="keyword">var</span> size = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">size</span>;</span><br><span class="line">      <span class="keyword">var</span> image = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;img&#x27;</span>);</span><br><span class="line">      image.<span class="property">src</span> = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">logo</span>;</span><br><span class="line">      image.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> dwidth = self.<span class="property">props</span>.<span class="property">logoWidth</span> || size * <span class="number">0.2</span>;</span><br><span class="line">        <span class="keyword">var</span> dheight = self.<span class="property">props</span>.<span class="property">logoHeight</span> || image.<span class="property">height</span> / image.<span class="property">width</span> * dwidth;</span><br><span class="line">        <span class="keyword">var</span> dx = (size - dwidth) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">var</span> dy = (size - dheight) / <span class="number">2</span>;</span><br><span class="line">        image.<span class="property">width</span> = dwidth;</span><br><span class="line">        image.<span class="property">height</span> = dheight;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;dwidth&#x27;</span>, dwidth)</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;dheight&#x27;</span>, dheight)</span><br><span class="line">        ctx.<span class="title function_">drawImage</span>(image, dx, dy, dwidth, dheight);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">onCanvasLoad</span>)&#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">props</span>.<span class="title function_">onCanvasLoad</span>(canvas.<span class="title function_">toDataURL</span>(<span class="string">&#x27;image/png&#x27;</span>))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;canvas&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">style</span>: &#123; <span class="attr">height</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">size</span>, <span class="attr">width</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">size</span> &#125;,</span><br><span class="line">      <span class="attr">height</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">size</span>,</span><br><span class="line">      <span class="attr">width</span>: <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">size</span>,</span><br><span class="line">      <span class="attr">ref</span>: <span class="string">&#x27;canvas&#x27;</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">QRCode</span>.<span class="property">propTypes</span> = &#123;</span><br><span class="line">  <span class="attr">value</span>: <span class="title class_">PropTypes</span>.<span class="property">string</span>.<span class="property">isRequired</span>,</span><br><span class="line">  <span class="attr">size</span>: <span class="title class_">PropTypes</span>.<span class="property">number</span>,</span><br><span class="line">  <span class="attr">bgColor</span>: <span class="title class_">PropTypes</span>.<span class="property">string</span>,</span><br><span class="line">  <span class="attr">fgColor</span>: <span class="title class_">PropTypes</span>.<span class="property">string</span>,</span><br><span class="line">  <span class="attr">logo</span>: <span class="title class_">PropTypes</span>.<span class="property">string</span>,</span><br><span class="line">  <span class="attr">logoWidth</span>: <span class="title class_">PropTypes</span>.<span class="property">number</span>,</span><br><span class="line">  <span class="attr">logoHeight</span>: <span class="title class_">PropTypes</span>.<span class="property">number</span>,</span><br><span class="line">  <span class="attr">onCanvasLoad</span>: <span class="title class_">PropTypes</span>.<span class="property">func</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">QRCode</span>.<span class="property">defaultProps</span> = &#123;</span><br><span class="line">  <span class="attr">size</span>: <span class="number">128</span>,</span><br><span class="line">  <span class="attr">bgColor</span>: <span class="string">&#x27;#FFFFFF&#x27;</span>,</span><br><span class="line">  <span class="attr">fgColor</span>: <span class="string">&#x27;#000000&#x27;</span>,</span><br><span class="line">  <span class="attr">value</span>: <span class="string">&#x27;http://facebook.github.io/react/&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title class_">QRCode</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>调用方式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">QRCode</span> <span class="keyword">from</span> <span class="string">&#x27;@/utils/qrcode-reactjs&#x27;</span></span><br><span class="line"></span><br><span class="line">&lt;<span class="title class_">QRCode</span> value=&#123;downloadURL&#125; size=&#123;<span class="number">250</span>&#125; onCanvasLoad=&#123;<span class="function"><span class="params">dataUrl</span> =&gt;</span> <span class="variable language_">this</span>.<span class="title function_">handleImageLoad</span>(dataUrl)&#125; /&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="根据Base64内容创建图片Dom"><a href="#根据Base64内容创建图片Dom" class="headerlink" title="根据Base64内容创建图片Dom"></a>根据Base64内容创建图片Dom</h3><p>这里做了个1秒延迟，防止二维码初始化时的报错，图片加载后注意把原来的QRCode节点隐藏。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">handleImageLoad = <span class="function"><span class="params">dataUrl</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; imgUrl &#125; = <span class="variable language_">this</span>.<span class="property">state</span>;</span><br><span class="line">    <span class="keyword">if</span> (imgUrl !== dataUrl) &#123;</span><br><span class="line">      <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">          <span class="attr">imgUrl</span>: dataUrl,</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;, <span class="number">1000</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#123;imgUrl &amp;&amp; ( <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;imgUrl&#125;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">height:</span> <span class="attr">250</span>, <span class="attr">width:</span> <span class="attr">250</span> &#125;&#125; <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>/&gt;</span> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="保存图片到本地"><a href="#保存图片到本地" class="headerlink" title="保存图片到本地"></a>保存图片到本地</h3><p>保存元素到图片我用的<code>html2canvas</code>，支持保存整个页面，也支持保存指定的元素Dom。我们实际只需要二维码和下面的描述信息。所以直接给需要的元素加上<code>ref</code>即可，也可以给个id，自己查找下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">handleSaveImg = <span class="function"><span class="params">packageName</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">html2canvas</span>(<span class="variable language_">this</span>.<span class="property">qrCodeImg</span>, &#123; <span class="attr">allowTaint</span>: <span class="literal">true</span>, <span class="attr">useCORS</span>: <span class="literal">true</span> &#125;).<span class="title function_">then</span>(<span class="function"><span class="params">canvas</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> a = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line">      a.<span class="property">href</span> = canvas.<span class="title function_">toDataURL</span>(<span class="string">&#x27;image/png&#x27;</span>);</span><br><span class="line">      a.<span class="property">download</span> = <span class="string">`<span class="subst">$&#123;packageName&#125;</span>_<span class="subst">$&#123;<span class="keyword">new</span> <span class="built_in">Date</span>().getTime().toString()&#125;</span>`</span>;</span><br><span class="line">      a.<span class="title function_">click</span>();</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&lt;div ref=&#123;<span class="function"><span class="params">node</span> =&gt;</span> &#123; <span class="variable language_">this</span>.<span class="property">qrCodeImg</span> = node &#125;&#125; className=&#123;styles.<span class="property">flavorList</span>&#125; &gt;</span><br><span class="line">...</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">Button</span> <span class="attr">type</span>=<span class="string">&quot;primary&quot;</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> this.handleSaveImg(packageInfo.name)&#125;&gt; 下载二维码 <span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>至此功能已经完成了，需要的试试吧。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/javascript/" rel="tag"># javascript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/19/sc/" rel="prev" title="如何设计一款安全高可用的登录模块">
+      <i class="fa fa-chevron-left"></i> 如何设计一款安全高可用的登录模块
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/08/celery-selenium/" rel="next" title="分布式Web UI自动化系统的设计与实现">
+      分布式Web UI自动化系统的设计与实现 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B"><span class="nav-number">2.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81%E5%B9%B6%E5%9B%9E%E4%BC%A0%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF"><span class="nav-number">2.0.1.</span> <span class="nav-text">生成二维码并回传图片信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AEBase64%E5%86%85%E5%AE%B9%E5%88%9B%E5%BB%BA%E5%9B%BE%E7%89%87Dom"><span class="nav-number">2.0.2.</span> <span class="nav-text">根据Base64内容创建图片Dom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E5%9B%BE%E7%89%87%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="nav-number">2.0.3.</span> <span class="nav-text">保存图片到本地</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">3.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '2176549f1c2ac5b8825646a77737baab',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

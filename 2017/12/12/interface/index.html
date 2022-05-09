@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1前言接口自动化测试的工具很多，比如soapUI，postman，jmeter等等，但是这些通用的工具的可扩展性以及跟项目的契合度上并不是十分合适。单有框架，还不足以让接口自动化更简化，自动化测试需要大量编码维护工作，为了改善这些问题，让接口测试更加流畅，数据维护更加简单，解放重复的劳动力，所以将其做成平台型的，可以让不懂技术的人都能使用，同时也让接口用例更加简单明了，易维护。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react + flask + unittest实现的接口自动化测试平台">
+<meta property="og:url" content="https://t880216t.github.io/2017/12/12/interface/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="1前言接口自动化测试的工具很多，比如soapUI，postman，jmeter等等，但是这些通用的工具的可扩展性以及跟项目的契合度上并不是十分合适。单有框架，还不足以让接口自动化更简化，自动化测试需要大量编码维护工作，为了改善这些问题，让接口测试更加流畅，数据维护更加简单，解放重复的劳动力，所以将其做成平台型的，可以让不懂技术的人都能使用，同时也让接口用例更加简单明了，易维护。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2017/2d1bc668-6eb6-4aa8-905a-cf02fd2687c2.gif!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2017/d1e97af4-69d2-49b2-aabe-19f4081de51a.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2017/eb870cc0-35cf-4587-a4ef-b4692fc38faf.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2017/ecd155c1-fb6c-483e-9213-6502410f9b97.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2017/1e76677c-0916-4549-ba04-dff5e45f6c96.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2017/854af1fa-b85d-43f7-b5ad-7295aa76d7e6.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2017/ed825fc7-7a0b-4f0a-bf56-3689ab54af67.png!large">
+<meta property="article:published_time" content="2017-12-12T15:50:12.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.575Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="react">
+<meta property="article:tag" content="flask">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://testerhome.com/uploads/photo/2017/2d1bc668-6eb6-4aa8-905a-cf02fd2687c2.gif!large">
+
+<link rel="canonical" href="https://t880216t.github.io/2017/12/12/interface/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>react + flask + unittest实现的接口自动化测试平台 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2017/12/12/interface/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          react + flask + unittest实现的接口自动化测试平台
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-12-12 23:50:12" itemprop="dateCreated datePublished" datetime="2017-12-12T23:50:12+08:00">2017-12-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1前言"><a href="#1前言" class="headerlink" title="1前言"></a>1前言</h1><p>接口自动化测试的工具很多，比如soapUI，postman，jmeter等等，但是这些通用的工具的可扩展性以及跟项目的契合度上并不是十分合适。<br>单有框架，还不足以让接口自动化更简化，自动化测试需要大量编码维护工作，为了改善这些问题，让接口测试更加流畅，数据维护更加简单，解放重复的劳动力，所以将其做成平台型的，可以让不懂技术的人都能使用，同时也让接口用例更加简单明了，易维护。</p>
+<span id="more"></span>
+
+<p>简单示范下使用流程。<br><img src="https://testerhome.com/uploads/photo/2017/2d1bc668-6eb6-4aa8-905a-cf02fd2687c2.gif!large"></p>
+<p>开源地址如下，欢迎提bug或建议。<br>服务端：<a target="_blank" rel="noopener" href="https://github-com/t880216t/manager-server">https://github-com/t880216t/manager-server</a><br>客户端：<a target="_blank" rel="noopener" href="https://github-com/t880216t/manager-web">https://github-com/t880216t/manager-web</a></p>
+<h1 id="2框架"><a href="#2框架" class="headerlink" title="2框架"></a>2框架</h1><h2 id="2-1框架简介"><a href="#2-1框架简介" class="headerlink" title="2-1框架简介"></a>2-1框架简介</h2><p>前端reactjs语言实现，后台由flask提供restful接口，基于pythonunittest测试框架，一键生成测试脚本，可视化的维护测试数据。</p>
+<h2 id="2-2框架介绍"><a href="#2-2框架介绍" class="headerlink" title="2-2框架介绍"></a>2-2框架介绍</h2><p>1-基于Python+unittest测试框架<br>2-二次封装了urlib库，对于cookie及存在业务流程依赖的数据，做了保存处理，可连贯测试业务流程及不同的请求场景。<br>3-支持多项目、不同环境数据参数的扩展。<br>4-支持返回值的code、指定字段校验，提升测试准确性。<br>5-定时任务、即时任务执行，满足稳定接口自动化业务测试及临时接口的调试测试。<br>6-在线报告展示以及Email自动发送报告</p>
+<h2 id="2-3框架结构"><a href="#2-3框架结构" class="headerlink" title="2-3框架结构"></a>2-3框架结构</h2><p>结构图：分为前后台两套代码<br><img src="https://testerhome.com/uploads/photo/2017/d1e97af4-69d2-49b2-aabe-19f4081de51a.png!large"></p>
+<h1 id="3平台"><a href="#3平台" class="headerlink" title="3平台"></a>3平台</h1><h2 id="3-1平台组件图"><a href="#3-1平台组件图" class="headerlink" title="3-1平台组件图"></a>3-1平台组件图</h2><h3 id="1新建用例"><a href="#1新建用例" class="headerlink" title="1新建用例"></a>1新建用例</h3><p><img src="https://testerhome.com/uploads/photo/2017/eb870cc0-35cf-4587-a4ef-b4692fc38faf.png!large"></p>
+<h3 id="2生成测试任务"><a href="#2生成测试任务" class="headerlink" title="2生成测试任务"></a>2生成测试任务</h3><p><img src="https://testerhome.com/uploads/photo/2017/ecd155c1-fb6c-483e-9213-6502410f9b97.png!large"></p>
+<h3 id="3执行并查看测试报告"><a href="#3执行并查看测试报告" class="headerlink" title="3执行并查看测试报告"></a>3执行并查看测试报告</h3><p><img src="https://testerhome.com/uploads/photo/2017/1e76677c-0916-4549-ba04-dff5e45f6c96.png!large"></p>
+<h2 id="3-2用例管理"><a href="#3-2用例管理" class="headerlink" title="3-2用例管理"></a>3-2用例管理</h2><p>在线编写自动化测试，让大家都能够参与测试<br>自动化用例编辑可视化，使自动化过程更加简单明了<br>针对需要连续流程获取的参数值，提供json类型的数据解析，获取指定的值。</p>
+<h3 id="3-2-1用例设计"><a href="#3-2-1用例设计" class="headerlink" title="3-2-1用例设计"></a>3-2-1用例设计</h3><p>平台用例执行流程图<br><img src="https://testerhome.com/uploads/photo/2017/854af1fa-b85d-43f7-b5ad-7295aa76d7e6.png!large"></p>
+<h2 id="3-3任务管理"><a href="#3-3任务管理" class="headerlink" title="3-3任务管理"></a>3-3任务管理</h2><h3 id="3-3-1创建任务"><a href="#3-3-1创建任务" class="headerlink" title="3-3-1创建任务"></a>3-3-1创建任务</h3><p>根据测试用例，生成指定域名或测试机器ip的测试任务。</p>
+<h3 id="3-3-2执行任务"><a href="#3-3-2执行任务" class="headerlink" title="3-3-2执行任务"></a>3-3-2执行任务</h3><p>定时任务是在计划好的时间点自动执行指定的测试用例，每日执行<br>每次执行测试用例（包括手动执行和定时任务）之后，都会生成一份测试报告，发送给指定人。</p>
+<h3 id="3-3-3测试报告"><a href="#3-3-3测试报告" class="headerlink" title="3-3-3测试报告"></a>3-3-3测试报告</h3><p><img src="https://testerhome.com/uploads/photo/2017/ed825fc7-7a0b-4f0a-bf56-3689ab54af67.png!large"><br>可按测试时间及给定文件名，生成对应时间的html可视化报告，报告内容包含测试耗时，测试执行用例总数，执行成功、失败、出错用例数统计；还有单个用例的执行情况(ID,用例名称，服务端返回值，运行结果等)</p>
+<h3 id="3-3-4邮件通知"><a href="#3-3-4邮件通知" class="headerlink" title="3-3-4邮件通知"></a>3-3-4邮件通知</h3><p>暂时发送人和接收人是写在代码里的，看需求再看是否需要做成前端配置。</p>
+<h1 id="4后续可做的功能"><a href="#4后续可做的功能" class="headerlink" title="4后续可做的功能"></a>4后续可做的功能</h1><h2 id="4-1用户管理"><a href="#4-1用户管理" class="headerlink" title="4-1用户管理"></a>4-1用户管理</h2><p>建立不同角色，对用例、任务的操作权限</p>
+<h2 id="4-2参数全局修改"><a href="#4-2参数全局修改" class="headerlink" title="4-2参数全局修改"></a>4-2参数全局修改</h2><p>常用常变的参数，提供全局修改功能，提高测试效率，提升用户体验。</p>
+<h2 id="4-3接入研发的API接口平台"><a href="#4-3接入研发的API接口平台" class="headerlink" title="4-3接入研发的API接口平台"></a>4-3接入研发的API接口平台</h2><p>实现接口与接口用例的一致性</p>
+<h2 id="4-4邮件内容及接收人定制化发送"><a href="#4-4邮件内容及接收人定制化发送" class="headerlink" title="4-4邮件内容及接收人定制化发送"></a>4-4邮件内容及接收人定制化发送</h2><p>丰富邮件正文，接收人参数化配置</p>
+<h2 id="5待解决的问题"><a href="#5待解决的问题" class="headerlink" title="5待解决的问题"></a>5待解决的问题</h2><p>1-上传文件接口脚本适配<br>2-多版本同时修改接口，执行接口用例。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/react/" rel="tag"># react</a>
+              <a href="/tags/flask/" rel="tag"># flask</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/12/01/buger/" rel="prev" title="移动端 JIRA 快速提 bug APP">
+      <i class="fa fa-chevron-left"></i> 移动端 JIRA 快速提 bug APP
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/12/18/xmind2/" rel="next" title="用python将思维导图转换成树形列表（二）">
+      用python将思维导图转换成树形列表（二） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2%E6%A1%86%E6%9E%B6"><span class="nav-number">2.</span> <span class="nav-text">2框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1%E6%A1%86%E6%9E%B6%E7%AE%80%E4%BB%8B"><span class="nav-number">2.1.</span> <span class="nav-text">2-1框架简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2%E6%A1%86%E6%9E%B6%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.2.</span> <span class="nav-text">2-2框架介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3%E6%A1%86%E6%9E%B6%E7%BB%93%E6%9E%84"><span class="nav-number">2.3.</span> <span class="nav-text">2-3框架结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3%E5%B9%B3%E5%8F%B0"><span class="nav-number">3.</span> <span class="nav-text">3平台</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1%E5%B9%B3%E5%8F%B0%E7%BB%84%E4%BB%B6%E5%9B%BE"><span class="nav-number">3.1.</span> <span class="nav-text">3-1平台组件图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E6%96%B0%E5%BB%BA%E7%94%A8%E4%BE%8B"><span class="nav-number">3.1.1.</span> <span class="nav-text">1新建用例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E7%94%9F%E6%88%90%E6%B5%8B%E8%AF%95%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.1.2.</span> <span class="nav-text">2生成测试任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E6%89%A7%E8%A1%8C%E5%B9%B6%E6%9F%A5%E7%9C%8B%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A"><span class="nav-number">3.1.3.</span> <span class="nav-text">3执行并查看测试报告</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2%E7%94%A8%E4%BE%8B%E7%AE%A1%E7%90%86"><span class="nav-number">3.2.</span> <span class="nav-text">3-2用例管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-1%E7%94%A8%E4%BE%8B%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.2.1.</span> <span class="nav-text">3-2-1用例设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86"><span class="nav-number">3.3.</span> <span class="nav-text">3-3任务管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-1%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.3.1.</span> <span class="nav-text">3-3-1创建任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-2%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.3.2.</span> <span class="nav-text">3-3-2执行任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-3%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A"><span class="nav-number">3.3.3.</span> <span class="nav-text">3-3-3测试报告</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-4%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5"><span class="nav-number">3.3.4.</span> <span class="nav-text">3-3-4邮件通知</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4%E5%90%8E%E7%BB%AD%E5%8F%AF%E5%81%9A%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">4.</span> <span class="nav-text">4后续可做的功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-number">4.1.</span> <span class="nav-text">4-1用户管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2%E5%8F%82%E6%95%B0%E5%85%A8%E5%B1%80%E4%BF%AE%E6%94%B9"><span class="nav-number">4.2.</span> <span class="nav-text">4-2参数全局修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3%E6%8E%A5%E5%85%A5%E7%A0%94%E5%8F%91%E7%9A%84API%E6%8E%A5%E5%8F%A3%E5%B9%B3%E5%8F%B0"><span class="nav-number">4.3.</span> <span class="nav-text">4-3接入研发的API接口平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4%E9%82%AE%E4%BB%B6%E5%86%85%E5%AE%B9%E5%8F%8A%E6%8E%A5%E6%94%B6%E4%BA%BA%E5%AE%9A%E5%88%B6%E5%8C%96%E5%8F%91%E9%80%81"><span class="nav-number">4.4.</span> <span class="nav-text">4-4邮件内容及接收人定制化发送</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E5%BE%85%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">4.5.</span> <span class="nav-text">5待解决的问题</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '8cba66786d3e1b42c6b418b393135cbf',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

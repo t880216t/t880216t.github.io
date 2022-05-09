@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="世面上云真机平台有很多，但开源的很少，且收费不菲，于是深挖了下实现原理，着手设计开发一个符合自身定制需求的平台。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="支持IOS&amp;Android的云真机平台的设计与实现">
+<meta property="og:url" content="https://t880216t.github.io/2020/03/10/cloudDevice/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="世面上云真机平台有很多，但开源的很少，且收费不菲，于是深挖了下实现原理，着手设计开发一个符合自身定制需求的平台。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/17067099-d3b4200504df4114.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/17067099-7abd87361169446c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/740">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/17067099-58927753b8574bc6.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/17067099-57a65be84edb1a39.gif?imageMogr2/auto-orient/strip">
+<meta property="article:published_time" content="2020-03-10T00:46:52.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.573Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="云真机">
+<meta property="article:tag" content="object-c">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/17067099-d3b4200504df4114.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+
+<link rel="canonical" href="https://t880216t.github.io/2020/03/10/cloudDevice/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>支持IOS&Android的云真机平台的设计与实现 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2020/03/10/cloudDevice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          支持IOS&Android的云真机平台的设计与实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-10 08:46:52" itemprop="dateCreated datePublished" datetime="2020-03-10T08:46:52+08:00">2020-03-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>世面上云真机平台有很多，但开源的很少，且收费不菲，于是深挖了下实现原理，着手设计开发一个符合自身定制需求的平台。</p>
+<span id="more"></span>
+
+<p>图片没有单独传，可以在我的简书中看到：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/2ff4c60243f5">https://www.jianshu.com/p/2ff4c60243f5</a></p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>疫情期间，同事们在家远程办公，为保证移动端版本的测试进度，和移动设备的最大化利用率，基于开源框架搭建了一套云真机系统。<br>并根据应用兼容性标准，接入了常用的Android 4.4 ~ 9.0测试机，及IOS 10设备。<br>实际运行过程中，存在Android部分设备易掉线、IOS高版本不兼容、操作卡顿等现象。<br><img src="https://upload-images.jianshu.io/upload_images/17067099-d3b4200504df4114.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="TM20200311124328.png"></p>
+<h1 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h1><p>在平台搭建过程中，对比调研了现有一些比较知名的云真机服务平台，如下：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mqc.aliyun.com/">阿里MQC</a></li>
+<li><a target="_blank" rel="noopener" href="http://tphone.testbird.com/home/devices">TestBird</a></li>
+<li><a target="_blank" rel="noopener" href="http://wetest.qq.com/">腾讯WeTest</a></li>
+<li><a target="_blank" rel="noopener" href="http://remote.utest.qq.com/deviceSearch">腾讯优测</a></li>
+<li><a target="_blank" rel="noopener" href="http://remote.testin.cn/">Testin云测</a></li>
+<li><a target="_blank" rel="noopener" href="http://mtc.baidu.com/">百度MTC</a></li>
+</ul>
+<p>体验了下，基本上都是基于开源框架STF的Android远程真机，支持iOS端的很少，操作体验不是很好，并且收费也相对较高。<br>深入了解了为数不多的几个开源方案（<a target="_blank" rel="noopener" href="https://github.com/mrx1203/stf.git">STF 集成 iOS</a>、<a target="_blank" rel="noopener" href="https://github.com/openatx/atxserver2">atxserver2 手机设备管理平台</a>）的实现原理后，着手开始了平台核心组件的开发。</p>
+<h1 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h1><p>系统前端采用reactjs开发，监听用户在设备显示区域的鼠标操作，通过http &amp;&amp; websocket来与python flask服务端通信。后端将用户的操作转发给provider,由provider与对应的设备进行交互：</p>
+<ul>
+<li>IOS调用WDA根据XCUITest封装的http接口</li>
+<li>Android调用minitouch的websocket接口</li>
+</ul>
+<p>云真机系统架构大部分都差不多，由于ios真机需要调用xcodebuild执行Test Scheme，所以需要部署在mac系统上，且要保持usb连接。Android对系统没有要求，只要有个provider去管理设备即可。<br><img src="https://upload-images.jianshu.io/upload_images/17067099-7abd87361169446c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/740" alt="ui.png"></p>
+<h1 id="核心轮子介绍"><a href="#核心轮子介绍" class="headerlink" title="核心轮子介绍"></a>核心轮子介绍</h1><p>云真机系统核心是设备界面同步和用户的操作同步，了解到的方案对比如下：</p>
+<p><strong>界面同步框架</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>安卓</th>
+<th>苹果</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/openstf/minicap">minicap</a></td>
+<td>✔</td>
+<td>✘</td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/openstf/ios-minicap">ios-minicap</a></td>
+<td>✘</td>
+<td>✔</td>
+<td>一台mac只支持一台设备</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/Genymobile/scrcpy">scrcpy</a></td>
+<td>✔</td>
+<td>✘</td>
+<td>需二次开发</td>
+</tr>
+<tr>
+<td>adb</td>
+<td>✔</td>
+<td>✘</td>
+<td>需二次开发自定义封装，且图片过大</td>
+</tr>
+<tr>
+<td>idevicescreenshot</td>
+<td>✘</td>
+<td>✔</td>
+<td>需二次开发自定义封装</td>
+</tr>
+<tr>
+<td>MJPEG Server</td>
+<td>✘</td>
+<td>✔</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>操作同步框架</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>安卓</th>
+<th>苹果</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/openstf/minitouch">minitouch</a></td>
+<td>✔</td>
+<td>✘</td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/Genymobile/scrcpy">scrcpy</a></td>
+<td>✔</td>
+<td>✘</td>
+<td>需二次开发</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/appium/WebDriverAgent">webDriverAgent</a></td>
+<td>✘</td>
+<td>✔</td>
+<td></td>
+</tr>
+<tr>
+<td>adb</td>
+<td>✔</td>
+<td>✘</td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="iOS解决方案"><a href="#iOS解决方案" class="headerlink" title="iOS解决方案"></a>iOS解决方案</h1><p>通过上述的框架对比，我最终选择了使用 <a target="_blank" rel="noopener" href="https://github.com/appium/WebDriverAgent">appium-webDriverAgent</a> 作为iOS设备的远程控制驱动，他们自定义封装的MJPEG Server，输出的 <code>multipart/x-mixed-replace</code> 格式的数据流，可以直接用在 <code>&lt;img /&gt;</code>上。</p>
+<h2 id="实现效果"><a href="#实现效果" class="headerlink" title="实现效果"></a>实现效果</h2><p>截的gif图像有些失真了，实际很清晰。<br><img src="https://upload-images.jianshu.io/upload_images/17067099-58927753b8574bc6.gif?imageMogr2/auto-orient/strip" alt="phone1.gif"></p>
+<p>关于appium-webDriverAgent的安装和开发者证书配置这里不再赘述，可以参见<a target="_blank" rel="noopener" href="https://github.com/appium/WebDriverAgent/blob/master/README.md">Readme</a>。</p>
+<h3 id="启动WDA"><a href="#启动WDA" class="headerlink" title="启动WDA"></a>启动WDA</h3><p>要集成到服务中，可以用xcodebuild命令行来启动，我们的持续集成平台也用的这个。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">xcodebuild -project WebDriverAgent.xcodeproj \</span><br><span class="line">           -scheme WebDriverAgentRunner \</span><br><span class="line">           -destination <span class="string">&#x27;platform=iOS Simulator,name=iPhone 6&#x27;</span> \</span><br><span class="line">           <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+<p>启动的是个模拟器，如果是真机把destination里的配置换成设备ID即可：<code> -destination &#39;id=xxxxxxxid&#39;</code>， 设备id可以通过Xcode或者<code>idevice_id -l</code>获取。</p>
+<h3 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h3><p>如上面的启动wda服务后，你还需要把手机的MJPEG服务端口暴露出来，默认是<code>9100</code>，我们可以通过iproxy来转发9100端口，要做多设备管理，在上面xcodebuild的命令里加上<code>MJPEG_PORT=xxxx</code>参数来实现。<br>iproxy转发命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iproxy 9100 9100</span><br></pre></td></tr></table></figure>
+
+<p>同时因为前端的同源限制，我需要把服务通过nginx再次给转发下。实际项目中<code>“8100、9100”</code>端口是动态生成入库跟踪的，同时会动态生成nginx的配置文件，通过<code>nginx -s reload</code>去更新服务<br>nginx中的转发配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">location deviceControllPort/ &#123; proxy_pass http://127.0.0.1:deviceControllPort/; &#125; //设备操作控制服务</span><br><span class="line">location deviceScreenPort/ &#123; proxy_pass http://127.0.0.1:deviceScreenPort/; &#125; //设备界面显示服务</span><br></pre></td></tr></table></figure>
+
+<h2 id="界面同步"><a href="#界面同步" class="headerlink" title="界面同步"></a>界面同步</h2><p>这里我用css给ios加了设备边框，目前代码不全，只写了比较通用的iphone和刘海屏的X系列。可以根据设备的大小自动调节边框。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.phone&#125;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;height:</span> <span class="attr">windowSize.height</span> + <span class="attr">24</span>,<span class="attr">width:</span> <span class="attr">windowSize.width</span> + <span class="attr">24</span>&#125;&#125;&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">phone_bg1</span>&quot;]&#125;&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">phone_bg2</span>&quot;]&#125;&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>  <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">phone_bg3</span>&quot;]&#125;&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">div</span>  <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">phone_lh</span>&quot;]&#125;&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span>  <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">phone_lh_con</span>&quot;]&#125;&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">lh_tiao</span>&quot;]&#125;&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">lh_yuan</span>&quot;]&#125;&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">phone_screen</span>&quot;]&#125;&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">img</span></span></span><br><span class="line"><span class="tag">              <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">height:</span> <span class="attr">windowSize.height</span>, <span class="attr">width:</span> <span class="attr">windowSize.width</span> &#125;&#125;</span></span><br><span class="line"><span class="tag">              <span class="attr">src</span>=<span class="string">&#123;screenUrl&#125;</span></span></span><br><span class="line"><span class="tag">              <span class="attr">alt</span>=<span class="string">&quot;&quot;</span></span></span><br><span class="line"><span class="tag">              <span class="attr">onMouseDown</span>=<span class="string">&#123;e</span> =&gt;</span> onMouseDown(e)&#125;</span><br><span class="line">              onMouseUp=&#123;e =&gt; onMouseUp(e)&#125;</span><br><span class="line">              // onMouseMove=&#123;e =&gt; this.handleMouseMove(e)&#125;</span><br><span class="line">              onDragStart=&#123;e =&gt; onDragStart(e)&#125;</span><br><span class="line">              onDragEnd=&#123;e =&gt; onDragEnd(e)&#125;</span><br><span class="line">            /&gt;</span><br><span class="line">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">phone_home</span>&quot;]&#125;&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">jingyin</span>&quot;]&#125;&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">yl_jia</span>&quot;]&#125;&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">yl_jian</span>&quot;]&#125;&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles[</span>&quot;<span class="attr">suoping</span>&quot;]&#125;&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="操作同步"><a href="#操作同步" class="headerlink" title="操作同步"></a>操作同步</h2><p>因为操作也是调WDA接口，所以上面设置好了后，设备无再做其他的设置。</p>
+<blockquote>
+<p>关于操作设备，我们可以直接让前端与设备通信，也可以让前端把请求发送server再由去调WDA。<br>各有利弊，前者直接通信会快点，但安全性不好控制。可以根据实际使用场景来设计。</p>
+</blockquote>
+<p>现阶段WDA的操作还是http请求的，有精力有能力时可以转成websocket提高效率。同样原版的webdriveragent里点击api判断的逻辑较多，参照<a target="_blank" rel="noopener" href="https://github.com/mrx1203/WebDriverAgent">mrx1203</a>的修改方案，做了些优化，也加了些自定义的api，如控制设备旋转屏幕等常用操作。关于使用<code>XCEventGenerator</code>私有api，优化点击速度的方案需慎用，不兼容Xcode10.1以上。</p>
+<p>主要的修改如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">//用于远程控制，通过旋转角度设置横竖屏</span><br><span class="line">[[FBRoute POST:@&quot;/orientation_Control&quot;].withoutSession respondWithTarget:self action:@selector(handleSetOrientation_Control:)],</span><br><span class="line">[[FBRoute GET:@&quot;/orientation_Control&quot;].withoutSession respondWithTarget:self action:@selector(handleGetOrientation_Control:)],</span><br><span class="line"></span><br><span class="line">+ (id&lt;FBResponsePayload&gt;)handleSetOrientation_Control:(FBRouteRequest *)request</span><br><span class="line">&#123;</span><br><span class="line">  [XCUIDevice sharedDevice].orientation = [request.arguments[@&quot;orientation&quot;] integerValue];</span><br><span class="line">  return FBResponseWithOK();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (id&lt;FBResponsePayload&gt;)handleGetOrientation_Control:(FBRouteRequest *)request</span><br><span class="line">&#123;</span><br><span class="line">  UIDeviceOrientation orientation = [XCUIDevice sharedDevice].orientation ;</span><br><span class="line">  return FBResponseWithObject( @&#123;</span><br><span class="line">                                 @&quot;func&quot;:@&quot;orientation_Control&quot;,</span><br><span class="line">                                 @&quot;orientation&quot;:[NSString stringWithFormat:@&quot;%ld&quot;,(long)orientation]</span><br><span class="line">                                 &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Android解决方案"><a href="#Android解决方案" class="headerlink" title="Android解决方案"></a>Android解决方案</h1><p>对比了现有框架，我采用的是minicap做界面同步，minitouch做操作同步，服务端封装adb命令执行辅助操作。推荐个将两者结合了工具 <a href="github.com/openatx/atx-agent">atx-agent</a> 这是非必须的，根据自己需要添加。minitouch与minicap本身也可以通过websocket与外部通信，关于详细的实现原理参见其Readme。</p>
+<h2 id="界面同步-1"><a href="#界面同步-1" class="headerlink" title="界面同步"></a>界面同步</h2><p>因为使用了atx-agent，界面同步和操作同步，我只需监听设备的一个端口即可，默认的设备上是7912。要做多设备集成，可以通过<code>adb forward</code>把设备端口与服务端任意个端口进行绑定，与之前的iproxy功能类似。<br>通过atx-agent启动minicap与minitouch命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adb shell /data/local/tmp/atx-agent server -d   <span class="comment"># 启动 | 停止需加上--stop</span></span><br></pre></td></tr></table></figure>
+<h4 id="转发设备端口"><a href="#转发设备端口" class="headerlink" title="转发设备端口"></a>转发设备端口</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adb forward tcp:serverPort  tcp:7912</span><br></pre></td></tr></table></figure>
+<p>此时可以通过<code>http://server:port/screenshot</code>来看到设备的一张静态图片了，要让它动起来，我们需要借助前端代码实现。</p>
+<h3 id="创建显示组件"><a href="#创建显示组件" class="headerlink" title="创建显示组件"></a>创建显示组件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">```html</span><br><span class="line">        &lt;AndroidPhoneFrame&gt;</span><br><span class="line">            &lt;div className=&#123;styles.deviceScreen&#125;&gt;</span><br><span class="line">              &lt;img</span><br><span class="line">                ref=&#123;node =&gt; &#123;</span><br><span class="line">                  this.androidScreen = node;</span><br><span class="line">                &#125;&#125;</span><br><span class="line">                src=&#123;`http://server:port/screenshot?t=$&#123;new Date().getTime()&#125;`&#125;</span><br><span class="line">                alt=&quot;&quot;</span><br><span class="line">              /&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">          &lt;/AndroidPhoneFrame&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="建立连接并实时刷新显示"><a href="#建立连接并实时刷新显示" class="headerlink" title="建立连接并实时刷新显示"></a>建立连接并实时刷新显示</h3><p>代码如下，最好放在Dom加载后触发。可以看到这里是建立了一个socket（如果没有用atx-agent可以将地址换成minicap的服务地址），监听服务端发来blob图片，并将其更新到前面定义的显示标签上。</p>
+<blockquote>
+<p>minicap的图片已经被压缩处理过了了，比原生adb截图小近百倍，而且atx-agent还进行了二次处理，因此android这种方案流畅度更好。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">syncDisplay = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> ws = <span class="keyword">new</span> <span class="title class_">WebSocket</span>(<span class="string">&#x27;ws://server:port/minicap/broadcast&#x27;</span>)</span><br><span class="line">    ws.<span class="property">onclose</span> = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;onclose &#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    ws.<span class="property">onerror</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;onerror&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    ws.<span class="property">onmessage</span> = <span class="function">(<span class="params">message</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">androidScreen</span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;error&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (message.<span class="property">data</span> <span class="keyword">instanceof</span> <span class="title class_">Blob</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> blob = <span class="keyword">new</span> <span class="title class_">Blob</span>([message.<span class="property">data</span>], &#123;</span><br><span class="line">          <span class="attr">type</span>: <span class="string">&#x27;image/jpeg&#x27;</span></span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="keyword">let</span> <span class="variable constant_">URL</span> = <span class="variable language_">window</span>.<span class="property">URL</span> || <span class="variable language_">window</span>.<span class="property">webkitURL</span></span><br><span class="line">        <span class="keyword">let</span> u = <span class="variable constant_">URL</span>.<span class="title function_">createObjectURL</span>(blob)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">androidScreen</span>.<span class="property">src</span> = u <span class="comment">//更新 ref Dom</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;receive message:&quot;</span>, message.<span class="property">data</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ws.<span class="property">onopen</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;onopen&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="操作同步-1"><a href="#操作同步-1" class="headerlink" title="操作同步"></a>操作同步</h2><p>用户在网页端的操作主要是鼠标事件，iOS部分没有细化介绍，这里简单说下，因为minitouch本身的语法格式要求，可以看到这里把<code>u, d, c, w</code>这几个事件与鼠标<code>mouseDown, mouseMove, mouseUp</code>结合了起来，也正是由于其特殊的实现方式，安卓可以实现按住滑动，而iOS是滑动完才会触发事件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">syncTouchpad</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> element = <span class="variable language_">this</span>.<span class="property">androidScreen</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="title function_">touchSync</span> = (<span class="params">operation, event</span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">var</span> e = event;</span><br><span class="line">      <span class="keyword">if</span> (e.<span class="property">originalEvent</span>) &#123;</span><br><span class="line">        e = e.<span class="property">originalEvent</span></span><br><span class="line">      &#125;</span><br><span class="line">      e.<span class="title function_">preventDefault</span>()</span><br><span class="line">      <span class="keyword">let</span> x = e.<span class="property">offsetX</span>, y = e.<span class="property">offsetY</span></span><br><span class="line">      <span class="keyword">let</span> w = e.<span class="property">target</span>.<span class="property">clientWidth</span>, h = e.<span class="property">target</span>.<span class="property">clientHeight</span></span><br><span class="line">      <span class="keyword">let</span> scaled = <span class="variable language_">this</span>.<span class="title function_">coords</span>(w, h, x, y, <span class="variable language_">this</span>.<span class="property">rotation</span>);</span><br><span class="line">      ws.<span class="title function_">send</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123;</span><br><span class="line">        <span class="attr">operation</span>: operation, <span class="comment">// u, d, c, w</span></span><br><span class="line">        <span class="attr">index</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="attr">pressure</span>: <span class="number">0.5</span>,</span><br><span class="line">        <span class="attr">xP</span>: scaled.<span class="property">xP</span>,</span><br><span class="line">        <span class="attr">yP</span>: scaled.<span class="property">yP</span>,</span><br><span class="line">      &#125;))</span><br><span class="line">      ws.<span class="title function_">send</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; <span class="attr">operation</span>: <span class="string">&#x27;c&#x27;</span> &#125;))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">mouseMoveListener</span>(<span class="params">event</span>) &#123;</span><br><span class="line">      <span class="title function_">touchSync</span>(<span class="string">&#x27;m&#x27;</span>, event)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">mouseUpListener</span>(<span class="params">event</span>) &#123;</span><br><span class="line">      <span class="title function_">touchSync</span>(<span class="string">&#x27;u&#x27;</span>, event)</span><br><span class="line">      element.<span class="title function_">removeEventListener</span>(<span class="string">&#x27;mousemove&#x27;</span>, mouseMoveListener);</span><br><span class="line">      <span class="variable language_">document</span>.<span class="title function_">removeEventListener</span>(<span class="string">&#x27;mouseup&#x27;</span>, mouseUpListener);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">mouseDownListener</span>(<span class="params">event</span>) &#123;</span><br><span class="line">      <span class="title function_">touchSync</span>(<span class="string">&#x27;d&#x27;</span>, event)</span><br><span class="line">      element.<span class="title function_">addEventListener</span>(<span class="string">&#x27;mousemove&#x27;</span>, mouseMoveListener);</span><br><span class="line">      <span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;mouseup&quot;</span>, mouseUpListener)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> ws = <span class="keyword">new</span> <span class="title class_">WebSocket</span>(<span class="string">&quot;ws://server:port/minitouch&quot;</span>)</span><br><span class="line"></span><br><span class="line">    ws.<span class="property">onopen</span> = <span class="function">(<span class="params">ret</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;minitouch connected&quot;</span>)</span><br><span class="line">      ws.<span class="title function_">send</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; <span class="comment">// touch reset, fix when device is outof control</span></span><br><span class="line">        <span class="attr">operation</span>: <span class="string">&quot;r&quot;</span>,</span><br><span class="line">      &#125;))</span><br><span class="line">      element.<span class="title function_">addEventListener</span>(<span class="string">&quot;mousedown&quot;</span>, mouseDownListener)</span><br><span class="line">    &#125;</span><br><span class="line">    ws.<span class="property">onmessage</span> = <span class="function">(<span class="params">message</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;minitouch recv&quot;</span>, message)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ws.<span class="property">onclose</span> = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;minitouch closed&quot;</span>)</span><br><span class="line">      element.<span class="title function_">removeEventListener</span>(<span class="string">&quot;mousedown&quot;</span>, mouseDownListener)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="辅助操作"><a href="#辅助操作" class="headerlink" title="辅助操作"></a>辅助操作</h3><p>由于minitouch本身只是UI的操作，所以对于旋转、Home、Back等快捷操作，还需要外部的辅助。我使用的是adb命令。<br>以旋转屏幕为例:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adb shell settings put system user_rotation 1 <span class="comment"># 0，1，2，3，4对应着0~360°，先确保自动旋转已关闭。</span></span><br></pre></td></tr></table></figure>
+<p>这些adb命令可以通过服务端封装，针对被控设备 <strong><code>-s deviceId</code></strong> 调用。</p>
+<h2 id="实现效果-1"><a href="#实现效果-1" class="headerlink" title="实现效果"></a>实现效果</h2><p>由于安卓机型众多，暂时就不加边框显示了。 </p>
+<p><img src="https://upload-images.jianshu.io/upload_images/17067099-57a65be84edb1a39.gif?imageMogr2/auto-orient/strip" alt="phone2.gif"></p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>稳定可以扩展云真机的系统，不仅仅是一个移动设备的管理平台，还可以结合移动UI自动化、移动应用持续集成、远程调试等产生更多的价值。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/%E4%BA%91%E7%9C%9F%E6%9C%BA/" rel="tag"># 云真机</a>
+              <a href="/tags/object-c/" rel="tag"># object-c</a>
+              <a href="/tags/javascript/" rel="tag"># javascript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/13/wxlogin/" rel="prev" title="个人用户通过微信扫码登录网站的系统设计">
+      <i class="fa fa-chevron-left"></i> 个人用户通过微信扫码登录网站的系统设计
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/18/ldbp/" rel="next" title="LDAP登录功能开发">
+      LDAP登录功能开发 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%B0%E7%8A%B6"><span class="nav-number">2.</span> <span class="nav-text">现状</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">架构设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%BD%AE%E5%AD%90%E4%BB%8B%E7%BB%8D"><span class="nav-number">4.</span> <span class="nav-text">核心轮子介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">5.</span> <span class="nav-text">iOS解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%95%88%E6%9E%9C"><span class="nav-number">5.1.</span> <span class="nav-text">实现效果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8WDA"><span class="nav-number">5.1.1.</span> <span class="nav-text">启动WDA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="nav-number">5.1.2.</span> <span class="nav-text">端口转发</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%95%8C%E9%9D%A2%E5%90%8C%E6%AD%A5"><span class="nav-number">5.2.</span> <span class="nav-text">界面同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E5%90%8C%E6%AD%A5"><span class="nav-number">5.3.</span> <span class="nav-text">操作同步</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Android%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">6.</span> <span class="nav-text">Android解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%95%8C%E9%9D%A2%E5%90%8C%E6%AD%A5-1"><span class="nav-number">6.1.</span> <span class="nav-text">界面同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AC%E5%8F%91%E8%AE%BE%E5%A4%87%E7%AB%AF%E5%8F%A3"><span class="nav-number">6.1.0.1.</span> <span class="nav-text">转发设备端口</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%98%BE%E7%A4%BA%E7%BB%84%E4%BB%B6"><span class="nav-number">6.1.1.</span> <span class="nav-text">创建显示组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E5%B9%B6%E5%AE%9E%E6%97%B6%E5%88%B7%E6%96%B0%E6%98%BE%E7%A4%BA"><span class="nav-number">6.1.2.</span> <span class="nav-text">建立连接并实时刷新显示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E5%90%8C%E6%AD%A5-1"><span class="nav-number">6.2.</span> <span class="nav-text">操作同步</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%85%E5%8A%A9%E6%93%8D%E4%BD%9C"><span class="nav-number">6.2.1.</span> <span class="nav-text">辅助操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%95%88%E6%9E%9C-1"><span class="nav-number">6.3.</span> <span class="nav-text">实现效果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">7.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : 'ecebd1fded3f8ddbd7ae1aa19f90057f',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

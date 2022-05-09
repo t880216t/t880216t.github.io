@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="由于网速不稳定，在某天添加一个很大的分享时多点了几次，导致重复添加一百多个不同文件夹路径的文件。今天打开时提示我可以一键清理，本觉得百度还是挺人性化，虽然没做重复添加的校验，还是给了我清理办法。燃鹅，当我点击删除时，弹出了”不充钱，玩不了“的温馨提示，真是社会我百度。气愤之余，打了个座，于是有了下面破解之法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="非会员批量清理百度网盘重复文件方法">
+<meta property="og:url" content="https://t880216t.github.io/2018/04/03/baidu-fk/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="由于网速不稳定，在某天添加一个很大的分享时多点了几次，导致重复添加一百多个不同文件夹路径的文件。今天打开时提示我可以一键清理，本觉得百度还是挺人性化，虽然没做重复添加的校验，还是给了我清理办法。燃鹅，当我点击删除时，弹出了”不充钱，玩不了“的温馨提示，真是社会我百度。气愤之余，打了个座，于是有了下面破解之法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/46078f89-b873-460a-a7b8-daba37b360cc.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/1146bf16-0fe6-478e-bfe4-4a87db155d87.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/95f7f4b5-7a52-4e57-ad59-d12bd3292543.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/a852e286-3b6b-4bdf-9433-bba0303e99a3.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/2b76fa59-4754-418c-9e2b-bc167114133a.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/bf8beca8-044c-4e54-84e7-26b67c70a305.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/3708719d-79ce-432d-a408-df41452ad690.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/45afa4db-1ed5-42e4-8096-22472ce94b0b.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/166c137c-4eb6-4242-a870-44eef6827ad2.png!large">
+<meta property="og:image" content="https://testerhome.com/uploads/photo/2018/be2703c3-94f1-4eed-b606-afd8559144be.png!large">
+<meta property="article:published_time" content="2018-04-03T15:58:13.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.572Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="charles">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://testerhome.com/uploads/photo/2018/46078f89-b873-460a-a7b8-daba37b360cc.png!large">
+
+<link rel="canonical" href="https://t880216t.github.io/2018/04/03/baidu-fk/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>非会员批量清理百度网盘重复文件方法 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2018/04/03/baidu-fk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          非会员批量清理百度网盘重复文件方法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-04-03 23:58:13" itemprop="dateCreated datePublished" datetime="2018-04-03T23:58:13+08:00">2018-04-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>由于网速不稳定，在某天添加一个很大的分享时多点了几次，导致重复添加一百多个不同文件夹路径的文件。今天打开时提示我可以一键清理，本觉得百度还是挺人性化，虽然没做重复添加的校验，还是给了我清理办法。燃鹅，当我点击删除时，弹出了”不充钱，玩不了“的温馨提示，真是社会我百度。<br>气愤之余，打了个座，于是有了下面破解之法。</p>
+<span id="more"></span>
+
+<h1 id="环境："><a href="#环境：" class="headerlink" title="环境："></a>环境：</h1><p>1.火狐浏览器charles抓包已配置好</p>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤:"></a>步骤:</h1><h2 id="1-打开web百度网盘点击更多》垃圾清理》扫描重复文件（注意：这个功能有使用次数限制）"><a href="#1-打开web百度网盘点击更多》垃圾清理》扫描重复文件（注意：这个功能有使用次数限制）" class="headerlink" title="1. 打开web百度网盘点击更多》垃圾清理》扫描重复文件（注意：这个功能有使用次数限制）"></a>1. 打开web百度网盘点击更多》垃圾清理》扫描重复文件（注意：这个功能有使用次数限制）</h2><p><img src="https://testerhome.com/uploads/photo/2018/46078f89-b873-460a-a7b8-daba37b360cc.png!large"><br><img src="https://testerhome.com/uploads/photo/2018/1146bf16-0fe6-478e-bfe4-4a87db155d87.png!large"><br><img src="https://testerhome.com/uploads/photo/2018/95f7f4b5-7a52-4e57-ad59-d12bd3292543.png!large"></p>
+<h2 id="2-获取扫描完成页面的接口数据"><a href="#2-获取扫描完成页面的接口数据" class="headerlink" title="2.获取扫描完成页面的接口数据"></a>2.获取扫描完成页面的接口数据</h2><p>页面如下：<br>（因为我的重复数据已经清理掉了，这里随便复制了个做示例）<br><img src="https://testerhome.com/uploads/photo/2018/a852e286-3b6b-4bdf-9433-bba0303e99a3.png!large"></p>
+<p>接口是这个：</p>
+<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml">https://pan.baidu.com/api/garbagelist</span></span><br></pre></td></tr></table></figure>
+<p>保存数据到文件baidu.json，如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#baidu.json</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;errno&quot;</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">&quot;info&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;group_crashed&quot;</span>: false,</span><br><span class="line">    <span class="string">&quot;next_index&quot;</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="string">&quot;count&quot;</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="string">&quot;has_more&quot;</span>: false</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">&quot;list&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">&quot;fs_id&quot;</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">&quot;data&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="string">&quot;size&quot;</span>: <span class="string">&quot;36218244&quot;</span>,</span><br><span class="line">          <span class="string">&quot;category&quot;</span>: <span class="string">&quot;6&quot;</span>,</span><br><span class="line">          <span class="string">&quot;fs_id&quot;</span>: <span class="string">&quot;413693152779790&quot;</span>,</span><br><span class="line">          <span class="string">&quot;path&quot;</span>: <span class="string">&quot;\/BugReport(1).zip&quot;</span>,</span><br><span class="line">          <span class="string">&quot;isdir&quot;</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">&quot;s3_handle&quot;</span>: <span class="string">&quot;a50c2bf7017fb91bc5044e881e8a87d1&quot;</span>,</span><br><span class="line">          <span class="string">&quot;isdelete&quot;</span>: <span class="number">0</span>,</span><br><span class="line">          <span class="string">&quot;server_filename&quot;</span>: <span class="string">&quot;BugReport(1).zip&quot;</span>,</span><br><span class="line">          <span class="string">&quot;server_mtime&quot;</span>: <span class="string">&quot;1519452813&quot;</span>,</span><br><span class="line">          <span class="string">&quot;smart_choose&quot;</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="string">&quot;index&quot;</span>: <span class="number">0</span></span><br><span class="line">        &#125;,</span><br><span class="line">        ......</span><br><span class="line">  ],</span><br><span class="line">  <span class="string">&quot;request_id&quot;</span>: <span class="number">2151336299004000452</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ps：当我满心赞扬的点击这个删除键时，百度就是我下面的回应。<br><img src="https://testerhome.com/uploads/photo/2018/2b76fa59-4754-418c-9e2b-bc167114133a.png!large"></p>
+<h2 id="3-进入正题处理数据，获取需要删除的文件路径"><a href="#3-进入正题处理数据，获取需要删除的文件路径" class="headerlink" title="3.进入正题处理数据，获取需要删除的文件路径"></a>3.进入正题处理数据，获取需要删除的文件路径</h2><p>我们需要上面从保存的json数据中，剔除掉一个作为保留，并把重复的路径放到新的数组中，这里我直接是打印出来的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*-coding:utf-8-*-</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_need_delete_paths</span>():</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;baidu.json&#x27;</span>, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        data = json.loads(f.read())</span><br><span class="line">    a = <span class="number">1</span></span><br><span class="line">    lists = data[<span class="string">&quot;list&quot;</span>]</span><br><span class="line">    need_delete_paths = []</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">list</span> <span class="keyword">in</span> lists:</span><br><span class="line">        list_data = <span class="built_in">list</span>[<span class="string">&quot;data&quot;</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(list_data)):</span><br><span class="line">            need_delete_paths.append(list_data[i][<span class="string">&quot;path&quot;</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> path <span class="keyword">in</span> need_delete_paths:</span><br><span class="line">        <span class="keyword">if</span> a == <span class="number">1</span>:</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&quot;\n ======================= \n [&quot;</span></span><br><span class="line">        <span class="keyword">if</span> a - <span class="number">40</span> == <span class="number">0</span>:</span><br><span class="line">            a = <span class="number">1</span></span><br><span class="line">            <span class="built_in">print</span> <span class="string">&quot;]\n ======================= \n [&quot;</span></span><br><span class="line">        a = a + <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;&quot;&#x27;</span>+path+<span class="string">&#x27;&quot;,&#x27;</span></span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;]\n ======================= \n&quot;</span></span><br><span class="line"></span><br><span class="line">get_need_delete_paths()</span><br></pre></td></tr></table></figure>
+<p>我的打印内容如下：（注意，因为后面的删除接口字段不能太长，所以我这边是每40条做了个分隔。）<br><img src="https://testerhome.com/uploads/photo/2018/bf8beca8-044c-4e54-84e7-26b67c70a305.png!large"></p>
+<h2 id="4-获取删除文件接口"><a href="#4-获取删除文件接口" class="headerlink" title="4.获取删除文件接口"></a>4.获取删除文件接口</h2><p>因为百度有登陆状态的校验，这里我们可以先随意找个没用的文件删除，再直接从charles里克隆这条接口。</p>
+<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml">#删除文件接口</span></span><br><span class="line"><span class="language-xml">https://pan.baidu.com/api/filemanager</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://testerhome.com/uploads/photo/2018/3708719d-79ce-432d-a408-df41452ad690.png!large"></p>
+<h3 id="4-1获取删除文件接口"><a href="#4-1获取删除文件接口" class="headerlink" title="4.1获取删除文件接口"></a>4.1获取删除文件接口</h3><p><img src="https://testerhome.com/uploads/photo/2018/45afa4db-1ed5-42e4-8096-22472ce94b0b.png!large"></p>
+<h3 id="4-2克隆接口，并把需要删除的文件路径贴到字段里，（注意是个数组格式）。"><a href="#4-2克隆接口，并把需要删除的文件路径贴到字段里，（注意是个数组格式）。" class="headerlink" title="4.2克隆接口，并把需要删除的文件路径贴到字段里，（注意是个数组格式）。"></a>4.2克隆接口，并把需要删除的文件路径贴到字段里，（注意是个数组格式）。</h3><p><img src="https://testerhome.com/uploads/photo/2018/166c137c-4eb6-4242-a870-44eef6827ad2.png!large"></p>
+<h1 id="结果"><a href="#结果" class="headerlink" title="结果:"></a>结果:</h1><h2 id="这是我的删除记录，几百条重复数据，几下就清理干净了。"><a href="#这是我的删除记录，几百条重复数据，几下就清理干净了。" class="headerlink" title="这是我的删除记录，几百条重复数据，几下就清理干净了。"></a>这是我的删除记录，几百条重复数据，几下就清理干净了。</h2><p><img src="https://testerhome.com/uploads/photo/2018/be2703c3-94f1-4eed-b606-afd8559144be.png!large"></p>
+<h1 id="备注"><a href="#备注" class="headerlink" title="备注:"></a>备注:</h1><p>有钱的、重复数据量少的请忽略。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/charles/" rel="tag"># charles</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/03/12/pyqt-QThread/" rel="prev" title="PyQt4--《二十三》线程类 QThread">
+      <i class="fa fa-chevron-left"></i> PyQt4--《二十三》线程类 QThread
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/04/04/header-fomat/" rel="next" title="请求头参数转json格式">
+      请求头参数转json格式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">环境：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">步骤:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%89%93%E5%BC%80web%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E7%82%B9%E5%87%BB%E6%9B%B4%E5%A4%9A%E3%80%8B%E5%9E%83%E5%9C%BE%E6%B8%85%E7%90%86%E3%80%8B%E6%89%AB%E6%8F%8F%E9%87%8D%E5%A4%8D%E6%96%87%E4%BB%B6%EF%BC%88%E6%B3%A8%E6%84%8F%EF%BC%9A%E8%BF%99%E4%B8%AA%E5%8A%9F%E8%83%BD%E6%9C%89%E4%BD%BF%E7%94%A8%E6%AC%A1%E6%95%B0%E9%99%90%E5%88%B6%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">1. 打开web百度网盘点击更多》垃圾清理》扫描重复文件（注意：这个功能有使用次数限制）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%8E%B7%E5%8F%96%E6%89%AB%E6%8F%8F%E5%AE%8C%E6%88%90%E9%A1%B5%E9%9D%A2%E7%9A%84%E6%8E%A5%E5%8F%A3%E6%95%B0%E6%8D%AE"><span class="nav-number">2.2.</span> <span class="nav-text">2.获取扫描完成页面的接口数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%BF%9B%E5%85%A5%E6%AD%A3%E9%A2%98%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE%EF%BC%8C%E8%8E%B7%E5%8F%96%E9%9C%80%E8%A6%81%E5%88%A0%E9%99%A4%E7%9A%84%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84"><span class="nav-number">2.3.</span> <span class="nav-text">3.进入正题处理数据，获取需要删除的文件路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%8E%B7%E5%8F%96%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.4.</span> <span class="nav-text">4.获取删除文件接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1%E8%8E%B7%E5%8F%96%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.4.1.</span> <span class="nav-text">4.1获取删除文件接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2%E5%85%8B%E9%9A%86%E6%8E%A5%E5%8F%A3%EF%BC%8C%E5%B9%B6%E6%8A%8A%E9%9C%80%E8%A6%81%E5%88%A0%E9%99%A4%E7%9A%84%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84%E8%B4%B4%E5%88%B0%E5%AD%97%E6%AE%B5%E9%87%8C%EF%BC%8C%EF%BC%88%E6%B3%A8%E6%84%8F%E6%98%AF%E4%B8%AA%E6%95%B0%E7%BB%84%E6%A0%BC%E5%BC%8F%EF%BC%89%E3%80%82"><span class="nav-number">2.4.2.</span> <span class="nav-text">4.2克隆接口，并把需要删除的文件路径贴到字段里，（注意是个数组格式）。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">结果:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%99%E6%98%AF%E6%88%91%E7%9A%84%E5%88%A0%E9%99%A4%E8%AE%B0%E5%BD%95%EF%BC%8C%E5%87%A0%E7%99%BE%E6%9D%A1%E9%87%8D%E5%A4%8D%E6%95%B0%E6%8D%AE%EF%BC%8C%E5%87%A0%E4%B8%8B%E5%B0%B1%E6%B8%85%E7%90%86%E5%B9%B2%E5%87%80%E4%BA%86%E3%80%82"><span class="nav-number">3.1.</span> <span class="nav-text">这是我的删除记录，几百条重复数据，几下就清理干净了。</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%87%E6%B3%A8"><span class="nav-number">4.</span> <span class="nav-text">备注:</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '30fa2df3c6bd20caf5fd2acd1cae7dd9',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

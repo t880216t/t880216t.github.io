@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="RobotFramework自动化框架，文件读取。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RobotFramework自动化框架（二）">
+<meta property="og:url" content="https://t880216t.github.io/2019/04/28/robotframework2/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="RobotFramework自动化框架，文件读取。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-04-28T15:51:12.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.583Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="自动化">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://t880216t.github.io/2019/04/28/robotframework2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>RobotFramework自动化框架（二） | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2019/04/28/robotframework2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RobotFramework自动化框架（二）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-28 23:51:12" itemprop="dateCreated datePublished" datetime="2019-04-28T23:51:12+08:00">2019-04-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>RobotFramework自动化框架，文件读取。</p>
+<span id="more"></span>
+
+<p>robotframework提供了多种读取外部文件的方式。</p>
+<h1 id="1-Variables读取python脚本中变量"><a href="#1-Variables读取python脚本中变量" class="headerlink" title="1.Variables读取python脚本中变量"></a>1.Variables读取python脚本中变量</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试套件中</span></span><br><span class="line">*** Settings ***</span><br><span class="line"><span class="comment"># 引入python文件中的变量(xx.py和测试套件在同一个目录下)</span></span><br><span class="line">Variables   get_var.py</span><br><span class="line"></span><br><span class="line">*** Test Cases ***</span><br><span class="line">test01</span><br><span class="line">    [Documentation]     读取文件中变量</span><br><span class="line">    log  $&#123;testData&#125;[name]</span><br></pre></td></tr></table></figure>
+<p>get_var.py内容如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">testData = &#123;</span><br><span class="line">    <span class="string">&#x27;name&#x27;</span> : <span class="string">u&#x27;复仇者联盟4&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-Resource读取文件中关键字"><a href="#2-Resource读取文件中关键字" class="headerlink" title="2.Resource读取文件中关键字"></a>2.Resource读取文件中关键字</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试套件中</span></span><br><span class="line">*** Settings ***</span><br><span class="line">Resource    test_resource_file.txt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">*** Test Cases ***</span><br><span class="line">test01</span><br><span class="line">    [Documentation]     读取文件中关键字</span><br><span class="line">    外部关键词文件</span><br></pre></td></tr></table></figure>
+
+<p>test_resource_file.txt 内容如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">*** Keywords ***</span><br><span class="line">外部关键词文件</span><br><span class="line">    log    <span class="number">9999999999999999</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="3-Library读取同级脚本中的函数"><a href="#3-Library读取同级脚本中的函数" class="headerlink" title="3.Library读取同级脚本中的函数"></a>3.Library读取同级脚本中的函数</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">*** Settings ***</span><br><span class="line">Library           get_var_frome_script.py	<span class="comment">#在脚本的同级目录下</span></span><br><span class="line"></span><br><span class="line">*** Test Cases ***</span><br><span class="line">test01</span><br><span class="line">    [Documentation]    使用脚本中方法获取值</span><br><span class="line">    $&#123;returnlist&#125;    returnlist</span><br><span class="line">    log    $&#123;returnlist&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p> get_var_frome_script.py 内容如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 关键字(相当于python中的函数)</span></span><br><span class="line"><span class="keyword">def</span>  <span class="title function_">returnlist</span>():</span><br><span class="line">    <span class="keyword">return</span> [<span class="number">1</span>,<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-Library读取自定义库"><a href="#4-Library读取自定义库" class="headerlink" title="4.Library读取自定义库"></a>4.Library读取自定义库</h1><p>这里要自定义Library有个条件，就是Library要python能找到它。<br>有两种方式可以做到：</p>
+<ul>
+<li>把Library写到python的site-packages里</li>
+<li>把Library加到环境变量里</li>
+</ul>
+<p>这里我以上面第一种为例：</p>
+<h2 id="在Python27-Lib-site-packages里新建文件夹-MyLibrary"><a href="#在Python27-Lib-site-packages里新建文件夹-MyLibrary" class="headerlink" title="在Python27\Lib\site-packages里新建文件夹 MyLibrary"></a>在Python27\Lib\site-packages里新建文件夹 MyLibrary</h2><h2 id="在其中新建文件-get-var-from-script-class-py"><a href="#在其中新建文件-get-var-from-script-class-py" class="headerlink" title="在其中新建文件 get_var_from_script_class.py"></a>在其中新建文件 get_var_from_script_class.py</h2><p>内容如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SubLibrary</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,a=<span class="number">1</span>,b=<span class="number">2</span></span>):</span><br><span class="line">        self.a = a</span><br><span class="line">        self.b = b</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">returnint</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h2 id="再新建文件-init-py"><a href="#再新建文件-init-py" class="headerlink" title="再新建文件 init.py"></a>再新建文件 <strong>init</strong>.py</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> get_var_from_script_class <span class="keyword">import</span> SubLibrary</span><br><span class="line">version = <span class="string">&#x27;1.0&#x27;</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyLibrary</span>(<span class="title class_ inherited__">SubLibrary</span>):</span><br><span class="line">    ROBOT_LIBRARY_SCOPE = <span class="string">&#x27;GLOBAL&#x27;</span></span><br></pre></td></tr></table></figure>
+<h2 id="脚本中引入库"><a href="#脚本中引入库" class="headerlink" title="脚本中引入库"></a>脚本中引入库</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">*** Settings ***</span><br><span class="line">Library           MyLibrary</span><br><span class="line"></span><br><span class="line">*** Test Cases ***</span><br><span class="line">test02</span><br><span class="line">    [Documentation]    使用脚本中对象获取值</span><br><span class="line">    $&#123;returnData&#125;    returnint</span><br><span class="line">    log    $&#123;returnData&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 自动化</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/04/28/robotframework1/" rel="prev" title="RobotFramework自动化框架（一）">
+      <i class="fa fa-chevron-left"></i> RobotFramework自动化框架（一）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/04/28/robotframework3/" rel="next" title="RobotFramework自动化框架（三）">
+      RobotFramework自动化框架（三） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Variables%E8%AF%BB%E5%8F%96python%E8%84%9A%E6%9C%AC%E4%B8%AD%E5%8F%98%E9%87%8F"><span class="nav-number">1.</span> <span class="nav-text">1.Variables读取python脚本中变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Resource%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%E4%B8%AD%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">2.</span> <span class="nav-text">2.Resource读取文件中关键字</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Library%E8%AF%BB%E5%8F%96%E5%90%8C%E7%BA%A7%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">3.Library读取同级脚本中的函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Library%E8%AF%BB%E5%8F%96%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BA%93"><span class="nav-number">4.</span> <span class="nav-text">4.Library读取自定义库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8Python27-Lib-site-packages%E9%87%8C%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9-MyLibrary"><span class="nav-number">4.1.</span> <span class="nav-text">在Python27\Lib\site-packages里新建文件夹 MyLibrary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E5%85%B6%E4%B8%AD%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6-get-var-from-script-class-py"><span class="nav-number">4.2.</span> <span class="nav-text">在其中新建文件 get_var_from_script_class.py</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%8D%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6-init-py"><span class="nav-number">4.3.</span> <span class="nav-text">再新建文件 init.py</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC%E4%B8%AD%E5%BC%95%E5%85%A5%E5%BA%93"><span class="nav-number">4.4.</span> <span class="nav-text">脚本中引入库</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '7513be1e09b38e85be09bdffe9dce46b',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

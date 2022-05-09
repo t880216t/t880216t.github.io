@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="因为库的限制，想实现某些页面使用某种动画还是很难的，本方法可以通过传递参数决定某页面的跳转动画。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react navigation的使用技巧">
+<meta property="og:url" content="https://t880216t.github.io/2017/11/20/react_navigation/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="因为库的限制，想实现某些页面使用某种动画还是很难的，本方法可以通过传递参数决定某页面的跳转动画。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-11-20T10:50:12.000Z">
+<meta property="article:modified_time" content="2022-05-09T05:56:10.582Z">
+<meta property="article:author" content="Orion-c">
+<meta property="article:tag" content="react native">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://t880216t.github.io/2017/11/20/react_navigation/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>react navigation的使用技巧 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2017/11/20/react_navigation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          react navigation的使用技巧
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-20 18:50:12" itemprop="dateCreated datePublished" datetime="2017-11-20T18:50:12+08:00">2017-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-09 13:56:10" itemprop="dateModified" datetime="2022-05-09T13:56:10+08:00">2022-05-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>因为库的限制，想实现某些页面使用某种动画还是很难的，本方法可以通过传递参数决定某页面的跳转动画。</p>
+<span id="more"></span>
+<h1 id="《一》react-navigation指定跳转动画"><a href="#《一》react-navigation指定跳转动画" class="headerlink" title="《一》react navigation指定跳转动画"></a>《一》react navigation指定跳转动画</h1><h3 id="react-navigation根据平台的不同内置了相应的跳转动画"><a href="#react-navigation根据平台的不同内置了相应的跳转动画" class="headerlink" title="react-navigation根据平台的不同内置了相应的跳转动画"></a>react-navigation根据平台的不同内置了相应的跳转动画</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">forHorizontal, <span class="comment">//从右向左</span></span><br><span class="line">forVertical, <span class="comment">//从下向上</span></span><br><span class="line">forFadeFromBottomAndroid, <span class="comment">//安卓那种的从下向上</span></span><br><span class="line">forFade, <span class="comment">//淡出</span></span><br><span class="line">canUseNativeDriver,</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>在路由配置中增加如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">TaskPage</span> = <span class="title class_">StackNavigator</span>(&#123;</span><br><span class="line">    <span class="title class_">TaskPage</span>: &#123;<span class="attr">screen</span>: _TaskPage,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title class_">TaskDetail</span>:&#123;<span class="attr">screen</span>: <span class="title class_">TaskDetail</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title class_">LoginPage</span>:&#123;<span class="attr">screen</span>: <span class="title class_">BaseLoginPage</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title class_">MyFavourite</span>:&#123;<span class="attr">screen</span>: <span class="title class_">MyFavourite</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title class_">LogWork</span>:&#123;<span class="attr">screen</span>:<span class="title class_">LogWork</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">&#125;,&#123;</span><br><span class="line">    <span class="attr">initialRouteName</span>: <span class="string">&#x27;TaskPage&#x27;</span>,</span><br><span class="line">    <span class="attr">mode</span>: <span class="string">&#x27;card &#x27;</span>,</span><br><span class="line">    <span class="attr">headerMode</span>: <span class="string">&#x27;none&#x27;</span>,</span><br><span class="line">    <span class="comment">//解决安卓push无效果,并通过transition参数指定跳转动画,默认forHorizontal</span></span><br><span class="line">    <span class="attr">transitionConfig</span>:<span class="function">() =&gt;</span> (&#123;</span><br><span class="line">        <span class="attr">screenInterpolator</span>: <span class="function">(<span class="params">sceneProps</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">const</span> &#123; scene &#125; = sceneProps;</span><br><span class="line">            <span class="keyword">const</span> &#123; route &#125; = scene;</span><br><span class="line">            <span class="keyword">const</span> params = route.<span class="property">params</span> || &#123;&#125;;</span><br><span class="line">            <span class="keyword">const</span> transition = params.<span class="property">transition</span> || <span class="string">&#x27;forHorizontal&#x27;</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="title class_">CardStackStyleInterpolator</span>[transition](sceneProps);</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>在需要自定义跳转动画的地方传参数给路由：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//通过参数transition，指定跳转动画</span></span><br><span class="line">titleBack=<span class="function">(<span class="params">e,navigate</span>)=&gt;</span>&#123;</span><br><span class="line">	<span class="title function_">navigate</span>(<span class="string">&#x27;MyFavourite&#x27;</span>,&#123; <span class="attr">transition</span>: <span class="string">&#x27;forVertical&#x27;</span> &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="《二》react-navigation路由，指定页面不显示底部tabbar"><a href="#《二》react-navigation路由，指定页面不显示底部tabbar" class="headerlink" title="《二》react navigation路由，指定页面不显示底部tabbar"></a>《二》react navigation路由，指定页面不显示底部tabbar</h1><p>大部分的页面都是TabNavigator嵌套着StackNavigator的，默认的所有页面都会在底部显示tabbar，我们可以在单个页面配置navigationOptions，来控制是否要显示底部模块。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> <span class="title class_">TaskDetail</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">	<span class="comment">//去除底部tabbar</span></span><br><span class="line">    <span class="keyword">static</span> navigationOptions = &#123;</span><br><span class="line">        <span class="attr">tabBarVisible</span>:<span class="literal">false</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 构造</span></span><br><span class="line">      <span class="title function_">constructor</span>(<span class="params">props</span>) &#123;</span><br><span class="line">        <span class="variable language_">super</span>(props);</span><br><span class="line">        <span class="comment">// 初始状态</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">            <span class="attr">bugData</span>:&#123;&#125;</span><br><span class="line">        &#125;;</span><br><span class="line">      &#125;</span><br><span class="line">	  .</span><br><span class="line">	  .</span><br><span class="line">	  .</span><br></pre></td></tr></table></figure>
+
+<h1 id="《三》防快速点击跳转异常（待优化）"><a href="#《三》防快速点击跳转异常（待优化）" class="headerlink" title="《三》防快速点击跳转异常（待优化）"></a>《三》防快速点击跳转异常（待优化）</h1><p>修改node_modules&#x2F;react-navigation&#x2F;scr&#x2F;addNavigationHelpers.js<br>注释部分为原版的，不放心可以改回来。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@flow</span></span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Helpers for navigation.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> type &#123;</span><br><span class="line">  <span class="title class_">NavigationProp</span>,</span><br><span class="line">  <span class="title class_">NavigationParams</span>,</span><br><span class="line">  <span class="title class_">NavigationScreenProp</span>,</span><br><span class="line">  <span class="title class_">NavigationNavigateAction</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;./TypeDefinition&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">NavigationActions</span> <span class="keyword">from</span> <span class="string">&#x27;./NavigationActions&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> invariant <span class="keyword">from</span> <span class="string">&#x27;./utils/invariant&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// export default function&lt;S: &#123;&#125;&gt;(</span></span><br><span class="line"><span class="comment">//   navigation: NavigationProp&lt;S&gt;</span></span><br><span class="line"><span class="comment">// ): NavigationScreenProp&lt;S&gt; &#123;</span></span><br><span class="line"><span class="comment">//   return &#123;</span></span><br><span class="line"><span class="comment">//     ...navigation,</span></span><br><span class="line"><span class="comment">//     goBack: (key?: ?string): boolean =&gt; &#123;</span></span><br><span class="line"><span class="comment">//       let actualizedKey: ?string = key;</span></span><br><span class="line"><span class="comment">//       if (key === undefined &amp;&amp; navigation.state.key) &#123;</span></span><br><span class="line"><span class="comment">//         invariant(</span></span><br><span class="line"><span class="comment">//           typeof navigation.state.key === &#x27;string&#x27;,</span></span><br><span class="line"><span class="comment">//           &#x27;key should be a string&#x27;</span></span><br><span class="line"><span class="comment">//         );</span></span><br><span class="line"><span class="comment">//         actualizedKey = navigation.state.key;</span></span><br><span class="line"><span class="comment">//       &#125;</span></span><br><span class="line"><span class="comment">//       return navigation.dispatch(</span></span><br><span class="line"><span class="comment">//         NavigationActions.back(&#123; key: actualizedKey &#125;)</span></span><br><span class="line"><span class="comment">//       );</span></span><br><span class="line"><span class="comment">//     &#125;,</span></span><br><span class="line"><span class="comment">//     navigate: (</span></span><br><span class="line"><span class="comment">//       routeName: string,</span></span><br><span class="line"><span class="comment">//       params?: NavigationParams,</span></span><br><span class="line"><span class="comment">//       action?: NavigationNavigateAction</span></span><br><span class="line"><span class="comment">//     ): boolean =&gt;</span></span><br><span class="line"><span class="comment">//       navigation.dispatch(</span></span><br><span class="line"><span class="comment">//         NavigationActions.navigate(&#123; routeName, params, action &#125;)</span></span><br><span class="line"><span class="comment">//       ),</span></span><br><span class="line"><span class="comment">//     /**</span></span><br><span class="line"><span class="comment">//      * For updating current route params. For example the nav bar title and</span></span><br><span class="line"><span class="comment">//      * buttons are based on the route params.</span></span><br><span class="line"><span class="comment">//      * This means `setParams` can be used to update nav bar for example.</span></span><br><span class="line"><span class="comment">//      */</span></span><br><span class="line"><span class="comment">//     setParams: (params: NavigationParams): boolean =&gt; &#123;</span></span><br><span class="line"><span class="comment">//       invariant(</span></span><br><span class="line"><span class="comment">//         navigation.state.key &amp;&amp; typeof navigation.state.key === &#x27;string&#x27;,</span></span><br><span class="line"><span class="comment">//         &#x27;setParams cannot be called by root navigator&#x27;</span></span><br><span class="line"><span class="comment">//       );</span></span><br><span class="line"><span class="comment">//       const key = navigation.state.key;</span></span><br><span class="line"><span class="comment">//       return navigation.dispatch(NavigationActions.setParams(&#123; params, key &#125;));</span></span><br><span class="line"><span class="comment">//     &#125;,</span></span><br><span class="line"><span class="comment">//   &#125;;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span>&lt;<span class="attr">S</span>: *&gt;(<span class="attr">navigation</span>: <span class="title class_">NavigationProp</span>&lt;S, <span class="title class_">NavigationAction</span>&gt;) &#123;</span><br><span class="line">    <span class="comment">// 添加点击判断</span></span><br><span class="line">    <span class="keyword">let</span> debounce = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        ...navigation,</span><br><span class="line">        <span class="attr">goBack</span>: (key?: ?string): <span class="function"><span class="params">boolean</span> =&gt;</span></span><br><span class="line">            navigation.<span class="title function_">dispatch</span>(</span><br><span class="line">                <span class="title class_">NavigationActions</span>.<span class="title function_">back</span>(&#123;</span><br><span class="line">                    <span class="attr">key</span>: key === <span class="literal">undefined</span> ? navigation.<span class="property">state</span>.<span class="property">key</span> : key,</span><br><span class="line">                &#125;),</span><br><span class="line">            ),</span><br><span class="line">        <span class="attr">navigate</span>: (<span class="attr">routeName</span>: string,</span><br><span class="line">                   params?: <span class="title class_">NavigationParams</span>,</span><br><span class="line">                   action?: <span class="title class_">NavigationAction</span>,): <span class="function"><span class="params">boolean</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (debounce) &#123;</span><br><span class="line">                debounce = <span class="literal">false</span>;</span><br><span class="line">                navigation.<span class="title function_">dispatch</span>(</span><br><span class="line">                    <span class="title class_">NavigationActions</span>.<span class="title function_">navigate</span>(&#123;</span><br><span class="line">                        routeName,</span><br><span class="line">                        params,</span><br><span class="line">                        action,</span><br><span class="line">                    &#125;),</span><br><span class="line">                );</span><br><span class="line">                <span class="built_in">setTimeout</span>(</span><br><span class="line">                    <span class="function">() =&gt;</span> &#123;</span><br><span class="line">                        debounce = <span class="literal">true</span>;</span><br><span class="line">                    &#125;,</span><br><span class="line">                    <span class="number">3000</span>,<span class="comment">//增加延迟</span></span><br><span class="line">                );</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * For updating current route params. For example the nav bar title and</span></span><br><span class="line"><span class="comment">         * buttons are based on the route params.</span></span><br><span class="line"><span class="comment">         * This means `setParams` can be used to update nav bar for example.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="attr">setParams</span>: (<span class="attr">params</span>: <span class="title class_">NavigationParams</span>): <span class="function"><span class="params">boolean</span> =&gt;</span></span><br><span class="line">            navigation.<span class="title function_">dispatch</span>(</span><br><span class="line">                <span class="title class_">NavigationActions</span>.<span class="title function_">setParams</span>(&#123;</span><br><span class="line">                    params,</span><br><span class="line">                    <span class="attr">key</span>: navigation.<span class="property">state</span>.<span class="property">key</span>,</span><br><span class="line">                &#125;),</span><br><span class="line">            ),</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/react-native/" rel="tag"># react native</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/11/18/nginx-flask/" rel="prev" title="linux下使用nginx+gunicorn+supervisor配置flask生产环境">
+      <i class="fa fa-chevron-left"></i> linux下使用nginx+gunicorn+supervisor配置flask生产环境
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/11/27/xmind/" rel="next" title="用python将思维导图转换成树形列表">
+      用python将思维导图转换成树形列表 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%8A%E4%B8%80%E3%80%8Breact-navigation%E6%8C%87%E5%AE%9A%E8%B7%B3%E8%BD%AC%E5%8A%A8%E7%94%BB"><span class="nav-number">1.</span> <span class="nav-text">《一》react navigation指定跳转动画</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#react-navigation%E6%A0%B9%E6%8D%AE%E5%B9%B3%E5%8F%B0%E7%9A%84%E4%B8%8D%E5%90%8C%E5%86%85%E7%BD%AE%E4%BA%86%E7%9B%B8%E5%BA%94%E7%9A%84%E8%B7%B3%E8%BD%AC%E5%8A%A8%E7%94%BB"><span class="nav-number">1.0.1.</span> <span class="nav-text">react-navigation根据平台的不同内置了相应的跳转动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.0.2.</span> <span class="nav-text">代码实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%8A%E4%BA%8C%E3%80%8Breact-navigation%E8%B7%AF%E7%94%B1%EF%BC%8C%E6%8C%87%E5%AE%9A%E9%A1%B5%E9%9D%A2%E4%B8%8D%E6%98%BE%E7%A4%BA%E5%BA%95%E9%83%A8tabbar"><span class="nav-number">2.</span> <span class="nav-text">《二》react navigation路由，指定页面不显示底部tabbar</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%8A%E4%B8%89%E3%80%8B%E9%98%B2%E5%BF%AB%E9%80%9F%E7%82%B9%E5%87%BB%E8%B7%B3%E8%BD%AC%E5%BC%82%E5%B8%B8%EF%BC%88%E5%BE%85%E4%BC%98%E5%8C%96%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">《三》防快速点击跳转异常（待优化）</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '5b1b8652279080a273b160f673020ea4',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

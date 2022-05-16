@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <link rel="mask-icon" href="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"t880216t.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="PD Runner用不了了，自己撸个启动器吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我破解了你的破解">
+<meta property="og:url" content="https://t880216t.github.io/2022/05/16/pd-start/index.html">
+<meta property="og:site_name" content="你能成为任何你想成为的人">
+<meta property="og:description" content="PD Runner用不了了，自己撸个启动器吧。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/17067099-91233f18019ca386.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/17067099-6ee1c75eb2fff788.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/17067099-909bcddbea16166d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2022-05-16T01:52:24.000Z">
+<meta property="article:modified_time" content="2022-05-16T01:55:33.172Z">
+<meta property="article:author" content="Orion-c">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/17067099-91233f18019ca386.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640">
+
+<link rel="canonical" href="https://t880216t.github.io/2022/05/16/pd-start/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>我破解了你的破解 | 你能成为任何你想成为的人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你能成为任何你想成为的人</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://t880216t.github.io/2022/05/16/pd-start/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+      <meta itemprop="name" content="Orion-c">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你能成为任何你想成为的人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          我破解了你的破解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-16 09:52:24 / 修改时间：09:55:33" itemprop="dateCreated datePublished" datetime="2022-05-16T09:52:24+08:00">2022-05-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>PD Runner用不了了，自己撸个启动器吧。</p>
+<span id="more"></span>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>用MAC电脑偶尔有些时候需要用到windows，之前还有双系统可以选择，但从M1芯片开始，双系统就玩不了了，好在有虚拟机，而且性能还不错，日常够用了。</p>
+<p>我用的是Parallels，之前有个PD Runner，适用于Parallels Desktop的启动器, 可无视试用期限强制启动客户机 (支持 PD17.1.0)，但是最近用不了了。</p>
+<p>一番搜索学习后，B站发现了个用PD Start的视频，也可以实现绕过限制。然而实际下载安装后发现有报错无法使用。从视频得知作者用的是python写的，比较对口，于是便开始对它二次开发。</p>
+<p>本项目仅用于学习研究使用, 请支持正版!</p>
+<h1 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h1><h5 id="扒源码"><a href="#扒源码" class="headerlink" title="扒源码"></a>扒源码</h5><p>作者本身是没有提供源码的，但是这个工程使用的<code>py2app</code>打包，因此可以分析源码肯定在应用包中。<br><img src="https://upload-images.jianshu.io/upload_images/17067099-91233f18019ca386.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/17067099-6ee1c75eb2fff788.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h5 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h5><p>作者代码还是比较工整的，通过源码中分析不难看出，其核心步骤就是修改系统时间，调用系统命令启动虚拟机后再改回系统时间。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改电脑时间</span></span><br><span class="line">(datestatus, dateoutput) = subprocess.getstatusoutput(</span><br><span class="line">    <span class="string">&quot;echo &#123;&#125; | sudo -S &#123;&#125;&quot;</span>.<span class="built_in">format</span>(config[<span class="string">&quot;password&quot;</span>], <span class="string">f&quot;date <span class="subst">&#123;pc_time&#125;</span>2019&quot;</span>))  <span class="comment"># 设置日期</span></span><br><span class="line"><span class="built_in">print</span>(datestatus, dateoutput)</span><br><span class="line"></span><br><span class="line">prlctl = <span class="string">&quot;/usr/local/bin/prlctl&quot;</span>  <span class="comment"># 怕环境变量异常，尝试使用更粗暴的方式</span></span><br><span class="line">cmd = prlctl + <span class="string">&quot; start &quot;</span> + <span class="string">&quot;\&quot;&quot;</span> + parm.title + <span class="string">&quot;\&quot;&quot;</span></span><br><span class="line">(status, output) = subprocess.getstatusoutput(cmd)  <span class="comment"># 启动PD的系统</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将时间改回来</span></span><br><span class="line">(datestatus, dateoutput) = subprocess.getstatusoutput(</span><br><span class="line">    <span class="string">&quot;echo &#123;&#125; | sudo -S &#123;&#125;&quot;</span>.<span class="built_in">format</span>(config[<span class="string">&quot;password&quot;</span>], <span class="string">f&quot;date <span class="subst">&#123;pc_time&#125;</span><span class="subst">&#123;nowdate.year&#125;</span>&quot;</span>))  <span class="comment"># 设置日期</span></span><br><span class="line"><span class="built_in">print</span>(datestatus, dateoutput)</span><br></pre></td></tr></table></figure>
+
+<h5 id="自定义开发"><a href="#自定义开发" class="headerlink" title="自定义开发"></a>自定义开发</h5><p>实际也没改啥，不过介于作者提供的版本运行报错，我自己装了相关的运行依赖debug来看，是没有出现了，估计是m1版本的问题。</p>
+<p>于是就用pipenv管理下依赖，源码也用git管理下，后面有问题也好详细定位处理，顺手改了改文案重新打包吧。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pipenv --python=3.8</span><br><span class="line">pipenv install</span><br><span class="line">python setup.py py2app -A</span><br></pre></td></tr></table></figure>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>效果还不错，后面看需求再给它加功能吧。</p>
+<p>亲测macbook m1 pro + PD 17.1 有效。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/17067099-909bcddbea16166d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>当是复习python的桌面应用开发了，有条件的还请支持原版吧，我比较穷。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/08/celery-selenium/" rel="prev" title="分布式Web UI自动化系统的设计与实现">
+      <i class="fa fa-chevron-left"></i> 分布式Web UI自动化系统的设计与实现
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/16/env/" rel="next" title="资源动态管理的测试环境发布系统的设计与未实现">
+      资源动态管理的测试环境发布系统的设计与未实现 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%87%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%92%E6%BA%90%E7%A0%81"><span class="nav-number">2.0.0.0.1.</span> <span class="nav-text">扒源码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%BA%90%E7%A0%81"><span class="nav-number">2.0.0.0.2.</span> <span class="nav-text">分析源码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%80%E5%8F%91"><span class="nav-number">2.0.0.0.3.</span> <span class="nav-text">自定义开发</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Orion-c"
+      src="https://avatars2.githubusercontent.com/u/16489708?v=3&s=460">
+  <p class="site-author-name" itemprop="name">Orion-c</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/t880216t" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;t880216t" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Orion-c</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e7d79a0eece9fafa272c',
+      clientSecret: 'f9409d475bee12a3ede8f9e220ae9c69a99d7d54',
+      repo        : 't880216t.github.io',
+      owner       : 't880216t',
+      admin       : ['t880216t'],
+      id          : '7b91a1d23975128436735f0dc317c620',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
